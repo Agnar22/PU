@@ -63,4 +63,3 @@ class RegisterFormView(View):
 def logout_user(request):
     logout(request)
     return redirect('/')
-
