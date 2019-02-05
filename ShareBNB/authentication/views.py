@@ -1,15 +1,13 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-from django.conf import settings
+from django.contrib.auth import authenticate, login, logout
 from django.views.generic import View
-from django.core.exceptions import ValidationError
+from django.conf import settings
 from .forms import LoginForm, RegisterForm
-from django.core.mail import send_mail
 
-# Create your views here.
+
 class LoginFormView(View):
 
-    template_name = 'home/login.html'
+    template_name = 'authentication/login.html'
     form_class = LoginForm
 
     def get(self, request):
@@ -23,26 +21,15 @@ class LoginFormView(View):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            user.update_class_year()
-            return redirect('students')
+            return redirect('/')
     
         # Refreshes the login form if not correct
-        return  render(request, self.template_name, {'form': form})
-    
-        
-def send_confiramtion_email(user_email):
-    send_mail(
-        "Velkommen til Leonardos nettside", # Subject
-        "Hei!\nVelkommen til Leonardos nettside. Her kan du melde deg på arrangementer, legge ut prosjektene dine på prosjektsiden og skrive artikler til wikisiden vår.\n\nMvh. Leonardo linjeforening", # Message
-        settings.EMAIL_HOST_USER, # From email
-        [user_email], # To email
-        fail_silently=False,
-    )
+        return render(request, self.template_name, {'form': form})
 
 
 class RegisterFormView(View):
     form_class = RegisterForm
-    template_name = 'home/register.html'
+    template_name = 'authentication/register.html'
 
     # display a blank form
     def get(self, request):
@@ -59,17 +46,21 @@ class RegisterFormView(View):
             # Cleaned (normalized) data
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            allergies = form.cleaned_data['allergies']
             user.set_password(password)
             user.save()
 
-            # Returns User ovbjects if credentials are correct
+            # Returns User objects if credentials are correct
             user = authenticate(email=email, password=password)
 
             if user is not None:
-                send_confiramtion_email(user.email)
                 if user.is_active:
-                    login(request, user) # Loging in user to the website
-                    return redirect('students')
+                    login(request, user)  # User is logged in
+                    return redirect('/')
 
-        return  render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form})
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('/')
+
