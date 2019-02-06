@@ -1,0 +1,190 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+*, *::after, *::before {
+  box-sizing: border-box; }
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+body {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+html {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold; }
+
+h1 {
+  font-size: 2.25rem; }
+
+h2 {
+  font-size: 1.875rem; }
+
+h3 {
+  font-size: 1.5rem; }
+
+h4 {
+  font-size: 1.125rem; }
+
+h5 {
+  font-size: 0.875rem; }
+
+h6 {
+  font-size: 0.75rem; }
+
+.container {
+  margin: 1rem auto;
+  max-width: 56.25em;
+  min-width: 90%; }
+
+img {
+  -webkit-user-select: none;
+  /* Chrome all / Safari all */
+  -moz-user-select: none;
+  /* Firefox all */
+  -ms-user-select: none;
+  /* IE 10+ */
+  user-select: none;
+  /* Likely future */ }
+
+button, .button {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.12);
+  background-color: #FCFCFC;
+  border: 1px solid #53787D;
+  border-radius: 200px;
+  outline: 0;
+  cursor: pointer;
+  color: #53787D;
+  transition: background-color 200ms ease-in-out, transform 200ms ease-in-out;
+  will-change: background-color, transform; }
+  button:hover, .button:hover {
+    background-color: #f7f7f7; }
+  button:active, .button:active {
+    transform: scale(0.98); }
+  button.primary, .button.primary {
+    border: 0;
+    color: #FCFCFC;
+    background-color: #70B991; }
+    button.primary:hover, .button.primary:hover {
+      background-color: #5fb184; }
+
+.input-field {
+  position: relative;
+  margin-bottom: 1rem; }
+  .input-field.fluid, .input-field.fluid input {
+    width: 100%; }
+  .input-field label {
+    position: absolute;
+    font-size: 1rem;
+    top: 1.1rem;
+    left: 1rem;
+    transition: top 200ms ease-in-out, color 200ms ease-in-out;
+    will-change: top, color;
+    color: #B4B3B1;
+    pointer-events: none; }
+  .input-field input {
+    background-color: #F1F1F1;
+    border-radius: 6px;
+    outline: 0;
+    font-size: 1rem;
+    padding: 1.2rem 1rem 0.6rem;
+    border: 0; }
+    .input-field input::placeholder {
+      visibility: hidden; }
+    .input-field input:not(:placeholder-shown) + label {
+      top: 0.4rem;
+      font-size: 0.75rem;
+      color: #B4B3B1; }
+  .input-field p {
+    position: relative;
+    color: #E41F4E;
+    margin-left: 1rem;
+    padding-left: 0.5rem; }
+    .input-field p::before, .input-field p::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      background-color: #E41F4E;
+      width: 2px;
+      height: 14px;
+      border-radius: 10px; }
+    .input-field p::after {
+      transform: rotate(45deg); }
+    .input-field p::before {
+      transform: rotate(-45deg); }
+
+#landing-page {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); }
+  #landing-page h1 {
+    color: #53787D; }
+  #landing-page h4 {
+    color: #70B991;
+    margin: 0.5rem 0 3rem; }
+  #landing-page .search-fields {
+    max-width: 90%;
+    max-height: 90%;
+    margin: auto auto;
+    position: relative;
+    left: -3rem;
+    top: -5rem; }
+  #landing-page form {
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: repeat(2, 1fr); }
+    #landing-page form .location {
+      grid-column: 1 / span 2; }
+  #landing-page .image {
+    height: 100vh;
+    width: 50vw;
+    overflow: hidden; }
+    #landing-page .image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; }
+
+/*# sourceMappingURL=styles.css.map */

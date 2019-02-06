@@ -1,0 +1,41 @@
+#landing-page {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  h1 {
+    color: $primary-dark;
+  }
+
+  h4 {
+    color: $primary;
+    margin: 0.5rem 0 3rem;
+  }
+
+  .search-fields {
+    max-width: 90%;
+    max-height: 90%;
+    margin: auto auto;
+    position: relative;
+    left: -3rem;
+    top: -5rem;
+  }
+  form {
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+
+    .location {
+      grid-column: 1 / span 2;
+    }
+  }
+
+  .image {
+    height: 100vh;
+    width: 50vw;
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}

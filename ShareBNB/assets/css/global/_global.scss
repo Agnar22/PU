@@ -1,0 +1,9 @@
+.container {
+  margin: 1rem auto;
+  max-width: $lg;
+  min-width: 90%;
+}
+
+img {
+  @include no-select;
+}

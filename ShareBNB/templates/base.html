@@ -11,14 +11,14 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet">
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
     <!-- Extra header -->
     {% block head %}{% endblock head %}
 </head>
 <body>
-    <p>{% static 'css/stylesheet.css' %}</p>
     {% block body %}{% endblock body %}
-    <script>{% block js %}{% endblock js %}</script>
+
+    {% block js %}{% endblock js %}
 </body>
 </html>

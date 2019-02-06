@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block body %}
+<div id="landing-page">
+    <div class="search-fields">
+        <h1>Finn ditt midlertidige<br> hjem med ShareBNB</h1>
+        <h4>Søk blant over 10 hjem i opptil 2 byer!</h4>
+        <form action="" method="get">
+            <div class="input-field fluid location">
+                <input id="location" type="text" placeholder=".">
+                <label for="location">Hvor vil du leie?</label>
+            </div>
+            <div class="input-field fluid">
+                <input id="from_date" type="text" placeholder=".">
+                <label for="from_date">Fra når?</label>
+            </div>
+            <div class="input-field fluid">
+                <input id="to_date" type="text" placeholder=".">
+                <label for="to_date">Til når?</label>
+            </div>
+            <div class="input-field fluid">
+                <input id="guests" type="text" placeholder=".">
+                <label for="guests">Antall gjester?</label>
+            </div>
+            <input class="button primary" type="submit" value="Søk etter leiligheter">
+        </form>
+        <div class="login-fields">
+            <p>Registrer ny bruker</p>
+            <p>Logg inn</p>
+        </div>
+    </div>
+    <div class="image">
+        <img src="{% static 'img/landingpage.jpg' %}" alt="Green apartment">
+    </div>
+</div>
+{% endblock body %}
+{% block js %}
+<script>
+</script>
+{% endblock js %}

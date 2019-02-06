@@ -1,0 +1,28 @@
+button, .button {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  box-shadow: $med-shadow;
+  background-color: $white;
+  border: 1px solid $primary-dark;
+  border-radius: 200px;
+  outline: 0;
+  cursor: pointer;
+  color: $primary-dark;
+  transition: background-color 200ms ease-in-out, transform 200ms ease-in-out;
+  will-change: background-color, transform;
+  &:hover {
+    background-color: darken($white, 2%);
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &.primary {
+    border: 0;
+    color: $white;
+    background-color: $primary;
+    &:hover {
+      background-color: darken($primary, 5%);
+    }
+  }
+}
