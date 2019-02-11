@@ -6,3 +6,7 @@
 6. `python manage.py migrate`
 7. `python manage.py createsuperuser`
 8. `python manage.py runserver`
+
+
+# Hvordan branche
+`git checkout -b "Branch-navn"`
