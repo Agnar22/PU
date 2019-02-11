@@ -1,3 +1,4 @@
+# Sette opp prosjektet
 1. Navigér til den mappen du vil klone repositorien i
 2. Skriv `git clone url`
 3. navigér inn i den mappen med `cd` og inn i ShareBNB med cd `cd ShareBNB`
