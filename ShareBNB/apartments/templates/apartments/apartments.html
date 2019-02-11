@@ -1,5 +1,53 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block body %}
-    <h1>Apartment</h1>
+    {% include 'navbar.html' %}
+    <div class="container" id="apartments">
+        <div class="search-bar">
+            <div class="input-field fluid location">
+                <input id="location" type="text" placeholder=".">
+                <label for="location">Hvor vil du leie?</label>
+            </div>
+            <div class="input-field fluid start-date">
+                <input id="start-date" type="text" placeholder=".">
+                <label for="start-date">Fra når?</label>
+            </div>
+            <div class="input-field fluid end-date">
+                <input id="end-date" type="text" placeholder=".">
+                <label for="end-date">Til når?</label>
+            </div>
+            <div class="input-field fluid guests">
+                <select id="guests" type="text" placeholder=".">
+                    {% for i in i|rjust:9 %}
+                        <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                    {% endfor %}
+                </select>
+                <label for="guests">Antall gjester</label>
+            </div>
+        </div>
+        <p class="result-count">Fant 12 leiligheter i Trondheim</p>
+        <div class="apartment-list">
+            <a class="apartment-list-item card clickable" href="{% url 'apartment-detail' apartment_id=1 %}">
+                <img class="apartment-image" src="{% static 'img/apartment.png' %}" alt="">
+                <h4>Maybach Apartment - Location. Design. Comfort</h4>
+                <i><img src="{% static 'icons/pin.svg' %}" alt="">Midtbyen Trondheim</i>
+                <i><img src="{% static 'icons/house.svg' %}   " alt="">43 m<sup>2</sup></i>
+                <div class="rating">
+                    {% for i in i|rjust:4 %}
+                        <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="">
+                    {% endfor %}
+                    <img src="{% static 'icons/rating/gray_star.svg' %}" alt="">
+                    <h6>62</h6>
+                </div>
+                <div class="right-aligned">
+                    <div>
+                        <h3>14 212 kr</h3>
+                        <h6>for 42 dager</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
 {% endblock body %}

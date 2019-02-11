@@ -1,0 +1,10 @@
+{% load static %}
+
+<nav id="navbar">
+    <a href="{% url 'landing-page' %}" class="logo">
+        <img src="{% static 'img/logo.svg' %}" alt="ShareBNB logo">
+        <h4>ShareBNB</h4>
+    </a>
+    <a class="chat" href="{% url 'landing-page' %}">Meldinger</a>
+    <img class="user-icon" src="{% static 'icons/user-icon.svg' %}" alt="User icon">
+</nav>

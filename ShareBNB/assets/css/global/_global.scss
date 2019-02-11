@@ -1,5 +1,8 @@
+body {
+  background-color: $white;
+}
 .container {
-  margin: 1rem auto;
+  margin: 5rem auto 1rem;
   max-width: $lg;
   min-width: 90%;
 }
