@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Our apps:
     'authentication',
-    'landingpage'
+    'landingpage',
+    'apartments'
     # Third party apps:
 ]
 
