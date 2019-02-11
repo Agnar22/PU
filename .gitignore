@@ -1,6 +1,7 @@
 # ShareBNB specific
 
 *.css.map
+*.sqlite3
 
 # Created by https://www.gitignore.io/api/macos,windows,pycharm+all,sublimetext,webstorm+all,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=macos,windows,pycharm+all,sublimetext,webstorm+all,visualstudiocode
@@ -9,6 +10,7 @@
 # General
 .DS_Store
 .AppleDouble
+
 .LSOverride
 
 # Icon must end with two \r
