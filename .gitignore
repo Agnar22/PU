@@ -1,3 +1,6 @@
+# ShareBNB specific
+
+*.css.map
 
 # Created by https://www.gitignore.io/api/macos,windows,pycharm+all,sublimetext,webstorm+all,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=macos,windows,pycharm+all,sublimetext,webstorm+all,visualstudiocode
