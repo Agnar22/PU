@@ -48,6 +48,10 @@ table {
   border-collapse: collapse;
   border-spacing: 0; }
 
+a {
+  text-decoration: none;
+  color: inherit; }
+
 html {
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 16px; }
@@ -73,8 +77,14 @@ h5 {
 h6 {
   font-size: 0.75rem; }
 
+p {
+  line-height: 1.14em; }
+
+body {
+  background-color: #FCFCFC; }
+
 .container {
-  margin: 1rem auto;
+  margin: 5rem auto 1rem;
   max-width: 56.25em;
   min-width: 90%; }
 
@@ -100,7 +110,10 @@ button, .button {
   cursor: pointer;
   color: #53787D;
   transition: background-color 200ms ease-in-out, transform 200ms ease-in-out;
-  will-change: background-color, transform; }
+  will-change: background-color, transform;
+  text-decoration: none;
+  display: flex;
+  align-items: center; }
   button:hover, .button:hover {
     background-color: #f7f7f7; }
   button:active, .button:active {
@@ -115,7 +128,7 @@ button, .button {
 .input-field {
   position: relative;
   margin-bottom: 1rem; }
-  .input-field.fluid, .input-field.fluid input {
+  .input-field.fluid input, .input-field.fluid select, .input-field.fluid textarea {
     width: 100%; }
   .input-field label {
     position: absolute;
@@ -172,9 +185,19 @@ button, .button {
       transform: rotate(-45deg); }
 
 .card {
+  position: relative;
+  display: block;
   background-color: #FCFCFC;
   box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.12);
-  padding: 1rem; }
+  padding: 1rem;
+  overflow: hidden;
+  border-radius: 6px; }
+  .card.clickable {
+    cursor: pointer;
+    transition: transform 200ms ease-in-out;
+    will-change: transform; }
+    .card.clickable:hover {
+      transform: scale(0.996); }
 
 .snackbar {
   max-width: 60%;
@@ -205,6 +228,37 @@ button, .button {
   .snackbar.warning {
     color: #2A2722;
     background-color: #DFAF08; }
+
+#navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.12);
+  z-index: 10000;
+  background-color: #FCFCFC; }
+  #navbar a {
+    text-decoration: none;
+    color: #2A2722; }
+  #navbar a.logo {
+    position: absolute;
+    left: 5%; }
+    #navbar a.logo img, #navbar a.logo h4 {
+      display: inline; }
+    #navbar a.logo img {
+      height: 28px;
+      width: auto; }
+    #navbar a.logo h4 {
+      color: #70B991; }
+  #navbar .chat {
+    position: absolute;
+    right: calc(5% + 48px); }
+  #navbar .user-icon {
+    position: absolute;
+    right: 5%; }
 
 #landing-page {
   display: grid;
@@ -251,5 +305,105 @@ button, .button {
       width: 100%;
       height: 100%;
       object-fit: cover; }
+
+#apartments .search-bar {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-gap: 1rem; }
+#apartments .result-count {
+  color: #B4B3B1;
+  margin: 2rem 0 1rem; }
+#apartments .apartment-list-item {
+  padding-left: calc(160px + 1rem);
+  width: 100%;
+  margin-bottom: 2rem; }
+  #apartments .apartment-list-item .apartment-image {
+    width: 160px;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    left: 0;
+    top: 0; }
+  #apartments .apartment-list-item i {
+    display: block;
+    color: #5B5A57;
+    margin: 0.5rem 0; }
+    #apartments .apartment-list-item i img {
+      height: 18px;
+      width: 18px;
+      position: relative;
+      top: 2px;
+      margin-right: 0.5rem; }
+  #apartments .apartment-list-item .rating {
+    display: flex;
+    align-items: center; }
+    #apartments .apartment-list-item .rating img {
+      margin-right: 4px; }
+    #apartments .apartment-list-item .rating h6 {
+      color: #B4B3B1;
+      display: inline;
+      position: relative;
+      top: 1px; }
+  #apartments .apartment-list-item .right-aligned {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-left: 1px solid #F1F1F1; }
+
+#apartment-detail {
+  position: relative; }
+  #apartment-detail .apartment-images {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 50vw; }
+    #apartment-detail .apartment-images img {
+      object-fit: cover;
+      height: 100%;
+      width: 100%; }
+  #apartment-detail .apartment-info {
+    margin-left: 50vw;
+    padding: 10rem 6rem 6rem; }
+    #apartment-detail .apartment-info h1 {
+      margin-bottom: 1rem; }
+    #apartment-detail .apartment-info .rating {
+      margin-bottom: 1.5rem; }
+      #apartment-detail .apartment-info .rating img {
+        height: 18px;
+        width: 18px;
+        margin-right: 4px; }
+      #apartment-detail .apartment-info .rating p {
+        color: #5B5A57; }
+    #apartment-detail .apartment-info i {
+      display: flex;
+      align-items: center;
+      margin-top: 0.5rem; }
+      #apartment-detail .apartment-info i img {
+        width: 18px;
+        height: 18px;
+        margin-right: 0.5rem; }
+    #apartment-detail .apartment-info h4 {
+      margin: 2rem 0 0.5rem;
+      color: #5B5A57; }
+    #apartment-detail .apartment-info .user {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      grid-gap: 0.5rem;
+      margin: 1rem 0; }
+      #apartment-detail .apartment-info .user > img {
+        width: 42px;
+        height: 42px;
+        object-fit: cover;
+        border-radius: 100px; }
+      #apartment-detail .apartment-info .user .user-rating img {
+        width: 10px;
+        height: 10px; }
 
 /*# sourceMappingURL=styles.css.map */

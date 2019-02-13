@@ -2,8 +2,10 @@
   position: relative;
   margin-bottom: 1rem;
 
-  &.fluid, &.fluid input {
-    width: 100%;
+  &.fluid {
+    input, select, textarea {
+      width: 100%;
+    }
   }
 
   label {

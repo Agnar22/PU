@@ -11,6 +11,9 @@ button, .button {
   color: $primary-dark;
   transition: background-color 200ms ease-in-out, transform 200ms ease-in-out;
   will-change: background-color, transform;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
   &:hover {
     background-color: darken($white, 2%);
   }

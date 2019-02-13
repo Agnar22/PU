@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block body %}
+    {% include 'navbar.html' %}
+    <div id="apartment-detail">
+        <div class="apartment-images">
+            <img src="{% static 'img/apartment.png' %}" alt="Apartment image">
+        </div>
+        <div class="apartment-info">
+            <h1>Maybach Apartment - Location. Design. Comfort</h1>
+            <div class="rating">
+                {% for i in i|rjust:4 %}
+                    <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="">
+                {% endfor %}
+                <img src="{% static 'icons/rating/gray_star.svg' %}" alt="">
+                <p>14 stemmer</p>
+            </div>
+            <p>Wake up feeling rejuvenated in this quiet loft condo featuring a private patio. Experience a mix of
+                tranquility and history in a rustic, modern apartment with exposed brick, an Art Deco ceiling, an
+                open-plan
+                living area, and a roof deck walkout.</p>
+            <i><img src="{% static 'icons/pin.svg' %}" alt="">Midtbyen Trondheim</i>
+            <i><img src="{% static 'icons/house.svg' %}" alt="">43 m<sup>2</sup></i>
+            <h4>Leie i perioden 17.06.19 til 26.07.19</h4>
+            <h3>Totalpris: 16 317 kr</h3>
+            <div class="user">
+                <img src="{% static 'img/girl.jpg' %}" alt="girl">
+                <div class="user-rating">
+                    <p>Pia Jensen</p>
+                    {% for i in i|rjust:4 %}
+                        <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="">
+                    {% endfor %}
+                    <img src="{% static 'icons/rating/gray_star.svg' %}" alt="">
+                </div>
+            </div>
+            <button class="primary">Send Pia en melding</button>
+        </div>
+    </div>
+{% endblock body %}
