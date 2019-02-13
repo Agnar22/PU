@@ -4,7 +4,11 @@ from django.shortcuts import render
 
 
 def apartments(request):
-    context = {}
+    apartments = Apartment.objects.all()
+
+    context = {
+        'apartments': apartments
+    }
     return render(request, 'apartments/apartments.html', context)
 
 
