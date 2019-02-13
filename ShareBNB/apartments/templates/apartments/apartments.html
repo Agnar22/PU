@@ -29,25 +29,26 @@
         </div>
         <p class="result-count">Fant 12 leiligheter i Trondheim</p>
         <div class="apartment-list">
+            {% for apartment in apartments %}
             <a class="apartment-list-item card clickable" href="{% url 'apartment-detail' apartment_id=1 %}">
-                <img class="apartment-image" src="{% static 'img/apartment.png' %}" alt="">
-                <h4>Maybach Apartment - Location. Design. Comfort</h4>
-                <i><img src="{% static 'icons/pin.svg' %}" alt="">Midtbyen Trondheim</i>
-                <i><img src="{% static 'icons/house.svg' %}   " alt="">43 m<sup>2</sup></i>
+                <img class="apartment-image" src="{{ apartment.profile_picture.url }}" alt="">
+                <h4>{{ apartment.title }}</h4>
+                <i><img src="{% static 'icons/pin.svg' %}" alt="">{{ apartment.city }}</i>
+                <i><img src="{% static 'icons/house.svg' %}" alt="">{{ apartment.size }} m<sup>2</sup></i>
                 <div class="rating">
-                    {% for i in i|rjust:4 %}
+                    {% for i in i|rjust:apartment.rating %}
                         <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="">
                     {% endfor %}
-                    <img src="{% static 'icons/rating/gray_star.svg' %}" alt="">
-                    <h6>62</h6>
+                    <h6>{{ apartment.vote_amount }}</h6>
                 </div>
                 <div class="right-aligned">
                     <div>
-                        <h3>14 212 kr</h3>
+                        <h3>{{ apartment.monthly_cost }} kr</h3>
                         <h6>for 42 dager</h6>
                     </div>
                 </div>
             </a>
+            {% endfor %}
         </div>
     </div>
 {% endblock body %}

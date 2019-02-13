@@ -2,6 +2,8 @@ from django.shortcuts import render
 
 # Create your views here.
 
+from .models import Apartment
+
 
 def apartments(request):
     apartments = Apartment.objects.all()

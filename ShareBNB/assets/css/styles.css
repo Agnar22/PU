@@ -315,7 +315,8 @@ button, .button {
   margin: 2rem 0 1rem; }
 #apartments .apartment-list-item {
   padding-left: calc(160px + 1rem);
-  width: 100%; }
+  width: 100%;
+  margin-bottom: 2rem; }
   #apartments .apartment-list-item .apartment-image {
     width: 160px;
     height: 100%;
