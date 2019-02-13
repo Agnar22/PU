@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     # Our apps:
     'authentication',
     'landingpage',
-    'apartments'
+    'apartments',
+
     # Third party apps:
+    'imagekit'
 ]
 
 MIDDLEWARE = [
