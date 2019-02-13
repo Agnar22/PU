@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'authentication',
     'landingpage',
     'apartments',
+    'profile_page',
 
     # Third party apps:
     'imagekit'
