@@ -31,17 +31,138 @@
             </div>
             <input class="button primary" type="submit" value="Søk etter leiligheter">
         </form>
-        <div class="login-fields">
-            <p>Registrer ny bruker</p>
-            <p>Logg inn</p>
+        <div class="login-fields" id="login-buttons">
+            <p id="register-button" onclick="moveImageLeft('inline', 'none')">Registrer ny bruker</p>
+            <p id="login-button" onclick="moveImageLeft('none', 'inline')">Logg inn</p>
         </div>
     </div>
-    <div class="image">
+
+
+    <div class="image" id="start-image">
         <img src="{% static 'img/landingpage.jpg' %}" alt="Green apartment">
     </div>
+
+    <div class="search-fields" id="login-fields">
+        <h1>Logg inn</h1>
+        <br>
+        <form action="" method="get">
+            <div class="input-field fluid location">
+                <input id="login_email" type="text" placeholder=".">
+                <label for="login_email">E-mail</label>
+            </div>
+            <div class="input-field fluid location">
+                <input id="login_password" type="text" placeholder=".">
+                <label for="login_password">Passord</label>
+            </div>
+            <br>
+            <input class="button primary" type="submit" value="Logg inn">
+            <div class="input-field fluid location" onclick="moveImageRight()">
+                Tilbake
+            </div>
+        </form>
+    </div>
+
+
+    <div class="search-fields" id="register-fields">
+        <h1>Registrer ny bruker</h1>
+        <br>
+        <br>
+        <form action="" method="get">
+            <div class="input-field fluid">
+                <input id="register_first_name" type="text" placeholder=".">
+                <label for="register_first_name">Fornavn</label>
+            </div>
+            <div class="input-field fluid">
+                <input id="register_sure_name" type="text" placeholder=".">
+                <label for="register_sure_name">Etternavn</label>
+            </div>
+            <div class="input-field fluid location">
+                <input id="register_email" type="text" placeholder=".">
+                <label for="register_email">E-mail</label>
+            </div>
+            <div class="input-field fluid location">
+                <input id="register_phone" type="text" placeholder=".">
+                <label for="register_phone">Tlf.</label>
+            </div>
+
+            <div class="input-field fluid location">
+                <select id="register_country">
+                    <option value="1">Norge</option>
+                    <option value="2">Sverige</option>
+                    <option value="3">Danmark</option>
+                    <option value="4">Finland</option>
+                </select>
+                <label for="register_country">Land</label>
+            </div>
+
+            <div class="input-field fluid location">
+                <input id="register_password" type="text" placeholder=".">
+                <label for="register_password">Passord</label>
+            </div>
+             <div class="input-field fluid" onclick="moveImageRight()">
+                Tilbake
+            </div>
+            <input class="button primary" type="submit" value="Registrer">
+        </form>
+    </div>
+
 </div>
 {% endblock body %}
 {% block js %}
 <script>
+    var startImage=document.getElementById("start-image");
+    var startPosImage=getPosition(startImage);
+
+    var registerFields=document.getElementById("register-fields");
+    var loginFields=document.getElementById("login-fields");
+
+    var slidingVelocity=3
+
+
+    function getPosition( element ) {
+        var rect = element.getBoundingClientRect();
+        return {x:rect.left,y:rect.top};
+    }
+
+    function moveImageLeft(displayRegister, displayLogin){
+        // console.log(startImage.getBoundingClientRect())
+        registerFields.style.display=displayRegister;
+        loginFields.style.display=displayLogin;
+
+
+        startImage.style.position="absolute";
+        startImage.style.width=50+'%';
+
+        var pos=startPosImage.x;
+        startImage.style.left=pos+"px";
+        var id = setInterval(frame, 1);
+        function frame() {
+           if (pos <= 0) {
+             clearInterval(id);
+           }
+           else {
+             pos-=slidingVelocity;
+             startImage.style.left = pos + 'px';
+           }
+        }
+        // console.log(startImage.getBoundingClientRect())
+    };
+
+    function moveImageRight(){
+        var pos=getPosition(startImage).x;
+        console.log("pos",pos);
+        var id = setInterval(frame, 1);
+        function frame() {
+            console.log(startImage.style.left);
+            console.log(pos);
+           if (pos >= startPosImage.x) {
+             clearInterval(id);
+           }
+           else {
+             pos+=slidingVelocity;
+             startImage.style.left = pos + 'px';
+           }
+        }
+    }
 </script>
 {% endblock js %}

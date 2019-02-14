@@ -26,6 +26,7 @@
     margin: auto auto;
     position: relative;
     top: 2rem;
+    margin-top: 20%;
     @media screen and (min-width: $sm) {
       top: -5rem;
     }
@@ -46,6 +47,7 @@
   .image {
     height: 100vh;
     overflow: hidden;
+    z-index: 10;
     @media screen and (max-width: $sm) {
       display: none;
     }
@@ -55,4 +57,22 @@
       object-fit: cover;
     }
   }
+
+   #login-fields {
+    position: fixed;
+    margin-top: 15%;
+    /*top: 10%;*/
+    right: 12%;
+    width: 30%;
+    /*display: none;*/
+  }
+
+  #register-fields {
+    position: fixed;
+    margin-top: 8%;
+    /*top: 3%;*/
+    right: 7%;
+    display: none;
+  }
+
 }

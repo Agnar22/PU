@@ -228,7 +228,9 @@ button, .button {
     max-height: 90%;
     margin: auto auto;
     position: relative;
-    top: 2rem; }
+    top: 2rem;
+    margin-top: 20%;              /*New line*/
+  }
     @media screen and (min-width: 37.5em) {
       #landing-page .search-fields {
         top: -5rem; } }
@@ -243,7 +245,9 @@ button, .button {
       grid-column: 1 / span 2; }
   #landing-page .image {
     height: 100vh;
-    overflow: hidden; }
+    overflow: hidden;
+    z-index: 10;
+  }
     @media screen and (max-width: 37.5em) {
       #landing-page .image {
         display: none; } }
@@ -251,5 +255,24 @@ button, .button {
       width: 100%;
       height: 100%;
       object-fit: cover; }
+
+
+
+  #landing-page #login-fields {
+    position: fixed;
+    margin-top: 15%;
+    /*top: 10%;*/
+    right: 12%;
+    width: 30%;
+    /*display: none;*/
+  }
+
+  #landing-page #register-fields {
+    position: fixed;
+    margin-top: 8%;
+    /*top: 3%;*/
+    right: 7%;
+    display: none;
+  }
 
 /*# sourceMappingURL=styles.css.map */
