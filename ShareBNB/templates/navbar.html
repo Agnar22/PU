@@ -5,6 +5,8 @@
         <img src="{% static 'img/logo.svg' %}" alt="ShareBNB logo">
         <h4>ShareBNB</h4>
     </a>
+    {% if request.user.is_authenticated %}
     <a class="chat" href="{% url 'landing-page' %}">Meldinger</a>
-    <img class="user-icon" src="{% static 'icons/user-icon.svg' %}" alt="User icon">
+    <a href="{% url 'profile' %}" class="user-icon"><img src="{% static 'icons/user-icon.svg' %}" alt="User icon"></a>
+    {% endif %}
 </nav>

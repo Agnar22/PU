@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'landingpage',
     'apartments',
     'profile_page',
-
     # Third party apps:
     'imagekit'
 ]
@@ -127,8 +126,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'assets')]
 
-MEDIA_URL = '/static/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'assets', 'media')
+MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
