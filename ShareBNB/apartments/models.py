@@ -30,9 +30,12 @@ class Apartment(models.Model):
     monthly_cost = models.PositiveIntegerField()
     vote_amount = models.PositiveIntegerField(default=0)
     size = models.PositiveIntegerField()
-    image1 = ProcessedImageField(upload_to='apartments/', processors =[ResizeToFit(2000, 2000,False)], format ='JPEG', options = {'quality': 85})
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True)
     contracts = models.ManyToManyField(Contract)
+    image1 = ProcessedImageField(upload_to='apartments/',
+                                 processors =[ResizeToFit(2000, 2000,False)],
+                                 format ='JPEG',
+                                 options = {'quality': 85})
 
     def __str__(self):
         return self.title
