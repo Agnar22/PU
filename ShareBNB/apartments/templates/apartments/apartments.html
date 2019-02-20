@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load apartment_filters %}
 
 {% block body %}
     {% include 'navbar.html' %}
@@ -31,13 +32,16 @@
         <div class="apartment-list">
             {% for apartment in apartments %}
             <a class="apartment-list-item card clickable" href="{% url 'apartment-detail' apartment_id=1 %}">
-                <img class="apartment-image" src="{{ apartment.profile_picture.url }}" alt="">
+                <img class="apartment-image" src="{{ apartment.image1.url }}" alt="">
                 <h4>{{ apartment.title }}</h4>
                 <i><img src="{% static 'icons/pin.svg' %}" alt="">{{ apartment.city }}</i>
                 <i><img src="{% static 'icons/house.svg' %}" alt="">{{ apartment.size }} m<sup>2</sup></i>
                 <div class="rating">
-                    {% for i in i|rjust:apartment.rating %}
+                    {% for i in apartment.rating|yellow_stars %}
                         <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="">
+                    {% endfor %}
+                    {% for i in apartment.rating|gray_stars %}
+                        <img src="{% static 'icons/rating/gray_star.svg' %}" alt="">
                     {% endfor %}
                     <h6>{{ apartment.vote_amount }}</h6>
                 </div>

@@ -112,7 +112,7 @@ button, .button {
   transition: background-color 200ms ease-in-out, transform 200ms ease-in-out;
   will-change: background-color, transform;
   text-decoration: none;
-  display: flex;
+  display: inline-flex;
   align-items: center; }
   button:hover, .button:hover {
     background-color: #f7f7f7; }
@@ -191,7 +191,8 @@ button, .button {
   box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.12);
   padding: 1rem;
   overflow: hidden;
-  border-radius: 6px; }
+  border-radius: 6px;
+  margin-bottom: 1rem; }
   .card.clickable {
     cursor: pointer;
     transition: transform 200ms ease-in-out;
@@ -405,5 +406,49 @@ button, .button {
       #apartment-detail .apartment-info .user .user-rating img {
         width: 10px;
         height: 10px; }
+
+#profile-page h1 {
+  color: #53787D; }
+#profile-page .my-apartments {
+  padding-top: 2rem; }
+  #profile-page .my-apartments h2 {
+    color: #53787D;
+    margin-bottom: 2rem; }
+  #profile-page .my-apartments > a.button {
+    margin-top: 2rem; }
+  #profile-page .my-apartments .card > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: -1rem 0 -1rem -1rem;
+    object-fit: cover;
+    width: calc(160px + 1rem);
+    height: calc(100% + 2rem); }
+  #profile-page .my-apartments .card > div {
+    display: block;
+    padding: 1rem 1rem 1rem calc(160px + 1rem); }
+    #profile-page .my-apartments .card > div i {
+      display: block;
+      color: #5B5A57;
+      margin: 0.5rem 0; }
+      #profile-page .my-apartments .card > div i img {
+        height: 18px;
+        width: 18px;
+        position: relative;
+        top: 2px;
+        margin-right: 0.5rem; }
+    #profile-page .my-apartments .card > div .rating {
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      color: #B4B3B1; }
+      #profile-page .my-apartments .card > div .rating img {
+        margin-right: 4px; }
+    #profile-page .my-apartments .card > div ul {
+      margin-top: 1rem;
+      margin-left: 1.5rem;
+      color: #53787D; }
+      #profile-page .my-apartments .card > div ul li {
+        list-style-type: circle; }
 
 /*# sourceMappingURL=styles.css.map */
