@@ -5,32 +5,37 @@
 {% block body %}
     {% include 'navbar.html' %}
     <div class="container" id="apartments">
-        <div class="search-bar">
-            <div class="input-field fluid location">
-                <input id="location" type="text" placeholder=".">
-                <label for="location">Hvor vil du leie?</label>
+        <form action="" method="get">
+            <div class="search-bar">
+                <div class="input-field fluid location">
+                    <input name = "location" id="location" type="text" placeholder=".">
+                    <label for="location">Hvor vil du leie?</label>
+                </div>
+                <div class="input-field fluid start-date">
+                    <input name = "start_date id="start-date" type="date" placeholder=".">
+                    <label for="start-date">Fra når?</label>
+                </div>
+                <div class="input-field fluid end-date">
+                    <input name = end_date id="end-date" type="date" placeholder=".">
+                    <label for="end-date">Til når?</label>
+                </div>
+                <div class="input-field fluid guests">
+                    <select name = guests id="guests" type="text" placeholder=".">
+                        {% for i in i|rjust:9 %}
+                            <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="guests">Antall gjester</label>
+                </div>
+                <div>
+                    <input class = "button primary" id="submit" type="submit" placeholder="." value="Søk">
+                </div>
             </div>
-            <div class="input-field fluid start-date">
-                <input id="start-date" type="text" placeholder=".">
-                <label for="start-date">Fra når?</label>
-            </div>
-            <div class="input-field fluid end-date">
-                <input id="end-date" type="text" placeholder=".">
-                <label for="end-date">Til når?</label>
-            </div>
-            <div class="input-field fluid guests">
-                <select id="guests" type="text" placeholder=".">
-                    {% for i in i|rjust:9 %}
-                        <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
-                    {% endfor %}
-                </select>
-                <label for="guests">Antall gjester</label>
-            </div>
-        </div>
+        </form>
         <p class="result-count">Fant 12 leiligheter i Trondheim</p>
         <div class="apartment-list">
             {% for apartment in apartments %}
-            <a class="apartment-list-item card clickable" href="{% url 'apartment-detail' apartment_id=1 %}">
+            <a class="apartment-list-item card clickable" href="{% url 'apartment-detail' apartment_id=apartment.id %}">
                 <img class="apartment-image" src="{{ apartment.profile_picture.url }}" alt="">
                 <h4>{{ apartment.title }}</h4>
                 <i><img src="{% static 'icons/pin.svg' %}" alt="">{{ apartment.city }}</i>

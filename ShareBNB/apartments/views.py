@@ -12,15 +12,36 @@ def apartments(request):
     start_date_query = request.GET.get("start_date")
     end_date_query = request.GET.get("end_date")
 
-    apartments = Apartment.objects.filter()
+
+
 
     #---------------------------------------------------
     #Filter basert på lokasjon og antall sengeplasser:
 
+
+    if(location_query != None and guests_query != None):
+        apartments = Apartment.objects.filter((
+            Q(city__icontains = location_query) |
+            Q(country__icontains = location_query) |
+            Q(address__icontains = location_query)) &
+            Q(beds__gte = guests_query)).distinct()
+
+    elif(location_query != None and guests_query == None):
+        apartments = Apartment.objects.filter(
+            Q(city__icontains=location_query) |
+            Q(country__icontains=location_query) |
+            Q(address__icontains=location_query)).distinct()
+
+    elif (location_query == None and guests_query != None):
+        apartments = Apartment.objects.filter(Q(beds__gte = guests_query)).distinct()
+
+    else:
+        apartments = Apartment.objects.all()
+
     #apartments = Apartment.objects.filter((
      #   Q(city__icontains = location_query) |
       #  Q(country__icontains = location_query) |
-       # Q(address__iontains = location_query)) &
+       # Q(address__icontains = location_query)) &
         #Q(beds__gte = guests_query)).distinct()
     # ---------------------------------------------------
 
@@ -52,3 +73,5 @@ def apartments(request):
 def apartment_detail(request, apartment_id):
     context = {'id': apartment_id}
     return render(request, 'apartments/apartment-detail.html', context)
+
+
