@@ -7,21 +7,21 @@
     <div class="search-fields">
         <h1>Finn ditt midlertidige<br> hjem med ShareBNB</h1>
         <h4>Søk blant over 10 hjem i opptil 2 byer!</h4>
-        <form action="" method="get">
+        <form action="apartments/" method="get">
             <div class="input-field fluid location">
-                <input id="location" type="text" placeholder=".">
+                <input name = "location" id="location" type="text" placeholder=".">
                 <label for="location">Hvor vil du leie?</label>
             </div>
             <div class="input-field fluid">
-                <input id="from_date" type="text" placeholder=".">
+                <input name = "start_date" id="from_date" type="date" placeholder=".">
                 <label for="from_date">Fra når?</label>
             </div>
             <div class="input-field fluid">
-                <input id="to_date" type="text" placeholder=".">
+                <input name = "end_date" id="to_date" type="date" placeholder=".">
                 <label for="to_date">Til når?</label>
             </div>
             <div class="input-field fluid">
-                <select id="guests">
+                <select name = "guests" id="guests">
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -29,7 +29,9 @@
                 </select>
                 <label for="guests">Antall gjester?</label>
             </div>
-            <a class="button primary" href="{% url 'apartments' %}">Søk etter leiligheter</a>
+            <div>
+                <input class="button primary" id="submit" type="submit" placeholder="." value="Søk etter leiligheter" align = "middle">
+            </div>
         </form>
         <div class="login-fields">
             <p>Registrer ny bruker</p>
