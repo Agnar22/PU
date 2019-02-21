@@ -8,39 +8,52 @@
         <div class="user">
             <h1>{{ request.user.first_name }} {{ request.user.last_name }}</h1>
         </div>
-        <div class="my-apartments">
-            <h2>Mine leiligheter</h2>
-            {% for apartment in my_apartments %}
-                <div class="card">
-                    <img src="{{ apartment.image1.url }}" alt="{{ apartment.title }}">
-                    <div>
-                        <h4>{{ apartment.title }}</h4>
-                        <i><img src="{% static 'icons/pin.svg' %}" alt="pin-icon">{{ apartment.city }}</i>
-                        <i><img src="{% static 'icons/house.svg' %}" alt="house-icon">{{ apartment.size }} m<sup>2</sup></i>
-                        <div class="rating">
-                            {% for i in apartment.rating|yellow_stars %}
-                                <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="yellow star">
-                            {% endfor %}
-                            {% for i in apartment.rating|gray_stars %}
-                                <img src="{% static 'icons/rating/gray_star.svg' %}" alt="yellow star">
-                            {% endfor %}
-                            {{ apartment.vote_amount }}
+        <div class="profile-container">
+            <div class="my-apartments">
+                <h2>Mine leiligheter</h2>
+                {% for apartment in my_apartments %}
+                    <div class="card">
+                        <img src="{{ apartment.image1.url }}" alt="{{ apartment.title }}">
+                        <div>
+                            <h4>{{ apartment.title }}</h4>
+                            <i><img src="{% static 'icons/pin.svg' %}" alt="pin-icon">{{ apartment.city }}</i>
+                            <i><img src="{% static 'icons/house.svg' %}" alt="house-icon">{{ apartment.size }}
+                                m<sup>2</sup></i>
+                            <div class="rating">
+                                {% for i in apartment.rating|yellow_stars %}
+                                    <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="yellow star">
+                                {% endfor %}
+                                {% for i in apartment.rating|gray_stars %}
+                                    <img src="{% static 'icons/rating/gray_star.svg' %}" alt="yellow star">
+                                {% endfor %}
+                                {{ apartment.vote_amount }}
+                            </div>
+                            <ul>
+                                {% for contract in apartment.contracts.all %}
+                                    <li>Leies av {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
+                                        i perioden {{ contract.start_date|date:"d.m.y" }} -
+                                        {{ contract.end_date|date:"d.m.y" }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
                         </div>
-                        <ul>
-                            {% for contract in apartment.contracts.all %}
-                                <li>Leies av {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
-                                    i perioden {{ contract.start_date|date:"d.m.y" }} -
-                                    {{ contract.end_date|date:"d.m.y" }}
-                                </li>
-                            {% endfor %}
-                        </ul>
                     </div>
-                </div>
-            {% endfor %}
-            <a class="button" href="{% url 'create-apartment' %}">Opprett ny leilighet</a>
-        </div>
-        <div class="profile-settings">
-            <!-- Legg inn knappen her Invgild -->
+                {% endfor %}
+                <a class="button" href="{% url 'create-apartment' %}">Opprett ny leilighet</a>
+            </div>
+            <div class="profile-settings">
+                <!-- Legg inn knappen her Invgild -->
+                <form method="post">
+                    <div class="input-field">
+                        <input type="text">
+                        <label for="">Name</label>
+                    </div>
+                </form>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="submit" class="button error" value="Slett bruker">
+                </form>
+            </div>
         </div>
     </div>
 {% endblock %}
