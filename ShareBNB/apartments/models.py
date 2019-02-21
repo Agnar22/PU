@@ -9,6 +9,12 @@ from imagekit.processors import ResizeToFit
 from authentication.models import Profile
 
 
+class ContractManager(models.Manager):
+    def get_queryset(self):
+        return super(ReadOnlyManager, self).get_queryset()\
+            .annotate(combined=Concat('first', " " 'second', output_field=models.CharField()))
+
+
 class Contract(models.Model):
     contract_text = models.TextField()
     tenant = models.ForeignKey(Profile, on_delete=models.CASCADE)
