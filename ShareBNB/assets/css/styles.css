@@ -124,6 +124,10 @@ button, .button {
     background-color: #70B991; }
     button.primary:hover, .button.primary:hover {
       background-color: #5fb184; }
+  button.error, .button.error {
+    background-color: #E41F4E;
+    color: #FCFCFC;
+    border: 0; }
 
 .input-field {
   position: relative;
@@ -409,6 +413,9 @@ button, .button {
 
 #profile-page h1 {
   color: #53787D; }
+#profile-page .profile-container {
+  display: grid;
+  grid-template-columns: 3fr 1fr; }
 #profile-page .my-apartments {
   padding-top: 2rem; }
   #profile-page .my-apartments h2 {
