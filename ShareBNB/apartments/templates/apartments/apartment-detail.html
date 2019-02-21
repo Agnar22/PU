@@ -1,30 +1,30 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load apartment_filters %}
 
 {% block body %}
     {% include 'navbar.html' %}
     <div id="apartment-detail">
         <div class="apartment-images">
-            <img src="{% static 'img/apartment.png' %}" alt="Apartment image">
+            <img src="{{ apartment.image1.url }}" alt="Apartment image">
         </div>
         <div class="apartment-info">
-            <h1>Maybach Apartment - Location. Design. Comfort</h1>
+            <h1>{{ apartment.title }}</h1>
             <div class="rating">
-                {% for i in i|rjust:4 %}
+                {% for i in apartment.rating|yellow_stars %}
                     <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="">
                 {% endfor %}
-                <img src="{% static 'icons/rating/gray_star.svg' %}" alt="">
-                <p>14 stemmer</p>
+                {% for i in apartment.rating|gray_stars %}
+                    <img src="{% static 'icons/rating/gray_star.svg' %}" alt="">
+                {% endfor %}
+                <p>{{ apartment.vote_amount }} stemmer</p>
             </div>
-            <p>Wake up feeling rejuvenated in this quiet loft condo featuring a private patio. Experience a mix of
-                tranquility and history in a rustic, modern apartment with exposed brick, an Art Deco ceiling, an
-                open-plan
-                living area, and a roof deck walkout.</p>
-            <i><img src="{% static 'icons/pin.svg' %}" alt="">Midtbyen Trondheim</i>
-            <i><img src="{% static 'icons/house.svg' %}" alt="">43 m<sup>2</sup></i>
-            <h4>Leie i perioden 17.06.19 til 26.07.19</h4>
-            <h3>Totalpris: 16 317 kr</h3>
+            <p>{{ apartment.description }}</p>
+            <i><img src="{% static 'icons/pin.svg' %}" alt="">{{ apartment.address }}, {{ apartment.city }}</i>
+            <i><img src="{% static 'icons/house.svg' %}" alt="">{{ apartment.size }} m<sup>2</sup></i>
+            <h4>Leie i perioden {{ query.start_date }} til {{ query.end_date|date:'d.m.y' }}</h4>
+            <h3>Totalpris: {{ apartment_price }} kr</h3>
             <div class="user">
                 <img src="{% static 'img/girl.jpg' %}" alt="girl">
                 <div class="user-rating">
