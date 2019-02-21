@@ -29,4 +29,10 @@ button, .button {
       background-color: darken($primary, 5%);
     }
   }
+
+  &.error {
+    background-color: $error;
+    color: $white;
+    border: 0;
+  }
 }
