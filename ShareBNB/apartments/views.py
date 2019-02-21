@@ -28,7 +28,9 @@ def apartments(request):
 
         #Returnerer ingenting dersom brukeren
         #har skrevet inn startdato etter sluttdato
-        if (start_date_query >= end_date_query):
+        if (start_date_query >= end_date_query
+                or start_date_query < datetime.datetime.today().strftime('%Y-%m-%d')):
+
             apartments = Apartment.objects.none()
 
         else:
