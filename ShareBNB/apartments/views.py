@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
 
@@ -64,16 +66,40 @@ def apartments(request):
         #Q(contract__end_date__lt = end_date_query))).distinct()
     # ------------------------------------------------------------
 
+    start_date = start_date_query.split('-')
+    start_date = datetime.datetime(int(start_date[0]), int(start_date[1]), int(start_date[2]))
+    end_date = end_date_query.split('-')
+    end_date = datetime.datetime(int(end_date[0]), int(end_date[1]), int(end_date[2]))
+    delta = end_date - start_date
 
     context = {
-        'apartments': apartments
+        'apartments': apartments,
+        'query': {
+            'location': location_query,
+            'guests': guests_query,
+            'start_date': start_date_query,
+            'end_date': end_date_query
+        },
+        'days': delta.days
     }
 
     return render(request, 'apartments/apartments.html', context)
 
 
-def apartment_detail(request, apartment_id):
-    context = {'id': apartment_id}
+def apartment_detail(request, apartment_id, start_date, end_date):
+    apartment = Apartment.objects.get(pk=apartment_id)
+
+    apartment_price = apartment.calculate_price(start_date, end_date)
+
+
+    context = {
+        'apartment': apartment,
+        'query': {
+            'start_date': start_date,
+            'end_date': end_date
+        },
+        'apartment_price': apartment_price
+    }
     return render(request, 'apartments/apartment-detail.html', context)
 
 
