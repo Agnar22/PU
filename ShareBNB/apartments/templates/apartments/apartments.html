@@ -9,19 +9,19 @@
         <form method="get">
             <div class="search-bar">
                 <div class="input-field fluid location">
-                    <input name="location" id="location" type="text" placeholder="." value="{{ query.location }}">
+                    <input name="location" id="location" type="text" placeholder="." required value="{{ query.location }}">
                     <label for="location">Hvor vil du leie?</label>
                 </div>
                 <div class="input-field fluid start-date">
-                    <input name="start_date" id="start-date" type="date" placeholder="." value="{{ query.start_date }}">
+                    <input name="start_date" id="start-date" type="date" placeholder="." required value="{{ query.start_date }}">
                     <label for="start-date">Fra når?</label>
                 </div>
                 <div class="input-field fluid end-date">
-                    <input name = end_date id="end-date" type="date" placeholder="." value="{{ query.end_date }}">
+                    <input name = end_date id="end-date" type="date" placeholder="." required value="{{ query.end_date }}">
                     <label for="end-date">Til når?</label>
                 </div>
                 <div class="input-field fluid guests">
-                    <select name = guests id="guests" type="text" placeholder="." value="{{ query.guests }}">
+                    <select name = guests id="guests" type="text" placeholder="." required value="{{ query.guests }}">
                         {% for i in i|rjust:9 %}
                             <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
                         {% endfor %}
