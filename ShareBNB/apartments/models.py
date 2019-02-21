@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -39,6 +41,16 @@ class Apartment(models.Model):
 
     def __str__(self):
         return self.title
+
+    def calculate_price(self, start_date, end_date):
+        start_date = start_date.split('-')
+        start_date = datetime.datetime(int(start_date[0]), int(start_date[1]), int(start_date[2]))
+        end_date = end_date.split('-')
+        end_date = datetime.datetime(int(end_date[0]), int(end_date[1]), int(end_date[2]))
+        delta = end_date - start_date
+        apartment_price = round(self.monthly_cost / 30 * delta.days)
+
+        return apartment_price
 
     def save(self, *args, **kwargs):
         if not self.title:
