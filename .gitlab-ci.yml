@@ -2,5 +2,5 @@ image: python:3.5
 
 all_tests:
   script:
-   - python3 manage.py test -k
+   - python3 ShareBNB/manage.py test -k
   when: on_success
