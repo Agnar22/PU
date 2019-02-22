@@ -26,8 +26,9 @@ def apartments(request):
     if (location_query != None and guests_query != None and
         start_date_query != None and end_date_query != None):
 
-        #Returnerer ingenting dersom brukeren
-        #har skrevet inn startdato etter sluttdato
+        # Returnerer ingenting dersom brukeren
+        # har skrevet inn startdato etter sluttdato,
+        # eller startdato før dagens dato
         if (start_date_query >= end_date_query
                 or start_date_query < datetime.datetime.today().strftime('%Y-%m-%d')):
 
@@ -35,15 +36,15 @@ def apartments(request):
 
         else:
             apartments = Apartment.objects.filter((
-            #Filtrer etter lokasjon
+                # Filtrer etter lokasjon
                 Q(city__icontains=location_query) |
                 Q(country__icontains=location_query) |
                 Q(address__icontains=location_query)) &
 
-                #Filtrer etter sengeplasser
+                # Filtrer etter sengeplasser
                 Q(beds__gte=guests_query)).exclude(
 
-                #Filtrer etter ledig dato:
+                # Filtrer etter ledig dato:
                 contracts__in=Contract.objects.filter(
                     Q(start_date__lte=start_date.date()) &
                     Q(end_date__gte=start_date.date()))).exclude(
@@ -54,7 +55,7 @@ def apartments(request):
 
                 contracts__in=Contract.objects.filter(
                     Q(start_date__gt=start_date.date()) &
-                    Q(end_date__lt=end_date.date()))).distinct()
+                    Q(end_date__lt=end_date.date()))).order_by('beds', 'monthly_cost').distinct()
 
     # Dersom noe går galt returneres ingenting
     else:
