@@ -23,7 +23,7 @@
             <p>{{ apartment.description }}</p>
             <i><img src="{% static 'icons/pin.svg' %}" alt="">{{ apartment.address }}, {{ apartment.city }}</i>
             <i><img src="{% static 'icons/house.svg' %}" alt="">{{ apartment.size }} m<sup>2</sup></i>
-            <h4>Leie i perioden {{ query.start_date }} til {{ query.end_date|date:'d.m.y' }}</h4>
+            <h4>Leie i perioden {{ query.start_date|date:'d.m.y' }} til {{ query.end_date|date:'d.m.y' }}</h4>
             <h3>Totalpris: {{ apartment_price }} kr</h3>
             <div class="user">
                 <img src="{% static 'img/girl.jpg' %}" alt="girl">
@@ -36,6 +36,13 @@
                 </div>
             </div>
             <button class="primary">Send Pia en melding</button>
-        </div>
+            <div class="mapouter">
+                <br><br>
+                <div class="gmap_canvas">
+                    <iframe width=90% height=350px id="gmap_canvas" src="https://maps.google.com/maps?q={{ apartment.address }}&t=&z=11&ie=UTF8&iwloc=&output=embed"
+                            frameborder="0" marginheight="0" marginwidth="0">
+                    </iframe>
+                </div>
+            </div>
     </div>
 {% endblock body %}

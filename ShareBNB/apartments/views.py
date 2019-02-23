@@ -80,7 +80,8 @@ def apartment_detail(request, apartment_id, start_date, end_date):
     apartment = Apartment.objects.get(pk=apartment_id)
 
     apartment_price = apartment.calculate_price(start_date, end_date)
-
+    start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
 
     context = {
         'apartment': apartment,
