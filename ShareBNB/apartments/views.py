@@ -24,7 +24,7 @@ def apartments(request):
     delta = end_date - start_date
 
     if (location_query != None and guests_query != None and
-        start_date_query != None and end_date_query != None):
+            start_date_query != None and end_date_query != None):
 
         # Returnerer ingenting dersom brukeren
         # har skrevet inn startdato etter sluttdato,
