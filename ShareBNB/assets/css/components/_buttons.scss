@@ -14,6 +14,7 @@ button, .button {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   &:hover {
     background-color: darken($white, 2%);
   }
@@ -34,5 +35,8 @@ button, .button {
     background-color: $error;
     color: $white;
     border: 0;
+  }
+  &.fluid {
+    width: 100%;
   }
 }

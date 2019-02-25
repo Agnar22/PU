@@ -113,7 +113,8 @@ button, .button {
   will-change: background-color, transform;
   text-decoration: none;
   display: inline-flex;
-  align-items: center; }
+  align-items: center;
+  justify-content: center; }
   button:hover, .button:hover {
     background-color: #f7f7f7; }
   button:active, .button:active {
@@ -128,6 +129,8 @@ button, .button {
     background-color: #E41F4E;
     color: #FCFCFC;
     border: 0; }
+  button.fluid, .button.fluid {
+    width: 100%; }
 
 .input-field {
   position: relative;
