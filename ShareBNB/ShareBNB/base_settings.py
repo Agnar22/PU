@@ -37,8 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Our apps:
     'authentication',
-    'landingpage'
+    'landingpage',
+    'apartments',
+    'profile_page',
     # Third party apps:
+    'imagekit'
 ]
 
 MIDDLEWARE = [
@@ -122,6 +125,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'assets')]
+
+MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'

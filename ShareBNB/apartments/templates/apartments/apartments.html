@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load apartment_filters %}
+
+{% block body %}
+    {% include 'navbar.html' %}
+    <div class="container" id="apartments">
+        <form method="get">
+            <div class="search-bar">
+                <div class="input-field fluid location">
+                    <input name="location" id="location" type="text" placeholder="." required value="{{ query.location }}">
+                    <label for="location">Hvor vil du leie?</label>
+                </div>
+                <div class="input-field fluid start-date">
+                    <input name="start_date" id="start-date" type="date" placeholder="." required value="{{ query.start_date }}">
+                    <label for="start-date">Fra når?</label>
+                </div>
+                <div class="input-field fluid end-date">
+                    <input name = end_date id="end-date" type="date" placeholder="." required value="{{ query.end_date }}">
+                    <label for="end-date">Til når?</label>
+                </div>
+                <div class="input-field fluid guests">
+                    <select name = guests id="guests" type="text" placeholder="." required>
+                        {% for i in i|rjust:9 %}
+                            <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="guests">Antall gjester</label>
+
+                    <script>
+                        function setSelectedIndex(s, i){
+                            s.options[i-1].selected = true;
+                            return;
+                        }
+                        setSelectedIndex(document.getElementById("guests"),{{ query.guests }});
+                    </script>
+
+                </div>
+                <div>
+                    <input class = "button primary" id="submit" type="submit" placeholder="." value="Søk">
+                </div>
+            </div>
+        </form>
+        <p class="result-count">Fant {{ apartments.count }} leilighet{% if apartments.count != 1 %}er{% endif %} i {{ query.location }}</p>
+        <div class="apartment-list">
+            {% for apartment in apartments %}
+            <a class="apartment-list-item card clickable" href="{% url 'apartment-detail' apartment_id=apartment.pk start_date=query.start_date end_date=query.end_date %}">
+                <img class="apartment-image" src="{{ apartment.image1.url }}" alt="">
+                <h4>{{ apartment.title }}</h4>
+                <i><img src="{% static 'icons/pin.svg' %}" alt="">{{ apartment.city }}</i>
+                <i><img src="{% static 'icons/house.svg' %}" alt="">{{ apartment.size }} m<sup>2</sup></i>
+                <div class="rating">
+                    {% for i in apartment.rating|yellow_stars %}
+                        <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="yellow star">
+                    {% endfor %}
+                    {% for i in apartment.rating|gray_stars %}
+                        <img src="{% static 'icons/rating/gray_star.svg' %}" alt="gray star">
+                    {% endfor %}
+                    <h6>{{ apartment.vote_amount }}</h6>
+                </div>
+                <div class="right-aligned">
+                    <div>
+                        <h3>{{ apartment|calculate_price:days }} kr</h3>
+                        <h6>for {{ days }} dager</h6>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock body %}

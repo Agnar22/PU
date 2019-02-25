@@ -1,5 +1,20 @@
 .card {
+  position: relative;
+  display: block;
   background-color: $white;
   box-shadow: $med-shadow;
   padding: 1rem;
+  overflow: hidden;
+  border-radius: $main-border-radius;
+  margin-bottom: 1rem;
+
+  &.clickable {
+    cursor: pointer;
+    transition: transform 200ms ease-in-out;
+    will-change: transform;
+
+    &:hover {
+      transform: scale(0.996);
+    }
+  }
 }

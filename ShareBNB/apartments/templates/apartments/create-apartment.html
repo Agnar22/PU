@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block body %}
+    {% include 'navbar.html' %}
+    <div class="container">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="input-field fluid">
+                {{ form.title }}
+                <label for="{{ form.title.id_for_label }}">Tittel</label>
+                {{ form.title.errors }}
+            </div>
+            <div class="input-field fluid">
+                {{ form.description }}
+                <label for="{{ form.description.id_for_label }}">Beskrivelse</label>
+                {{ form.description.errors }}
+            </div>
+            <div class="input-field fluid">
+                {{ form.address }}
+                <label for="{{ form.address.id_for_label }}">Gateadresse</label>
+                {{ form.address.errors }}
+            </div>
+            <div class="input-field fluid">
+                {{ form.city }}
+                <label for="{{ form.city.id_for_label }}">By</label>
+                {{ form.city.errors }}
+            </div>
+            <div class="input-field fluid">
+                {{ form.country }}
+                <label for="{{ form.country.id_for_label }}">Land</label>
+                {{ form.country.errors }}
+            </div>
+            <div class="input-field fluid">
+                {{ form.beds }}
+                <label for="{{ form.beds.id_for_label }}">Antall senger</label>
+                {{ form.beds.errors }}
+            </div>
+            <div class="input-field fluid">
+                {{ form.apartment_age }}
+                <label for="{{ form.apartment_age.id_for_label }}">Hvor gammel er leiligheten?</label>
+                {{ form.apartment_age.errors }}
+            </div>
+            <div class="input-field fluid">
+                {{ form.size }}
+                <label for="{{ form.size.id_for_label }}">ca. hvor mange kvadratmeter er leiligheten?</label>
+                {{ form.size.errors }}
+            </div>
+            <div class="input-field fluid">
+                {{ form.monthly_cost }}
+                <label for="{{ form.monthly_cost.id_for_label }}">Månedspris</label>
+                {{ form.monthly_cost.errors }}
+            </div>
+            <div class="input-field fluid">
+                {{ form.image1 }}
+                <label for="{{ form.monthly_cost.id_for_label }}">Last opp et bilde</label>
+                {{ form.image1.errors }}
+            </div>
+            <br>
+            <input type="submit" class="button primary" value="Opprett leilighet">
+        </form>
+    </div>
+{% endblock body %}
