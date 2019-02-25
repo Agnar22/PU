@@ -1,18 +1,30 @@
 #landing-page {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  @media screen and (max-width: $lg) {
-    grid-template-columns: 2fr 1fr;
-  }
-  @media screen and (max-width: $md) {
-    grid-template-columns: 4fr 1fr;
-  }
-  @media screen and (max-width: $sm) {
-    grid-template-columns: 1fr;
+  width: 100vw;
+  overflow-x: hidden;
+
+  .landing-page-wrapper {
+    overflow-y: hidden;
+    width: 150vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    transform: translateX(0);
+    transition: transform 500ms ease-in-out;
+    &.left {
+      transform: translateX(-50vw);
+    }
+    @media screen and (max-width: $lg) {
+      grid-template-columns: repeat(2, 100vw);
+      &.left {
+        transform: translateX(-100vw);
+      }
+    }
+
   }
 
   h1 {
     color: $primary-dark;
+    margin-bottom: 1rem;
   }
 
   h4 {
@@ -21,17 +33,12 @@
   }
 
   .search-fields {
-    max-width: 90%;
-    max-height: 90%;
-    margin: auto auto;
+    display: inline-block;
+    width: 50vw;
     position: relative;
-    top: 2rem;
-    margin-top: 20%;
-    @media screen and (min-width: $sm) {
-      top: -5rem;
-    }
-    @media screen and (min-width: $xxl) {
-      left: -3rem;
+    padding: 10%;
+    @media screen and (max-width: $lg) {
+      padding: 5%;
     }
   }
   form {
@@ -45,10 +52,11 @@
   }
 
   .image {
-    height: 100vh;
-    overflow: hidden;
+    display: inline-block;
+    width: 100%;
     z-index: 10;
-    @media screen and (max-width: $sm) {
+    transition: transform 500ms ease-in-out, transform 500ms ease-in-out;
+    @media screen and (max-width: $lg) {
       display: none;
     }
     img {
@@ -58,33 +66,28 @@
     }
   }
 
-   #login-fields {
-    position: fixed;
-    margin-top: 15%;
-    /*top: 10%;*/
-    right: 12%;
-    width: 30%;
-    /*display: none;*/
+  #login-registration-fields {
+    display: inline-block;
+    width: 50vw;
   }
 
-  #register-fields {
-    position: fixed;
-    margin-top: 8%;
-    /*top: 3%;*/
-    right: 7%;
-    display: none;
+  #register-fields, #login-fields {
+    padding: 10%;
   }
 
   #image-move-buttons {
-    color: #70B991;
     display: flex;
+    color: $primary;
   }
-  #image-move-buttons > div {
-    margin:5px;
+  #image-move-buttons > a {
+    position: relative;
+    top: -4px;
+    margin: 5px;
     text-align: center;
+    text-decoration: none;
+
   }
   #register-button:hover, #login-button:hover{
-    color: #557f3e;
     cursor: pointer;
   }
 

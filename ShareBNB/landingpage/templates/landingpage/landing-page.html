@@ -3,161 +3,152 @@
 {% load static %}
 
 {% block body %}
-<div id="landing-page">
     {% if messages %}
         {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}" id="alert-div">{{ message }}</div>
+            <div class="snackbar warning" id="alert-div"><img src="{% static 'icons/snackbar/alert-triangle.svg' %}"
+                                                              alt="">{{ message }}</div>
         {% endfor %}
     {% endif %}
-    <div class="search-fields">
-        <h1>Finn ditt midlertidige<br> hjem med ShareBNB</h1>
-        <h4>Søk blant over 10 hjem i opptil 2 byer!</h4>
-        <form action="" method="get">
-            <div class="input-field fluid location">
-                <input id="location" type="text" placeholder=".">
-                <label for="location">Hvor vil du leie?</label>
+    <div id="landing-page">
+        <div class="landing-page-wrapper">
+            <div class="search-fields">
+                <h1>Finn ditt midlertidige<br> hjem med ShareBNB</h1>
+                <h4>Søk blant over 10 hjem i opptil 2 byer!</h4>
+                <form action="" method="get">
+                    <div class="input-field fluid location">
+                        <input id="location" type="text" placeholder=".">
+                        <label for="location">Hvor vil du leie?</label>
+                    </div>
+                    <div class="input-field fluid">
+                        <input id="from_date" type="text" placeholder=".">
+                        <label for="from_date">Fra når?</label>
+                    </div>
+                    <div class="input-field fluid">
+                        <input id="to_date" type="text" placeholder=".">
+                        <label for="to_date">Til når?</label>
+                    </div>
+                    <div class="input-field fluid">
+                        <select id="guests">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                        <label for="guests">Antall gjester?</label>
+                    </div>
+                    <input class="button primary" type="submit" value="Søk etter leiligheter">
+                </form>
+                <br>
+                {% comment %}{% if request.user.is_authenticated %}{% endcomment %}
+                <div class="login-fields" id="image-move-buttons">
+                    <a href="#registration" id="register-button" class="link" onclick="registrationTrigger()">Registrer
+                        ny
+                        bruker</a>
+                    <div>|</div>
+                    <a href="#login" id="login-button" class="link" onclick="loginTrigger()">Logg inn</a>
+                </div>
+                {% comment %}{% endif %}{% endcomment %}
             </div>
-            <div class="input-field fluid">
-                <input id="from_date" type="text" placeholder=".">
-                <label for="from_date">Fra når?</label>
+            <div class="image right" id="start-image">
+                <img src="{% static 'img/landingpage.jpg' %}" alt="Green apartment">
             </div>
-            <div class="input-field fluid">
-                <input id="to_date" type="text" placeholder=".">
-                <label for="to_date">Til når?</label>
+            <div id="login-registration-fields">
+                <div id="login-fields">
+                    <a href="#" class="link" onclick="pushRight()">Tilbake</a>
+                    <br><br>
+                    <h1>Logg inn</h1>
+                    <br>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="input-field fluid">
+                            <input type="email" name="email" id="email" placeholder="." autocomplete="email">
+                            <label for="email">Epost</label>
+                        </div>
+                        <div class="input-field fluid">
+                            <input type="password" name="password" autocomplete="password" id="password">
+                            <label for="password">Passord</label>
+                        </div>
+                        <input class="button primary" type="submit" value="Logg inn">
+                    </form>
+                </div>
+
+
+                <div id="register-fields">
+                    <a href="#" class="link" onclick="pushRight()">Tilbake</a>
+                    <br><br>
+                    <h1>Registrer ny bruker</h1>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="input-field fluid">
+                            {{ form.first_name }}
+                            <label for="register_first_name">Fornavn</label>
+                        </div>
+                        <div class="input-field fluid">
+                            {{ form.last_name }}
+                            <label for="register_sure_name">Etternavn</label>
+                        </div>
+                        <div class="input-field fluid location">
+                            {{ form.email }}
+                            <label for="register_email">E-mail</label>
+                        </div>
+                        <div class="input-field fluid location">
+                            {{ form.phone_number }}
+                            <label for="register_phone">Tlf.</label>
+                        </div>
+                        <div class="input-field fluid location">
+                            {{ form.password }}
+                            <label for="register_password">Passord</label>
+                        </div>
+                        <input class="button primary" type="submit" value="Registrer">
+                    </form>
+                </div>
             </div>
-            <div class="input-field fluid">
-                <select id="guests">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                </select>
-                <label for="guests">Antall gjester?</label>
-            </div>
-            <input class="button primary" type="submit" value="Søk etter leiligheter">
-        </form>
-        <br>
-        <div class="login-fields" id="image-move-buttons">
-            <div id="register-button" onclick="moveImageLeft('inline', 'none')">Registrer ny bruker</div>
-            <div>|</div>
-            <div id="login-button" onclick="moveImageLeft('none', 'inline')">Logg inn</div>
         </div>
     </div>
-
-
-    <div class="image" id="start-image">
-        <img src="{% static 'img/landingpage.jpg' %}" alt="Green apartment">
-    </div>
-
-    <div id="login-fields">
-        <h1>Logg inn</h1>
-        <br>
-        <form method="post">
-            {% csrf_token %}
-            <div class="input-field">
-                <input type="email" name="email" id="email" placeholder="." autocomplete="email">
-                <label for="email">Epost</label>
-            </div>
-            <div class="input-field">
-                <input type="password" name="password" autocomplete="password" id="password">
-                <label for="password">Passord</label>
-            </div>
-            <div class="input-field fluid location" onclick="moveImageRight()">
-                Tilbake
-            </div>
-            <input class="button primary" type="submit" value="Logg inn">
-        </form>
-    </div>
-
-
-    <div id="register-fields">
-        <h1>Registrer ny bruker</h1>
-        <form method="post">
-            {% csrf_token %}
-            <div class="input-field fluid">
-                {{ form.first_name }}
-                <label for="register_first_name">Fornavn</label>
-            </div>
-            <div class="input-field fluid">
-                {{ form.last_name }}
-                <label for="register_sure_name">Etternavn</label>
-            </div>
-            <div class="input-field fluid location">
-                {{ form.email }}
-                <label for="register_email">E-mail</label>
-            </div>
-            <div class="input-field fluid location">
-                {{ form.phone_number }}
-                <label for="register_phone">Tlf.</label>
-            </div>
-            <div class="input-field fluid location">
-                {{ form.password }}
-                <label for="register_password">Passord</label>
-            </div>
-            <input class="button primary" type="submit" value="Registrer">
-            <div class="input-field fluid location" onclick="moveImageRight()">
-                Tilbake
-            </div>
-        </form>
-    </div>
-
-</div>
 {% endblock body %}
 {% block js %}
-<script>
-    var startImage=document.getElementById("start-image");
-    var startPosImage=getPosition(startImage);
+    <script>
+        $(document).ready(function () {
+            registration = $('#register-fields');
+            login = $('#login-fields');
+            wrapper = $('.landing-page-wrapper');
 
-    var registerFields=document.getElementById("register-fields");
-    var loginFields=document.getElementById("login-fields");
+            function pushRight() {
+                wrapper.removeClass('left');
+            }
 
-    var slidingVelocity=6;
+            function pushLeft() {
+                wrapper.addClass('left');
+            }
 
+            function loginTrigger() {
+                pushLeft();
+                login.show();
+                registration.hide();
+            }
 
-    function getPosition( element ) {
-        var rect = element.getBoundingClientRect();
-        return {x:rect.left,y:rect.top};
-    }
+            function registrationTrigger() {
+                pushLeft();
+                registration.show();
+                login.hide();
+            }
 
-    function moveImageLeft(displayRegister, displayLogin){
-        // console.log(startImage.getBoundingClientRect())
-        registerFields.style.display=displayRegister;
-        loginFields.style.display=displayLogin;
+            function checkUrl() {
+                const url = window.location.href;
+                console.log("URL-change", url);
+                if (url.includes('registration')) {
+                    registrationTrigger();
+                } else if (url.includes('login')) {
+                    loginTrigger();
+                } else {
+                    pushRight();
+                }
+            }
 
-
-        startImage.style.position="absolute";
-        startImage.style.width=50+'%';
-
-        var pos=startPosImage.x;
-        startImage.style.left=pos+"px";
-        var id = setInterval(frame, 1);
-        function frame() {
-           if (pos <= 0) {
-             clearInterval(id);
-           }
-           else {
-             pos-=slidingVelocity;
-             startImage.style.left = pos + 'px';
-           }
-        }
-        // console.log(startImage.getBoundingClientRect())
-    };
-
-    function moveImageRight(){
-        var pos=getPosition(startImage).x;
-        console.log("pos",pos);
-        var id = setInterval(frame, 1);
-        function frame() {
-            console.log(startImage.style.left);
-            console.log(pos);
-           if (pos >= startPosImage.x) {
-             clearInterval(id);
-           }
-           else {
-             pos+=slidingVelocity;
-             startImage.style.left = pos + 'px';
-           }
-        }
-    }
-</script>
+            $(window).on('hashchange', function (e) {
+                checkUrl();
+            });
+            checkUrl();
+        });
+    </script>
 {% endblock js %}
