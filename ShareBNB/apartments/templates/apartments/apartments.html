@@ -21,12 +21,21 @@
                     <label for="end-date">Til når?</label>
                 </div>
                 <div class="input-field fluid guests">
-                    <select name = guests id="guests" type="text" placeholder="." required value="{{ query.guests }}">
+                    <select name = guests id="guests" type="text" placeholder="." required>
                         {% for i in i|rjust:9 %}
                             <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
                         {% endfor %}
                     </select>
                     <label for="guests">Antall gjester</label>
+
+                    <script>
+                        function setSelectedIndex(s, i){
+                            s.options[i-1].selected = true;
+                            return;
+                        }
+                        setSelectedIndex(document.getElementById("guests"),{{ query.guests }});
+                    </script>
+
                 </div>
                 <div>
                     <input class = "button primary" id="submit" type="submit" placeholder="." value="Søk">
