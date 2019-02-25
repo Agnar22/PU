@@ -22,10 +22,9 @@
             </div>
             <div class="input-field fluid">
                 <select name = "guests" id="guests">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
+                    {% for i in i|rjust:9 %}
+                        <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                    {% endfor %}
                 </select>
                 <label for="guests">Antall gjester?</label>
             </div>

@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from apartments.forms import CreateApartmentForm
 from authentication.models import Profile
 from .models import Apartment
+from .models import Contract
 from django.db.models import Q
 
 
@@ -16,61 +17,50 @@ def apartments(request):
     start_date_query = request.GET.get("start_date")
     end_date_query = request.GET.get("end_date")
 
-
-
-
-    #---------------------------------------------------
-    #Filter basert på lokasjon og antall sengeplasser:
-
-
-    if(location_query != None and guests_query != None):
-        apartments = Apartment.objects.filter((
-            Q(city__icontains = location_query) |
-            Q(country__icontains = location_query) |
-            Q(address__icontains = location_query)) &
-            Q(beds__gte = guests_query)).distinct()
-
-    elif(location_query != None and guests_query == None):
-        apartments = Apartment.objects.filter(
-            Q(city__icontains=location_query) |
-            Q(country__icontains=location_query) |
-            Q(address__icontains=location_query)).distinct()
-
-    elif (location_query == None and guests_query != None):
-        apartments = Apartment.objects.filter(Q(beds__gte = guests_query)).distinct()
-
-    else:
-        apartments = Apartment.objects.all()
-
-    #apartments = Apartment.objects.filter((
-     #   Q(city__icontains = location_query) |
-      #  Q(country__icontains = location_query) |
-       # Q(address__icontains = location_query)) &
-        #Q(beds__gte = guests_query)).distinct()
-    # ---------------------------------------------------
-
-
-
-    # -------------------------------------------------------------
-    #Filter basert på start- og sluttdato. Bruker Contract-modul
-    #som inneholder en fremmednøkkel som referer til en leilighet:
-
-    #apartments = Apartment.objects.exclude(
-     #   (Q(contract__start_date__lte = start_date_query) &
-      #  Q(contract__end_date__gte = start_date_query)) |
-
-       # (Q(contract__start_date__lte = end_date_query) &
-        #Q(contract__end_date__gte = end_date_query)) |
-
-        #(Q(contract__start_date__gt = start_date_query) &
-        #Q(contract__end_date__lt = end_date_query))).distinct()
-    # ------------------------------------------------------------
-
     start_date = start_date_query.split('-')
     start_date = datetime.datetime(int(start_date[0]), int(start_date[1]), int(start_date[2]))
     end_date = end_date_query.split('-')
     end_date = datetime.datetime(int(end_date[0]), int(end_date[1]), int(end_date[2]))
     delta = end_date - start_date
+
+    if (location_query != None and guests_query != None and
+            start_date_query != None and end_date_query != None):
+
+        # Returnerer ingenting dersom brukeren
+        # har skrevet inn startdato etter sluttdato,
+        # eller startdato før dagens dato
+        if (start_date_query >= end_date_query
+                or start_date_query < datetime.datetime.today().strftime('%Y-%m-%d')):
+
+            apartments = Apartment.objects.none()
+
+        else:
+            apartments = Apartment.objects.filter((
+                # Filtrer etter lokasjon
+                Q(city__icontains=location_query) |
+                Q(country__icontains=location_query) |
+                Q(address__icontains=location_query)) &
+
+                # Filtrer etter sengeplasser
+                Q(beds__gte=guests_query)).exclude(
+
+                # Filtrer etter ledig dato:
+                contracts__in=Contract.objects.filter(
+                    Q(start_date__lte=start_date.date()) &
+                    Q(end_date__gte=start_date.date()))).exclude(
+
+                contracts__in=Contract.objects.filter(
+                    Q(start_date__lte=end_date.date()) &
+                    Q(end_date__gte=end_date.date()))).exclude(
+
+                contracts__in=Contract.objects.filter(
+                    Q(start_date__gt=start_date.date()) &
+                    Q(end_date__lt=end_date.date()))).order_by('beds', 'monthly_cost').distinct()
+
+    # Dersom noe går galt returneres ingenting
+    else:
+        apartments = Apartment.objects.none()
+
 
     context = {
         'apartments': apartments,
@@ -90,7 +80,8 @@ def apartment_detail(request, apartment_id, start_date, end_date):
     apartment = Apartment.objects.get(pk=apartment_id)
 
     apartment_price = apartment.calculate_price(start_date, end_date)
-
+    start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
 
     context = {
         'apartment': apartment,
