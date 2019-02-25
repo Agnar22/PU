@@ -1,5 +1,6 @@
 # ShareBNB specific
-
+__pycache__/
+*.py[cod]
 *.css.map
 *.sqlite3
 
