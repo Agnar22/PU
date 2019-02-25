@@ -216,7 +216,19 @@ button, .button {
   padding: 0.5rem 1rem 0.5rem 2.5rem;
   border-radius: 6px;
   box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.12);
-  font-size: 1.125rem; }
+  font-size: 1.125rem;
+  z-index: 1000000;
+  animation: dissapear 3s ease-in-out;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-user-select: none;
+  /* Chrome all / Safari all */
+  -moz-user-select: none;
+  /* Firefox all */
+  -ms-user-select: none;
+  /* IE 10+ */
+  user-select: none;
+  /* Likely future */ }
   .snackbar img {
     position: absolute;
     left: 1rem;
@@ -233,6 +245,37 @@ button, .button {
   .snackbar.warning {
     color: #2A2722;
     background-color: #DFAF08; }
+
+@keyframes dissapear {
+  0% {
+    opacity: 1; }
+  90% {
+    opacity: 1; }
+  100% {
+    opacity: 0; } }
+.link {
+  display: inline-block; }
+
+p a, .link {
+  position: relative;
+  color: #70B991;
+  text-decoration: none;
+  transition: color 100ms ease-in-out; }
+  p a::before, .link::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    left: 0;
+    bottom: -2px;
+    transform-origin: left center;
+    background-color: #70B991;
+    transform: scaleX(0);
+    transition: transform 200ms ease-in-out; }
+  p a:hover, .link:hover {
+    color: #51a577; }
+    p a:hover::before, .link:hover::before {
+      transform: scaleX(1); }
 
 #navbar {
   position: fixed;
@@ -266,34 +309,37 @@ button, .button {
     right: 5%; }
 
 #landing-page {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); }
-  @media screen and (max-width: 56.25em) {
-    #landing-page {
-      grid-template-columns: 2fr 1fr; } }
-  @media screen and (max-width: 48em) {
-    #landing-page {
-      grid-template-columns: 4fr 1fr; } }
-  @media screen and (max-width: 37.5em) {
-    #landing-page {
-      grid-template-columns: 1fr; } }
+  width: 100vw;
+  overflow-x: hidden; }
+  #landing-page .landing-page-wrapper {
+    overflow-y: hidden;
+    width: 150vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    transform: translateX(0);
+    transition: transform 500ms ease-in-out; }
+    #landing-page .landing-page-wrapper.left {
+      transform: translateX(-50vw); }
+    @media screen and (max-width: 56.25em) {
+      #landing-page .landing-page-wrapper {
+        grid-template-columns: repeat(2, 100vw); }
+        #landing-page .landing-page-wrapper.left {
+          transform: translateX(-100vw); } }
   #landing-page h1 {
-    color: #53787D; }
+    color: #53787D;
+    margin-bottom: 1rem; }
   #landing-page h4 {
     color: #70B991;
     margin: 0.5rem 0 3rem; }
   #landing-page .search-fields {
-    max-width: 90%;
-    max-height: 90%;
-    margin: auto auto;
+    display: inline-block;
+    width: 50vw;
     position: relative;
-    top: 2rem; }
-    @media screen and (min-width: 37.5em) {
+    padding: 10%; }
+    @media screen and (max-width: 56.25em) {
       #landing-page .search-fields {
-        top: -5rem; } }
-    @media screen and (min-width: 81.25em) {
-      #landing-page .search-fields {
-        left: -3rem; } }
+        padding: 5%; } }
   #landing-page form {
     display: grid;
     grid-gap: 1rem;
@@ -301,15 +347,33 @@ button, .button {
     #landing-page form .location {
       grid-column: 1 / span 2; }
   #landing-page .image {
-    height: 100vh;
-    overflow: hidden; }
-    @media screen and (max-width: 37.5em) {
+    display: inline-block;
+    width: 100%;
+    z-index: 10;
+    transition: transform 500ms ease-in-out, transform 500ms ease-in-out; }
+    @media screen and (max-width: 56.25em) {
       #landing-page .image {
         display: none; } }
     #landing-page .image img {
       width: 100%;
       height: 100%;
       object-fit: cover; }
+  #landing-page #login-registration-fields {
+    display: inline-block;
+    width: 50vw; }
+  #landing-page #register-fields, #landing-page #login-fields {
+    padding: 10%; }
+  #landing-page #image-move-buttons {
+    display: flex;
+    color: #70B991; }
+  #landing-page #image-move-buttons > a {
+    position: relative;
+    top: -4px;
+    margin: 5px;
+    text-align: center;
+    text-decoration: none; }
+  #landing-page #register-button:hover, #landing-page #login-button:hover {
+    cursor: pointer; }
 
 #apartments .search-bar {
   display: grid;

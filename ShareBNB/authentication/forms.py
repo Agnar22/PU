@@ -8,6 +8,7 @@ class RegisterForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
         self.fields['email'].widget.attrs['autocomplete'] = "email"
+        self.fields['email'].widget.attrs['placeholder'] = "email"
         self.fields['first_name'].widget.attrs['autocomplete'] = "given-name"
         self.fields['last_name'].widget.attrs['autocomplete'] = "family-name"
         self.fields['phone_number'].widget.attrs['autocomplete'] = "tel-national"

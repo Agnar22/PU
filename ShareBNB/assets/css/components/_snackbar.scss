@@ -11,6 +11,11 @@
   border-radius: $main-border-radius;
   box-shadow: $med-shadow;
   font-size: 1.125rem;
+  z-index: 1000000;
+  animation: dissapear 3s ease-in-out;
+  opacity: 0;
+  pointer-events: none;
+  @include no-select;
 
   img {
     position: absolute;
@@ -34,5 +39,17 @@
   &.warning {
     color: $black;
     background-color: $warning;
+  }
+}
+
+@keyframes dissapear {
+  0% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
