@@ -42,7 +42,7 @@
         <img src="{% static 'img/landingpage.jpg' %}" alt="Green apartment">
     </div>
 
-    <div>
+    <div id="login-fields">
         <h1>Logg inn</h1>
         <br>
         <form method="post">
@@ -63,7 +63,7 @@
     </div>
 
 
-    <div>
+    <div id="register-fields">
         <h1>Registrer ny bruker</h1>
         <form method="post">
             {% csrf_token %}
@@ -88,6 +88,9 @@
                 <label for="register_password">Passord</label>
             </div>
             <input class="button primary" type="submit" value="Registrer">
+            <div class="input-field fluid location" onclick="moveImageRight()">
+                Tilbake
+            </div>
         </form>
     </div>
 
@@ -101,7 +104,7 @@
     var registerFields=document.getElementById("register-fields");
     var loginFields=document.getElementById("login-fields");
 
-    var slidingVelocity=3
+    var slidingVelocity=6;
 
 
     function getPosition( element ) {
