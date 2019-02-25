@@ -89,7 +89,8 @@ def apartment_detail(request, apartment_id, start_date, end_date):
             'start_date': start_date,
             'end_date': end_date
         },
-        'apartment_price': apartment_price
+        'apartment_price': apartment_price,
+        'owner':apartment.owner
     }
     return render(request, 'apartments/apartment-detail.html', context)
 

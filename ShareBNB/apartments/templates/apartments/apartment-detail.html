@@ -28,14 +28,14 @@
             <div class="user">
                 <img src="{% static 'img/girl.jpg' %}" alt="girl">
                 <div class="user-rating">
-                    <p>Pia Jensen</p>
+                    <p>{{  owner.first_name }} {{ owner.last_name}}</p>
                     {% for i in i|rjust:4 %}
                         <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="">
                     {% endfor %}
                     <img src="{% static 'icons/rating/gray_star.svg' %}" alt="">
                 </div>
             </div>
-            <button class="primary">Send Pia en melding</button>
+            <button class="primary">Send {{  owner.first_name }} en melding</button>
             <div class="mapouter">
                 <br><br>
                 <div class="gmap_canvas">
