@@ -75,4 +75,17 @@
     display: none;
   }
 
+  #image-move-buttons {
+    color: #70B991;
+    display: flex;
+  }
+  #image-move-buttons > div {
+    margin:5px;
+    text-align: center;
+  }
+  #register-button:hover, #login-button:hover{
+    color: #557f3e;
+    cursor: pointer;
+  }
+
 }

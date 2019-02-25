@@ -267,4 +267,26 @@ button, .button {
     right: 7%;
     display: none; }
 
+  #landing-page #alert-div {
+    position: absolute;
+    z-index: -1;
+    width: 32%;
+    margin-left: 9%;
+    margin-top: 2rem;
+    left: auto;
+  }
+
+  #landing-page #image-move-buttons {
+    color: #70B991;
+    display: flex;
+  }
+  #landing-page #image-move-buttons > div {
+    margin:5px;
+    text-align: center;
+  }
+  #landing-page #register-button:hover, #login-button:hover{
+    color: #557f3e;
+    cursor: pointer;
+  }
+
 /*# sourceMappingURL=styles.css.map */

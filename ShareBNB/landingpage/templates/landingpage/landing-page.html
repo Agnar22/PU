@@ -4,6 +4,11 @@
 
 {% block body %}
 <div id="landing-page">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" id="alert-div">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
     <div class="search-fields">
         <h1>Finn ditt midlertidige<br> hjem med ShareBNB</h1>
         <h4>Søk blant over 10 hjem i opptil 2 byer!</h4>
@@ -31,9 +36,11 @@
             </div>
             <input class="button primary" type="submit" value="Søk etter leiligheter">
         </form>
-        <div class="login-fields" id="login-buttons">
-            <p id="register-button" onclick="moveImageLeft('inline', 'none')">Registrer ny bruker</p>
-            <p id="login-button" onclick="moveImageLeft('none', 'inline')">Logg inn</p>
+        <br>
+        <div class="login-fields" id="image-move-buttons">
+            <div id="register-button" onclick="moveImageLeft('inline', 'none')">Registrer ny bruker</div>
+            <div>|</div>
+            <div id="login-button" onclick="moveImageLeft('none', 'inline')">Logg inn</div>
         </div>
     </div>
 
@@ -55,10 +62,10 @@
                 <input type="password" name="password" autocomplete="password" id="password">
                 <label for="password">Passord</label>
             </div>
-            <input class="button primary" type="submit" value="Logg inn">
             <div class="input-field fluid location" onclick="moveImageRight()">
                 Tilbake
             </div>
+            <input class="button primary" type="submit" value="Logg inn">
         </form>
     </div>
 
