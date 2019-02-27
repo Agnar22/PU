@@ -1,1 +1,1 @@
-web: gunicorn gruppe-15.ShareBNB.prod_wsgi.py
+web: gunicorn ShareBNB.ShareBNB.prod_wsgi
