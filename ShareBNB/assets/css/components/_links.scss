@@ -1,11 +1,13 @@
 .link {
   display: inline-block;
 }
+
 p a, .link {
   position: relative;
   color: $primary;
   text-decoration: none;
   transition: color 100ms ease-in-out;
+
   &::before {
     content: '';
     position: absolute;
@@ -18,10 +20,24 @@ p a, .link {
     transform: scaleX(0);
     transition: transform 200ms ease-in-out;
   }
+
   &:hover {
     color: darken($primary, 10%);
+
     &::before {
       transform: scaleX(1);
+    }
+  }
+
+  &.error {
+    color: $error;
+
+    &:hover {
+      color: darken($error, 10%);
+    }
+
+    &::before {
+      background-color: $error;
     }
   }
 }
