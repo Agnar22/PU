@@ -1,6 +1,5 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from django.contrib import messages
 
 from authentication.forms import RegisterForm, LoginForm
 from authentication.models import Profile
@@ -33,7 +32,6 @@ def landing_page(request):
                 if user is not None:
                     if user.is_active:
                         login(request, user)  # User is logged in
-                        messages.success(request, f'Account created for {email}!')
                         return redirect('/')
 
             return render(request, 'landingpage/landing-page.html', {'form': form})
@@ -44,9 +42,7 @@ def landing_page(request):
             user = authenticate(request, email=email, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, f'Logget inn med {email}!')
                 return redirect('landing-page')
             else:
-                messages.warning(request, f'Finner ingen bruker med tilsvarende mail og passord!')
                 return redirect('landing-page')
 
