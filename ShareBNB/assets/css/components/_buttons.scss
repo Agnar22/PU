@@ -1,4 +1,10 @@
-button, .button {
+button {
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.button {
   padding: 0 2rem;
   height: 48px;
   font-size: 1rem;

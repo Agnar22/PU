@@ -3,19 +3,31 @@
   h1 {
     color: $primary-dark;
   }
-
-  .profile-container {
-    display: grid;
-    grid-template-columns: 3fr 1fr;
-  }
-
-  .my-apartments {
-    padding-top: 2rem;
-
-    h2 {
+  h2 {
       color: $primary-dark;
       margin-bottom: 2rem;
     }
+
+  .profile-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-gap: 4rem;
+    position: relative;
+  }
+
+  .my-apartments, .profile-settings {
+    padding-top: 2rem;
+  }
+
+  .profile-settings {
+    .link {
+      display: inline-block;
+      text-align: right;
+    }
+  }
+
+  .my-apartments {
+
     > a.button {
       margin-top: 2rem;
     }
