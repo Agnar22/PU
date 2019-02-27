@@ -1,6 +1,5 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from django.contrib import messages
 
 from authentication.forms import RegisterForm, LoginForm
 from authentication.models import Profile
@@ -45,6 +44,5 @@ def landing_page(request):
                 login(request, user)
                 return redirect('landing-page')
             else:
-                messages.warning(request, f'Finner ingen bruker med tilsvarende mail og passord!')
                 return redirect('landing-page')
 
