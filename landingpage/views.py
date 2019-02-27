@@ -33,7 +33,6 @@ def landing_page(request):
                 if user is not None:
                     if user.is_active:
                         login(request, user)  # User is logged in
-                        messages.success(request, f'Account created for {email}!')
                         return redirect('/')
 
             return render(request, 'landingpage/landing-page.html', {'form': form})
