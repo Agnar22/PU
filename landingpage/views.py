@@ -43,7 +43,6 @@ def landing_page(request):
             user = authenticate(request, email=email, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, f'Logget inn med {email}!')
                 return redirect('landing-page')
             else:
                 messages.warning(request, f'Finner ingen bruker med tilsvarende mail og passord!')
