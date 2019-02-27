@@ -1,4 +1,4 @@
-from ShareBNB.base_settings import *
+from ShareBNB.ShareBNB.base_settings import *
 
 # Override base.py settings here
 
