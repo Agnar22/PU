@@ -35,7 +35,13 @@
                     <img src="{% static 'icons/rating/gray_star.svg' %}" alt="">
                 </div>
             </div>
-            <button class="primary">Send {{  owner.first_name }} en melding</button>
+
+            <form method="post" >
+                {% csrf_token %}
+                <input type="submit" class="button primary" value="Send {{  owner.first_name }} en forespørsel om kontrakt">
+            </form>
+
+
             <div class="mapouter">
                 <br><br>
                 <div class="gmap_canvas">
