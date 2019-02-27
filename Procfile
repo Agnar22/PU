@@ -1,1 +1,1 @@
-web: gunicorn ShareBNB.ShareBNB.prod_wsgi
+web: gunicorn ShareBNB.prod_wsgi
