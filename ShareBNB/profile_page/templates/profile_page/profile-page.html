@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load apartment_filters %}
+{% load contracts_sort %}
 
 {% block body %}
     {% include 'navbar.html' %}
@@ -29,7 +30,7 @@
                                 {{ apartment.vote_amount }}
                             </div>
                             <ul>
-                                {% for contract in apartment.contracts.all %}
+                                {% for contract in apartment.contracts.all|sort_by:'start_date' %}
                                     {% if not contract.pending %}
                                         <li>Leies av {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
                                             i perioden {{ contract.start_date|date:"d.m.y" }} -
@@ -44,10 +45,11 @@
                                             <form method="post" >
                                                 <input type="hidden" name="contract_id" value="{{ contract.pk }}" />
                                                 {% csrf_token %}
-                                                <input type="submit" class="button primary" value="&#10003;  Godkjenn">
-                                                <input type="submit" class="button error" value="&#x2717;  Avslå">
+                                                <input type="submit" name="godkjenn" class="button primary" value="&#10003;  Godkjenn">
+                                                <input type="submit" name="avslå" class="button error" value="&#x2717;  Avslå">
                                             </form>
                                         </li>
+                                        <br>
                                     {% endif %}
                                 {% endfor %}
                             </ul>

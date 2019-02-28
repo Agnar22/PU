@@ -79,6 +79,7 @@ def apartments(request):
     return render(request, 'apartments/apartments.html', context)
 
 
+
 def apartment_detail(request, apartment_id, start_date, end_date):
 
     apartment = Apartment.objects.get(pk=apartment_id)
@@ -114,8 +115,8 @@ def apartment_detail(request, apartment_id, start_date, end_date):
             #Sjekker at det er en ledig apartment
             if apartment_count==1 and not (
                     start_date >= end_date
-                    or start_date < datetime.datetime.today()
-            ):
+                    or start_date.date() < datetime.datetime.today().date()):
+
                 contract = Contract.objects.create(contract_text="", tenant=request.user,
                                                    pending=True, start_date=start_date, end_date=end_date)
 
@@ -140,6 +141,7 @@ def apartment_detail(request, apartment_id, start_date, end_date):
         'message': error_message}
 
     return render(request, 'apartments/apartment-detail.html', context)
+
 
 
 
