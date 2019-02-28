@@ -5,7 +5,7 @@ from .models import Apartment, Contract
 
 class ContractAdmin(admin.ModelAdmin):
     list_display = ['__str__']
-    fields = ('contract_text', 'tenant', 'pending'','start_date', 'end_date')
+    fields = ('contract_text', 'tenant', 'pending','start_date', 'end_date')
 
     class Meta:
         model = Contract
