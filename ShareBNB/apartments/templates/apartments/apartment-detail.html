@@ -4,6 +4,11 @@
 {% load apartment_filters %}
 
 {% block body %}
+{% if message != "" %}
+        <div class="snackbar warning" id="alert-div"><img src="{% static 'icons/snackbar/alert-triangle.svg' %}"
+                                                          alt="">{{ message }}</div>
+{% endif %}
+
     {% include 'navbar.html' %}
     <div id="apartment-detail">
         <div class="apartment-images">
@@ -36,11 +41,12 @@
                 </div>
             </div>
 
+            {% if request.user.is_authenticated %}
             <form method="post" >
                 {% csrf_token %}
                 <input type="submit" class="button primary" value="Send {{  owner.first_name }} en forespørsel om kontrakt">
             </form>
-
+            {% endif %}
 
             <div class="mapouter">
                 <br><br>

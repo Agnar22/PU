@@ -86,8 +86,11 @@ def apartment_detail(request, apartment_id, start_date, end_date):
 
     error_message = ""
 
+    #Hvis bruker prøver å opprette en ny kontrakt
     if request.method=='POST':
 
+        #Sjekker at brukeren har en apartment som kan opprettes kontrakt på, ved å
+        #telle antall ledige leiligheter
         apartment_count = Apartment.objects.filter(pk=apartment_id).exclude(
 
             contracts__in=Contract.objects.filter(
@@ -102,19 +105,23 @@ def apartment_detail(request, apartment_id, start_date, end_date):
                 Q(start_date__gt=start_date.date()) &
                 Q(end_date__lt=end_date.date()))).order_by('beds', 'monthly_cost').distinct().count()
 
-        if apartment_count == 1:
-            contract = Contract.objects.create(contract_text="", tenant=request.user,
-                                               start_date=start_date, end_date=end_date)
+        #Sjekker at bruker ikke prøver å opprette kontrakt med seg selv
+        if not apartment.owner==request.user:
 
-            contract_for_apartment = Apartment.objects.get(pk=apartment_id)
-            contract_for_apartment.contracts.add(contract)
+            #Sjekker at det er en ledig apartment
+            if apartment_count==1:
+                contract = Contract.objects.create(contract_text="", tenant=request.user,
+                                                   start_date=start_date, end_date=end_date)
 
-            error_message = "Sent contract: Approval pending"
+                contract_for_apartment = Apartment.objects.get(pk=apartment_id)
+                contract_for_apartment.contracts.add(contract)
 
+                error_message = "Sent contract - Approval pending"
+
+            else:
+                error_message = "Contract creation failed - Date not available"
         else:
-            error_message = "Contract creation failed"
-
-
+            error_message = "Contract creation failed - This is your apartment"
 
     context = {
         'apartment': apartment,
@@ -125,9 +132,6 @@ def apartment_detail(request, apartment_id, start_date, end_date):
         'apartment_price': apartment_price,
         'owner': apartment.owner,
         'message': error_message}
-
-
-
 
     return render(request, 'apartments/apartment-detail.html', context)
 

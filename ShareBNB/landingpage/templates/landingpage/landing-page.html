@@ -62,7 +62,7 @@
                 <br><br>
                 <h1>Logg inn</h1>
                 <br>
-                <form method="post">
+                <form method="post" action="/">
                     {% csrf_token %}
                     <div class="input-field fluid">
                         <input type="email" name="email" id="email" placeholder="." autocomplete="email">
@@ -81,7 +81,7 @@
                 <a href="#" class="link" onclick="pushRight()">Tilbake</a>
                 <br><br>
                 <h1>Registrer ny bruker</h1>
-                <form method="post">
+                <form method="post" action="/">
                     {% csrf_token %}
                     <div class="input-field fluid">
                         {{ form.first_name }}
