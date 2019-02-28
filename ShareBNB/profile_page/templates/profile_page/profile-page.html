@@ -36,13 +36,18 @@
                                             {{ contract.end_date|date:"d.m.y" }}
                                         </li>
                                     {% else %}
-                                        {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
-                                            ønsker å leie i perioden {{ contract.start_date|date:'d.m.y' }} - {{ contract.end_date|date:'d.m.y' }}
-                                        <form method="post" >
-                                            <input type="hidden" name="contract_id" value="{{ contract.pk }}" />
-                                            {% csrf_token %}
-                                            <input type="submit" class="button primary" value=Godkjenn>
-                                        </form>
+                                        <li>
+                                            <div class="contract">
+                                            {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
+                                                ønsker å leie i perioden {{ contract.start_date|date:'d.m.y' }} - {{ contract.end_date|date:'d.m.y' }}
+                                            </div>
+                                            <form method="post" >
+                                                <input type="hidden" name="contract_id" value="{{ contract.pk }}" />
+                                                {% csrf_token %}
+                                                <input type="submit" class="button primary" value="&#10003;  Godkjenn">
+                                                <input type="submit" class="button error" value="&#x2717;  Avslå">
+                                            </form>
+                                        </li>
                                     {% endif %}
                                 {% endfor %}
                             </ul>
