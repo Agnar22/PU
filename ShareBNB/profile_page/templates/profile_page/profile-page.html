@@ -45,8 +45,8 @@
                                             <form method="post" >
                                                 <input type="hidden" name="contract_id" value="{{ contract.pk }}" />
                                                 {% csrf_token %}
-                                                <input type="submit" name="godkjenn" class="button primary" value="&#10003;  Godkjenn">
-                                                <input type="submit" name="avslå" class="button error" value="&#x2717;  Avslå">
+                                                <input type="submit" name="accept" class="button primary" value="&#10003;  Godkjenn">
+                                                <input type="submit" name="decline" class="button error" value="&#x2717;  Avslå">
                                             </form>
                                         </li>
                                         <br>

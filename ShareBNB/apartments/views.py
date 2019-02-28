@@ -99,15 +99,18 @@ def apartment_detail(request, apartment_id, start_date, end_date):
 
             contracts__in=Contract.objects.filter(
                 Q(start_date__lte=start_date.date()) &
-                Q(end_date__gte=start_date.date()))).exclude(
+                Q(end_date__gte=start_date.date()) &
+                Q(pending=False))).exclude(
 
             contracts__in=Contract.objects.filter(
                 Q(start_date__lte=end_date.date()) &
-                Q(end_date__gte=end_date.date()))).exclude(
+                Q(end_date__gte=end_date.date()) &
+                Q(pending=False))).exclude(
 
             contracts__in=Contract.objects.filter(
                 Q(start_date__gt=start_date.date()) &
-                Q(end_date__lt=end_date.date()))).order_by('beds', 'monthly_cost').distinct().count()
+                Q(end_date__lt=end_date.date()) &
+                Q(pending=False))).order_by('beds', 'monthly_cost').distinct().count()
 
         #Sjekker at bruker ikke prøver å opprette kontrakt med seg selv
         if not apartment.owner==request.user:

@@ -3,6 +3,7 @@ from django.http import HttpResponseForbidden
 
 from apartments.models import Apartment, Contract
 from authentication.models import Profile
+from django.db.models import Q
 
 
 def profile_view(request):
@@ -20,15 +21,33 @@ def profile_view(request):
 
         if contract_id is not None:
             contract = Contract.objects.get(pk=contract_id)
+            print("HE")
 
             #Brukeren trykte på godkjenn
-            if "godkjenn" in request.POST:
+            if "accept" in request.POST:
                 #Godkjenner kontrakten
                 contract.pending = False;
+                start_date_accepted = contract.start_date
+                end_date_accepted = contract.end_date
                 contract.save()
 
+                Contract.objects.exclude(
+                    Q(pk=contract_id)).filter(
+
+                    Q(pending=True) &
+
+                    (Q(start_date__lte=start_date_accepted) &
+                    Q(end_date__gte=start_date_accepted)) |
+
+                    (Q(start_date__lte=end_date_accepted) &
+                    Q(end_date__gte=end_date_accepted)) |
+
+                    (Q(start_date__gt=start_date_accepted) &
+                    Q(end_date__lt=end_date_accepted))).delete()
+
+
             #Brukeren trykte på avslå
-            elif "avslå" in request.POST:
+            elif "decline" in request.POST:
                 contract.delete()
 
             #Viser profilsiden dersom brukeren fremdeles er logget inn
