@@ -21,7 +21,6 @@ def profile_view(request):
 
         if contract_id is not None:
             contract = Contract.objects.get(pk=contract_id)
-            print("HE")
 
             #Brukeren trykte på godkjenn
             if "accept" in request.POST:
