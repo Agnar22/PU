@@ -47,15 +47,18 @@ def apartments(request):
                 # Filtrer etter ledig dato:
                 contracts__in=Contract.objects.filter(
                     Q(start_date__lte=start_date.date()) &
-                    Q(end_date__gte=start_date.date()))).exclude(
+                    Q(end_date__gte=start_date.date()) &
+                    Q(pending__iexact = False))).exclude(
 
                 contracts__in=Contract.objects.filter(
                     Q(start_date__lte=end_date.date()) &
-                    Q(end_date__gte=end_date.date()))).exclude(
+                    Q(end_date__gte=end_date.date()) &
+                    Q(pending__iexact = False))).exclude(
 
                 contracts__in=Contract.objects.filter(
                     Q(start_date__gt=start_date.date()) &
-                    Q(end_date__lt=end_date.date()))).order_by('beds', 'monthly_cost').distinct()
+                    Q(end_date__lt=end_date.date()) &
+                    Q(pending__iexact = False))).order_by('beds', 'monthly_cost').distinct()
 
     # Dersom noe går galt returneres ingenting
     else:
