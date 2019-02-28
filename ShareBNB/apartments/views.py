@@ -48,17 +48,17 @@ def apartments(request):
                 contracts__in=Contract.objects.filter(
                     Q(start_date__lte=start_date.date()) &
                     Q(end_date__gte=start_date.date()) &
-                    Q(pending__iexact = False))).exclude(
+                    Q(pending=False))).exclude(
 
                 contracts__in=Contract.objects.filter(
                     Q(start_date__lte=end_date.date()) &
                     Q(end_date__gte=end_date.date()) &
-                    Q(pending__iexact = False))).exclude(
+                    Q(pending=False))).exclude(
 
                 contracts__in=Contract.objects.filter(
                     Q(start_date__gt=start_date.date()) &
                     Q(end_date__lt=end_date.date()) &
-                    Q(pending__iexact = False))).order_by('beds', 'monthly_cost').distinct()
+                    Q(pending=False))).order_by('beds', 'monthly_cost').distinct()
 
     # Dersom noe går galt returneres ingenting
     else:
@@ -112,7 +112,10 @@ def apartment_detail(request, apartment_id, start_date, end_date):
         if not apartment.owner==request.user:
 
             #Sjekker at det er en ledig apartment
-            if apartment_count==1:
+            if apartment_count==1 and not (
+                    start_date >= end_date
+                    or start_date < datetime.datetime.today()
+            ):
                 contract = Contract.objects.create(contract_text="", tenant=request.user,
                                                    pending=True, start_date=start_date, end_date=end_date)
 
