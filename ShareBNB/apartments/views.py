@@ -111,7 +111,7 @@ def apartment_detail(request, apartment_id, start_date, end_date):
             #Sjekker at det er en ledig apartment
             if apartment_count==1:
                 contract = Contract.objects.create(contract_text="", tenant=request.user,
-                                                   start_date=start_date, end_date=end_date)
+                                                   pending=True, start_date=start_date, end_date=end_date)
 
                 contract_for_apartment = Apartment.objects.get(pk=apartment_id)
                 contract_for_apartment.contracts.add(contract)

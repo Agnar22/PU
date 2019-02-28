@@ -12,7 +12,7 @@ from authentication.models import Profile
 class Contract(models.Model):
     contract_text = models.TextField()
     tenant = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="tenant", null=True)
-    pending = models.BooleanField(default=True)
+    pending = models.BooleanField()
     start_date = models.DateField()
     end_date = models.DateField()
 
