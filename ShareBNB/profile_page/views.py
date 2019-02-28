@@ -23,7 +23,7 @@ def profile_view(request):
             contract.pending = False;
             contract.save()
 
-            #Viser siden dersom brukeren fremdeles er logget inn
+            #Viser profilsiden dersom brukeren fremdeles er logget inn
             if request.user.is_authenticated:
                 context = {
                     'my_apartments': Apartment.objects.filter(owner=request.user)
@@ -33,6 +33,7 @@ def profile_view(request):
                 return redirect('landing-page')
 
 
+        #Dersom brukeren trykker på knappen "slett bruker"
         else:
             user = Profile.objects.get(pk=request.user.pk)
             user.delete()

@@ -112,7 +112,10 @@ def apartment_detail(request, apartment_id, start_date, end_date):
         if not apartment.owner==request.user:
 
             #Sjekker at det er en ledig apartment
-            if apartment_count==1:
+            if apartment_count==1 and not (
+                    start_date >= end_date
+                    or start_date < datetime.datetime.today()
+            ):
                 contract = Contract.objects.create(contract_text="", tenant=request.user,
                                                    pending=True, start_date=start_date, end_date=end_date)
 
