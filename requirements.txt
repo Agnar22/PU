@@ -1,3 +1,0 @@
-django==2.1.5
-Pillow
-django-imagekit

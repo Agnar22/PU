@@ -2,6 +2,6 @@ image: python:3.5
 
 all_tests:
   script:
-   - pip install -r ShareBNB/requirements.txt
-   - python3 ShareBNB/manage.py test -k
+   - pip install -r requirements.txt
+   - python3 manage.py test -k
   when: on_success

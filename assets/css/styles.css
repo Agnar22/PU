@@ -98,7 +98,13 @@ img {
   user-select: none;
   /* Likely future */ }
 
-button, .button {
+button {
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 1rem; }
+
+.button {
   padding: 0 2rem;
   height: 48px;
   font-size: 1rem;
@@ -115,21 +121,21 @@ button, .button {
   display: inline-flex;
   align-items: center;
   justify-content: center; }
-  button:hover, .button:hover {
+  .button:hover {
     background-color: #f7f7f7; }
-  button:active, .button:active {
+  .button:active {
     transform: scale(0.98); }
-  button.primary, .button.primary {
+  .button.primary {
     border: 0;
     color: #FCFCFC;
     background-color: #70B991; }
-    button.primary:hover, .button.primary:hover {
+    .button.primary:hover {
       background-color: #5fb184; }
-  button.error, .button.error {
+  .button.error {
     background-color: #E41F4E;
     color: #FCFCFC;
     border: 0; }
-  button.fluid, .button.fluid {
+  .button.fluid {
     width: 100%; }
 
 .input-field {
@@ -191,7 +197,7 @@ button, .button {
     .input-field p::before {
       transform: rotate(-45deg); }
 
-.card, #profile-page .my-apartments .card .apartment-description .contract {
+.card {
   position: relative;
   display: block;
   background-color: #FCFCFC;
@@ -200,11 +206,11 @@ button, .button {
   overflow: hidden;
   border-radius: 6px;
   margin-bottom: 1rem; }
-  .card.clickable, #profile-page .my-apartments .card .apartment-description .clickable.contract {
+  .card.clickable {
     cursor: pointer;
     transition: transform 200ms ease-in-out;
     will-change: transform; }
-    .card.clickable:hover, #profile-page .my-apartments .card .apartment-description .clickable.contract:hover {
+    .card.clickable:hover {
       transform: scale(0.996); }
 
 .snackbar {
@@ -279,6 +285,12 @@ p a, .link {
     color: #51a577; }
     p a:hover::before, .link:hover::before {
       transform: scaleX(1); }
+  p a.error, .link.error {
+    color: #E41F4E; }
+    p a.error:hover, .link.error:hover {
+      color: #ba163d; }
+    p a.error::before, .link.error::before {
+      background-color: #E41F4E; }
 
 #navbar {
   position: fixed;
@@ -314,6 +326,14 @@ p a, .link {
 #landing-page {
   width: 100vw;
   overflow-x: hidden; }
+  #landing-page .user-icon {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 100;
+    transition: transform 200ms ease-in-out; }
+    #landing-page .user-icon:hover {
+      transform: scale(1.1); }
   #landing-page .landing-page-wrapper {
     overflow-y: hidden;
     width: 150vw;
@@ -480,61 +500,54 @@ p a, .link {
 
 #profile-page h1 {
   color: #53787D; }
+#profile-page h2 {
+  color: #53787D;
+  margin-bottom: 2rem; }
 #profile-page .profile-container {
   display: grid;
-  grid-template-columns: 3fr 1fr; }
-#profile-page .my-apartments {
+  grid-template-columns: 2fr 1fr;
+  grid-gap: 4rem;
+  position: relative; }
+#profile-page .my-apartments, #profile-page .profile-settings {
   padding-top: 2rem; }
-  #profile-page .my-apartments h2 {
-    color: #53787D;
-    margin-bottom: 2rem; }
-  #profile-page .my-apartments > a.button {
-    margin-top: 2rem; }
-  #profile-page .my-apartments .card > img, #profile-page .my-apartments .card .apartment-description .contract > img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin: -1rem 0 -1rem -1rem;
-    object-fit: cover;
-    width: calc(160px + 1rem);
-    height: calc(100% + 2rem); }
-  #profile-page .my-apartments .card .apartment-description, #profile-page .my-apartments .card .apartment-description .contract .apartment-description {
+#profile-page .profile-settings .link {
+  display: inline-block;
+  text-align: right; }
+#profile-page .my-apartments > a.button {
+  margin-top: 2rem; }
+#profile-page .my-apartments .card > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: -1rem 0 -1rem -1rem;
+  object-fit: cover;
+  width: calc(160px + 1rem);
+  height: calc(100% + 2rem); }
+#profile-page .my-apartments .card > div {
+  display: block;
+  padding: 1rem 1rem 1rem calc(160px + 1rem); }
+  #profile-page .my-apartments .card > div i {
     display: block;
-    padding: 1rem 1rem 1rem calc(160px + 1rem); }
-    #profile-page .my-apartments .card .apartment-description i, #profile-page .my-apartments .card .apartment-description .contract .apartment-description i {
-      display: block;
-      color: #5B5A57;
-      margin: 0.5rem 0; }
-      #profile-page .my-apartments .card .apartment-description i img, #profile-page .my-apartments .card .apartment-description .contract .apartment-description i img {
-        height: 18px;
-        width: 18px;
-        position: relative;
-        top: 2px;
-        margin-right: 0.5rem; }
-    #profile-page .my-apartments .card .apartment-description .rating {
-      margin-top: 1rem;
-      display: flex;
-      align-items: center;
-      color: #B4B3B1; }
-      #profile-page .my-apartments .card .apartment-description .rating img {
-        margin-right: 4px; }
-    #profile-page .my-apartments .card .apartment-description ul, #profile-page .my-apartments .card .apartment-description .contract .apartment-description ul {
-      margin-top: 1rem;
-      margin-left: 1.5rem;
-      color: #53787D; }
-      #profile-page .my-apartments .card .apartment-description ul li, #profile-page .my-apartments .card .apartment-description .contract .apartment-description ul li {
-        list-style-type: circle; }
-    #profile-page .my-apartments .card .apartment-description .contract {
-      margin: 1rem 0 0 -1rem;
-      list-style-type: none;
-      font-size: 1.2rem;
-      line-height: 1.2em; }
-      #profile-page .my-apartments .card .apartment-description .contract span {
-        color: #5B5A57;
-        font-weight: bold; }
-      #profile-page .my-apartments .card .apartment-description .contract form {
-        margin-top: 1rem; }
-      #profile-page .my-apartments .card .apartment-description .contract .approve {
-        height: 32px; }
+    color: #5B5A57;
+    margin: 0.5rem 0; }
+    #profile-page .my-apartments .card > div i img {
+      height: 18px;
+      width: 18px;
+      position: relative;
+      top: 2px;
+      margin-right: 0.5rem; }
+  #profile-page .my-apartments .card > div .rating {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    color: #B4B3B1; }
+    #profile-page .my-apartments .card > div .rating img {
+      margin-right: 4px; }
+  #profile-page .my-apartments .card > div ul {
+    margin-top: 1rem;
+    margin-left: 1.5rem;
+    color: #53787D; }
+    #profile-page .my-apartments .card > div ul li {
+      list-style-type: circle; }
 
 /*# sourceMappingURL=styles.css.map */

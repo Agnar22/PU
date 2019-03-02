@@ -8,6 +8,14 @@
     <div class="container" id="profile-page">
         <div class="user">
             <h1>{{ request.user.first_name }} {{ request.user.last_name }}</h1>
+            <div class="user-rating">
+                {% for i in 4|yellow_stars %}
+                    <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="yellow star">
+                {% endfor %}
+                {% for i in 4|gray_stars %}
+                    <img src="{% static 'icons/rating/gray_star.svg' %}" alt="Gray star">
+                {% endfor %}
+            </div>
         </div>
         <div class="profile-container">
             <div class="my-apartments">
@@ -61,16 +69,29 @@
                 <a class="button" href="{% url 'create-apartment' %}">Opprett ny leilighet</a>
             </div>
             <div class="profile-settings">
-                <!-- Legg inn knappen her Invgild -->
-                <form method="post">
-                    <div class="input-field">
-                        <input type="text">
-                        <label for="">Name</label>
-                    </div>
-                </form>
+                <h2>Brukerinnstillinger</h2>
                 <form method="post">
                     {% csrf_token %}
-                    <input type="submit" class="button error" value="Slett bruker">
+                    <div class="input-field fluid">
+                        {{ form.first_name }}
+                        <label for="{{ form.first_name.id_for_label }}">Fornavn</label>
+                    </div>
+                    <div class="input-field fluid">
+                        {{ form.last_name }}
+                        <label for="{{ form.last_name.id_for_label }}">Etternavn</label>
+                    </div>
+                    <div class="input-field fluid">
+                        {{ form.phone_number }}
+                        <label for="{{ form.phone_number.id_for_label }}">Mobilnummer</label>
+                    </div>
+                    <input type="submit" class="button" value="Lagre brukerinformasjon">
+                </form>
+                <br><br>
+                <a href="{% url 'logout' %}" class="link">Logg ut</a>
+                <br><br><br><br>
+                <form action="delete-user" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="link error">Slett bruker</button>
                 </form>
             </div>
         </div>
