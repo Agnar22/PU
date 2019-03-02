@@ -1,41 +1,66 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import logout
+from django.http import HttpResponseForbidden
 
-from apartments.models import Apartment
-from authentication.forms import RegisterForm
+from apartments.models import Apartment, Contract
 from authentication.models import Profile
-
-
-def logout_view(request):
-    logout(request)
-    return redirect('landing-page')
-
-
-def delete_user(request):
-    if request.method == 'POST' and request.user.is_authenticated:
-        user = Profile.objects.get(pk=request.user.pk)
-        user.delete()
-        return redirect('landing-page')
+from django.db.models import Q
 
 
 def profile_view(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    else:
-        user = Profile.objects.get(pk=request.user.pk)
-        form = RegisterForm(instance=user)
-        context = {
-            'my_apartments': Apartment.objects.filter(owner=request.user),
-            'form': form
-        }
-        if request.method == 'GET':
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            context = {
+                'my_apartments': Apartment.objects.filter(owner=request.user)
+            }
             return render(request, 'profile_page/profile-page.html', context)
-        else:  # POST
-            form = RegisterForm(request.POST, instance=user)
-            print(form.errors)
-            user.first_name = form.cleaned_data['first_name']
-            user.last_name = form.cleaned_data['last_name']
-            user.phone_number = form.cleaned_data['phone_number']
-            user.save()
-            return render(request, 'profile_page/profile-page.html', context)
+        else:
+            return redirect('landing-page')
 
+    else: # POST
+        contract_id = request.POST.get("contract_id")
+
+        if contract_id is not None:
+            contract = Contract.objects.get(pk=contract_id)
+
+            #Brukeren trykte på godkjenn
+            if "accept" in request.POST:
+                #Godkjenner kontrakten
+                contract.pending = False;
+                start_date_accepted = contract.start_date
+                end_date_accepted = contract.end_date
+                contract.save()
+
+                Contract.objects.exclude(
+                    Q(pk=contract_id)).filter(
+
+                    Q(pending=True) &
+
+                    (Q(start_date__lte=start_date_accepted) &
+                    Q(end_date__gte=start_date_accepted)) |
+
+                    (Q(start_date__lte=end_date_accepted) &
+                    Q(end_date__gte=end_date_accepted)) |
+
+                    (Q(start_date__gt=start_date_accepted) &
+                    Q(end_date__lt=end_date_accepted))).delete()
+
+
+            #Brukeren trykte på avslå
+            elif "decline" in request.POST:
+                contract.delete()
+
+            #Viser profilsiden dersom brukeren fremdeles er logget inn
+            if request.user.is_authenticated:
+                context = {
+                    'my_apartments': Apartment.objects.filter(owner=request.user)
+                }
+                return render(request, 'profile_page/profile-page.html', context)
+            else:
+                return redirect('landing-page')
+
+
+        #Dersom brukeren trykker på knappen "slett bruker"
+        else:
+            user = Profile.objects.get(pk=request.user.pk)
+            user.delete()
+            return redirect('landing-page')

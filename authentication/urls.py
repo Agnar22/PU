@@ -1,6 +1,5 @@
-from django.urls import path, include
+from django.urls import path
 from django.contrib import admin
-from django.contrib.auth import logout
 
 from . import views
 

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load apartment_filters %}
+{% load contracts_sort %}
 
 {% block body %}
     {% include 'navbar.html' %}
@@ -22,7 +23,7 @@
                 {% for apartment in my_apartments %}
                     <div class="card">
                         <img src="{{ apartment.image1.url }}" alt="{{ apartment.title }}">
-                        <div>
+                        <div class="apartment-description">
                             <h4>{{ apartment.title }}</h4>
                             <i><img src="{% static 'icons/pin.svg' %}" alt="pin-icon">{{ apartment.city }}</i>
                             <i><img src="{% static 'icons/house.svg' %}" alt="house-icon">{{ apartment.size }}
@@ -37,11 +38,29 @@
                                 {{ apartment.vote_amount }}
                             </div>
                             <ul>
-                                {% for contract in apartment.contracts.all %}
-                                    <li>Leies av {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
-                                        i perioden {{ contract.start_date|date:"d.m.y" }} -
-                                        {{ contract.end_date|date:"d.m.y" }}
-                                    </li>
+                                {% for contract in apartment.contracts.all|sort_contracts %}
+                                    {% if not contract.pending %}
+                                        <li>Leies av {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
+                                            i perioden {{ contract.start_date|date:"d.m.y" }} -
+                                            {{ contract.end_date|date:"d.m.y" }}
+                                        </li>
+                                    {% else %}
+                                        <li class="contract">
+                                            {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
+                                            ønsker å leie i perioden:<br>
+                                            <span>{{ contract.start_date|date:'d. F Y' }} -
+                                                {{ contract.end_date|date:'d. F Y'}}</span>
+                                            <form method="post">
+                                                <input type="hidden" name="contract_id" value="{{ contract.pk }}"/>
+                                                {% csrf_token %}
+                                                <input type="submit" name="accept" class="approve button primary"
+                                                       value="Godkjenn">
+                                                <input type="submit" name="decline" class="approve button error"
+                                                       value="Avslå">
+                                            </form>
+                                        </li>
+                                        <br>
+                                    {% endif %}
                                 {% endfor %}
                             </ul>
                         </div>

@@ -9,15 +9,10 @@ from imagekit.processors import ResizeToFit
 from authentication.models import Profile
 
 
-class ContractManager(models.Manager):
-    def get_queryset(self):
-        return super(ReadOnlyManager, self).get_queryset()\
-            .annotate(combined=Concat('first', " " 'second', output_field=models.CharField()))
-
-
 class Contract(models.Model):
     contract_text = models.TextField()
-    tenant = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    tenant = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="tenant", null=True)
+    pending = models.BooleanField()
     start_date = models.DateField()
     end_date = models.DateField()
 
@@ -41,9 +36,9 @@ class Apartment(models.Model):
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True)
     contracts = models.ManyToManyField(Contract)
     image1 = ProcessedImageField(upload_to='apartments/',
-                                 processors =[ResizeToFit(2000, 2000,False)],
-                                 format ='JPEG',
-                                 options = {'quality': 85})
+                                 processors=[ResizeToFit(2000, 2000, False)],
+                                 format='JPEG',
+                                 options={'quality': 85})
 
     def __str__(self):
         return self.title

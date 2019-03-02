@@ -47,15 +47,18 @@ def apartments(request):
                 # Filtrer etter ledig dato:
                 contracts__in=Contract.objects.filter(
                     Q(start_date__lte=start_date.date()) &
-                    Q(end_date__gte=start_date.date()))).exclude(
+                    Q(end_date__gte=start_date.date()) &
+                    Q(pending=False))).exclude(
 
                 contracts__in=Contract.objects.filter(
                     Q(start_date__lte=end_date.date()) &
-                    Q(end_date__gte=end_date.date()))).exclude(
+                    Q(end_date__gte=end_date.date()) &
+                    Q(pending=False))).exclude(
 
                 contracts__in=Contract.objects.filter(
                     Q(start_date__gt=start_date.date()) &
-                    Q(end_date__lt=end_date.date()))).order_by('beds', 'monthly_cost').distinct()
+                    Q(end_date__lt=end_date.date()) &
+                    Q(pending=False))).order_by('beds', 'monthly_cost').distinct()
 
     # Dersom noe går galt returneres ingenting
     else:
@@ -76,12 +79,59 @@ def apartments(request):
     return render(request, 'apartments/apartments.html', context)
 
 
+
 def apartment_detail(request, apartment_id, start_date, end_date):
+
     apartment = Apartment.objects.get(pk=apartment_id)
 
     apartment_price = apartment.calculate_price(start_date, end_date)
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+
+    error_message = ""
+
+    #Hvis bruker prøver å opprette en ny kontrakt
+    if request.method=='POST':
+
+        #Sjekker at brukeren har en apartment som kan opprettes kontrakt på, ved å
+        #telle antall ledige leiligheter
+        apartment_count = Apartment.objects.filter(pk=apartment_id).exclude(
+
+            contracts__in=Contract.objects.filter(
+                Q(start_date__lte=start_date.date()) &
+                Q(end_date__gte=start_date.date()) &
+                Q(pending=False))).exclude(
+
+            contracts__in=Contract.objects.filter(
+                Q(start_date__lte=end_date.date()) &
+                Q(end_date__gte=end_date.date()) &
+                Q(pending=False))).exclude(
+
+            contracts__in=Contract.objects.filter(
+                Q(start_date__gt=start_date.date()) &
+                Q(end_date__lt=end_date.date()) &
+                Q(pending=False))).order_by('beds', 'monthly_cost').distinct().count()
+
+        #Sjekker at bruker ikke prøver å opprette kontrakt med seg selv
+        if not apartment.owner==request.user:
+
+            #Sjekker at det er en ledig apartment
+            if apartment_count==1 and not (
+                    start_date >= end_date
+                    or start_date.date() < datetime.datetime.today().date()):
+
+                contract = Contract.objects.create(contract_text="", tenant=request.user,
+                                                   pending=True, start_date=start_date, end_date=end_date)
+
+                contract_for_apartment = Apartment.objects.get(pk=apartment_id)
+                contract_for_apartment.contracts.add(contract)
+
+                error_message = "Sent contract - Approval pending"
+
+            else:
+                error_message = "Contract creation failed - Date not available"
+        else:
+            error_message = "Contract creation failed - This is your apartment"
 
     context = {
         'apartment': apartment,
@@ -90,9 +140,12 @@ def apartment_detail(request, apartment_id, start_date, end_date):
             'end_date': end_date
         },
         'apartment_price': apartment_price,
-        'owner':apartment.owner
-    }
+        'owner': apartment.owner,
+        'message': error_message}
+
     return render(request, 'apartments/apartment-detail.html', context)
+
+
 
 
 def create_apartment(request):
@@ -112,3 +165,5 @@ def create_apartment(request):
         else:
             print('failed')
             return render(request, 'apartments/create-apartment.html', {'form': form})
+
+
