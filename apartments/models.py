@@ -27,6 +27,8 @@ class Apartment(models.Model):
     country = models.CharField(max_length=60)
     city = models.CharField(max_length=60)
     address = models.CharField(max_length=100)
+    latitude = models.DecimalField(max_digits=10, decimal_places=6, default=0.0)
+    longitude = models.DecimalField(max_digits=10, decimal_places=6, default=0.0)
     beds = models.IntegerField()
     apartment_age = models.IntegerField()
     rating = models.IntegerField(validators=[MaxValueValidator(5), MinValueValidator(0)], default=0)

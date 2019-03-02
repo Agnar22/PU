@@ -9,6 +9,7 @@ from authentication.models import Profile
 from .models import Apartment
 from .models import Contract
 from django.db.models import Q
+from geopy.geocoders import Nominatim
 
 
 def apartments(request):
@@ -33,8 +34,10 @@ def apartments(request):
                 or start_date_query < datetime.datetime.today().strftime('%Y-%m-%d')):
 
             apartments = Apartment.objects.none()
+            apartments_map = Apartment.objects.none()
 
         else:
+
             apartments = Apartment.objects.filter((
                 # Filtrer etter lokasjon
                 Q(city__icontains=location_query) |
@@ -60,13 +63,39 @@ def apartments(request):
                     Q(end_date__lt=end_date.date()) &
                     Q(pending=False))).order_by('beds', 'monthly_cost').distinct()
 
+
+            #Leilighetene som skal vises på kartet skal ikke filtreres etter plassering
+            apartments_map = Apartment.objects.filter(
+
+                # Filtrer etter sengeplasser
+                Q(beds__gte=guests_query)).exclude(
+
+                # Filtrer etter ledig dato:
+                contracts__in=Contract.objects.filter(
+                    Q(start_date__lte=start_date.date()) &
+                    Q(end_date__gte=start_date.date()) &
+                    Q(pending=False))).exclude(
+
+                contracts__in=Contract.objects.filter(
+                    Q(start_date__lte=end_date.date()) &
+                    Q(end_date__gte=end_date.date()) &
+                    Q(pending=False))).exclude(
+
+                contracts__in=Contract.objects.filter(
+                    Q(start_date__gt=start_date.date()) &
+                    Q(end_date__lt=end_date.date()) &
+                    Q(pending=False))).order_by('beds', 'monthly_cost').distinct()
+
+
     # Dersom noe går galt returneres ingenting
     else:
         apartments = Apartment.objects.none()
+        apartments_map = Apartment.objects.none()
 
 
     context = {
         'apartments': apartments,
+        'apartments_map': apartments_map,
         'query': {
             'location': location_query,
             'guests': guests_query,
@@ -153,6 +182,8 @@ def create_apartment(request):
         form = CreateApartmentForm()
         return render(request, 'apartments/create-apartment.html', {'form': form})
     elif request.method == 'POST':
+        geolocator = Nominatim(user_agent="Apartment")
+
         form = CreateApartmentForm(request.POST, request.FILES or None)
         print(form.errors)
         if form.is_valid():
@@ -160,6 +191,14 @@ def create_apartment(request):
             apartment.owner = Profile.objects.get(pk=request.user.pk)
             apartment.image1 = request.FILES['image1']
             print(apartment.image1)
+
+            #Oppretter og lagrer longitude og latitude til adressen
+            location = geolocator.geocode(apartment.address + " " + apartment.city + " " + apartment.country)
+            print((location.latitude, location.longitude))
+            print(apartment.address + " " + apartment.city + " " + apartment.country)
+            apartment.latitude = location.latitude
+            apartment.longitude = location.longitude
+
             apartment.save()
             return redirect('profile')
         else:
