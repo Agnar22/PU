@@ -70,6 +70,10 @@ def apartments(request):
                 # Filtrer etter sengeplasser
                 Q(beds__gte=guests_query)).exclude(
 
+                #De som mangler koordinater kan ikke vises på kartet
+                Q(longitude=None)).exclude(
+                Q(latitude=None)).exclude(
+
                 # Filtrer etter ledig dato:
                 contracts__in=Contract.objects.filter(
                     Q(start_date__lte=start_date.date()) &
@@ -93,6 +97,20 @@ def apartments(request):
         apartments_map = Apartment.objects.none()
 
 
+    geolocator = Nominatim(user_agent="Apartment")
+    location = geolocator.geocode(location_query)
+
+    #Setter kartet til byen som ble søkt på
+    if location is not None:
+        lat = location.latitude
+        lon = location.longitude
+        zoom = 12
+
+    else:
+        lat = 55
+        lon = 25
+        zoom = 2
+
     context = {
         'apartments': apartments,
         'apartments_map': apartments_map,
@@ -102,9 +120,13 @@ def apartments(request):
             'start_date': start_date_query,
             'end_date': end_date_query
         },
-        'days': delta.days
+        'days': delta.days,
+        'latitude': str(lat),
+        'longitude': str(lon),
+        'zoom': str(zoom)
     }
 
+    print((lat, lon, zoom))
     return render(request, 'apartments/apartments.html', context)
 
 
@@ -194,10 +216,9 @@ def create_apartment(request):
 
             #Oppretter og lagrer longitude og latitude til adressen
             location = geolocator.geocode(apartment.address + " " + apartment.city + " " + apartment.country)
-            print((location.latitude, location.longitude))
-            print(apartment.address + " " + apartment.city + " " + apartment.country)
-            apartment.latitude = location.latitude
-            apartment.longitude = location.longitude
+            if location is not None:
+                apartment.latitude = str(location.latitude)
+                apartment.longitude = str(location.longitude)
 
             apartment.save()
             return redirect('profile')
