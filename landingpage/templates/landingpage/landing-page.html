@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block body %}
+    <div id="landing-page">
+        {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="user-icon"><img src="{% static 'icons/user-icon.svg' %}"
+                                                                 alt="user-icon"></a>
+        {% endif %}
+        <div class="landing-page-wrapper">
+            <div class="search-fields">
+                <h1>Finn ditt midlertidige<br> hjem med ShareBNB</h1>
+                <h4>Søk blant over 10 hjem i opptil 2 byer!</h4>
+                <form action="apartments/" method="get">
+                    <div class="input-field fluid location">
+                        <input name="location" id="location" type="text" placeholder="." required>
+                        <label for="location">Hvor vil du leie?</label>
+                    </div>
+                    <div class="input-field fluid">
+                        <input name="start_date" id="from_date" type="date" placeholder="." required>
+                        <label for="from_date">Fra når?</label>
+                    </div>
+                    <div class="input-field fluid">
+                        <input name="end_date" id="to_date" type="date" placeholder="." required>
+                        <label for="to_date">Til når?</label>
+                    </div>
+                    <div class="input-field fluid">
+                        <select name="guests" id="guests">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                        <label for="guests">Antall gjester?</label>
+                    </div>
+                    <div>
+                        <input class="button primary" id="submit" type="submit" placeholder="."
+                               value="Søk etter leiligheter" align="middle">
+                    </div>
+                </form>
+
+                <br>
+                {% if not request.user.is_authenticated %}
+                    <div class="login-fields" id="image-move-buttons">
+                        <a href="#registration" id="register-button" class="link" onclick="registrationTrigger()">Registrer
+                            ny
+                            bruker</a>
+                        <div>|</div>
+                        <a href="#login" id="login-button" class="link" onclick="loginTrigger()">Logg inn</a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="image right" id="start-image">
+                <img src="{% static 'img/landingpage.jpg' %}" alt="Green apartment">
+            </div>
+            <div id="login-registration-fields">
+                <div id="login-fields">
+                    <a href="#" class="link" onclick="pushRight()">Tilbake</a>
+                    <br><br>
+                    <h1>Logg inn</h1>
+                    <br>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="input-field fluid">
+                            <input type="email" name="email" id="email" placeholder="." autocomplete="email">
+                            <label for="email">Epost</label>
+                        </div>
+                        <div class="input-field fluid">
+                            <input type="password" name="password" autocomplete="current-password" id="password">
+                            <label for="password">Passord</label>
+                        </div>
+                        <input class="button primary" type="submit" value="Logg inn">
+                    </form>
+                </div>
+
+
+                <div id="register-fields">
+                    <a href="#" class="link" onclick="pushRight()">Tilbake</a>
+                    <br><br>
+                    <h1>Registrer ny bruker</h1>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="input-field fluid">
+                            {{ form.first_name }}
+                            <label for="register_first_name">Fornavn</label>
+                        </div>
+                        <div class="input-field fluid">
+                            {{ form.last_name }}
+                            <label for="register_sure_name">Etternavn</label>
+                        </div>
+                        <div class="input-field fluid location">
+                            {{ form.email }}
+                            <label for="register_email">E-mail</label>
+                        </div>
+                        <div class="input-field fluid location">
+                            {{ form.phone_number }}
+                            <label for="register_phone">Tlf.</label>
+                        </div>
+                        <div class="input-field fluid location">
+                            {{ form.password }}
+                            <label for="register_password">Passord</label>
+                        </div>
+                        <input class="button primary" type="submit" value="Registrer">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+{% block js %}
+    <script>
+        let userIsLoggedIn = "{{ request.user.is_authenticated }}";
+        let registration = $('#register-fields');
+        let login = $('#login-fields');
+        let wrapper = $('.landing-page-wrapper');
+
+        function pushRight() {
+            wrapper.removeClass('left');
+        }
+
+        function pushLeft() {
+            wrapper.addClass('left');
+        }
+
+        function loginTrigger() {
+            pushLeft();
+            login.show();
+            registration.hide();
+        }
+
+        function registrationTrigger() {
+            pushLeft();
+            registration.show();
+            login.hide();
+        }
+
+        function checkUrl() {
+            const url = window.location.href;
+            if (userIsLoggedIn === 'False') {
+                if (url.includes('registration')) {
+                    registrationTrigger();
+                } else if (url.includes('login')) {
+                    loginTrigger();
+                } else {
+                    pushRight();
+                }
+            } else {
+                pushRight();
+            }
+        }
+
+        $(window).on('hashchange', function (e) {
+            checkUrl();
+        });
+        checkUrl();
+    </script>
+{% endblock js %}
