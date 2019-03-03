@@ -61,10 +61,10 @@
             }).addTo(map);
 
             var myIcon = L.icon({
-            iconUrl: "{% static 'icons/Map/map_pin.png' %}",
-            iconSize: [38, 50],
-            iconAnchor: [19, 50],
-            popupAnchor: [0, -50]
+                iconUrl: "{% static 'icons/Map/map_pin.png' %}",
+                iconSize: [38, 50],
+                iconAnchor: [19, 50],
+                popupAnchor: [0, -50]
             });
 
             {% for apartment in apartments_map %}
