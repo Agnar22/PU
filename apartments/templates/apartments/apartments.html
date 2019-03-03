@@ -56,15 +56,13 @@
         <script>
             var map = L.map('map').setView([{{latitude}}, {{longitude}}], {{zoom}});
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
+            L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png').addTo(map);
 
             var myIcon = L.icon({
                 iconUrl: "{% static 'icons/Map/map_pin.png' %}",
-                iconSize: [38, 50],
-                iconAnchor: [19, 50],
-                popupAnchor: [0, -50]
+                iconSize: [24, 30],
+                iconAnchor: [12, 30],
+                popupAnchor: [0, -30]
             });
 
             {% for apartment in apartments_map %}
