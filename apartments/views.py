@@ -71,8 +71,8 @@ def apartments(request):
                 Q(beds__gte=guests_query)).exclude(
 
                 #De som mangler koordinater kan ikke vises på kartet
-                Q(longitude=None)).exclude(
-                Q(latitude=None)).exclude(
+                Q(longitude__isnull=True)).exclude(
+                Q(latitude__isnull=True)).exclude(
 
                 # Filtrer etter ledig dato:
                 contracts__in=Contract.objects.filter(
