@@ -25,6 +25,9 @@ class CreateApartmentForm(forms.ModelForm):
         self.fields['apartment_age'].widget.attrs['placeholder'] = "."
         self.fields['monthly_cost'].widget.attrs['placeholder'] = "."
         self.fields['size'].widget.attrs['placeholder'] = "."
+        self.fields['original_owner'].widget.attrs['placeholder'] = "."
+
+        self.fields['original_owner'].required = False
 
     class Meta:
         model = Apartment
@@ -38,5 +41,6 @@ class CreateApartmentForm(forms.ModelForm):
             'apartment_age',
             'monthly_cost',
             'size',
+            'original_owner',
             'image1',
         ]
