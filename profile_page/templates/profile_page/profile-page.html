@@ -89,7 +89,7 @@
                 <br><br>
                 <a href="{% url 'logout' %}" class="link">Logg ut</a>
                 <br><br><br><br>
-                <form action="delete-user" method="post">
+                <form action="" method="post">
                     {% csrf_token %}
                     <button type="submit" class="link error">Slett bruker</button>
                 </form>
