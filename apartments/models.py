@@ -13,6 +13,7 @@ class Contract(models.Model):
     contract_text = models.TextField()
     tenant = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="tenant", null=True)
     pending = models.BooleanField()
+    owner_approved = models.BooleanField(null=True)
     start_date = models.DateField()
     end_date = models.DateField()
 
@@ -36,6 +37,10 @@ class Apartment(models.Model):
     vote_amount = models.PositiveIntegerField(default=0)
     size = models.PositiveIntegerField()
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True)
+    original_owner = models.EmailField(
+        max_length=255,
+        null=True
+    )
     contracts = models.ManyToManyField(Contract)
     image1 = ProcessedImageField(upload_to='apartments/',
                                  processors=[ResizeToFit(2000, 2000, False)],

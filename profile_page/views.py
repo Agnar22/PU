@@ -10,7 +10,8 @@ def profile_view(request):
     if request.method == 'GET':
         if request.user.is_authenticated:
             context = {
-                'my_apartments': Apartment.objects.filter(owner=request.user)
+                'my_apartments': Apartment.objects.filter(owner=request.user),
+                'owner_of': Apartment.objects.filter(Q(original_owner__iexact=request.user.email))
             }
             return render(request, 'profile_page/profile-page.html', context)
         else:
@@ -21,16 +22,25 @@ def profile_view(request):
 
         if contract_id is not None:
             contract = Contract.objects.get(pk=contract_id)
+            apartment_id = Apartment.objects.get(contracts__pk=contract_id).pk
 
-            #Brukeren trykte på godkjenn
-            if "accept" in request.POST:
+            # Brukeren er utleier og trykte på godkjenn fremleie
+            if "accept_owner" in request.POST:
+                # Godkjenner kontrakten
+                contract.owner_approved = True;
+                contract.save()
+
+            #Brukeren er fremleier og trykte på godkjenn
+            elif "accept" in request.POST:
                 #Godkjenner kontrakten
                 contract.pending = False;
                 start_date_accepted = contract.start_date
                 end_date_accepted = contract.end_date
                 contract.save()
 
-                Contract.objects.exclude(
+                Contract.objects.filter(
+                    apartment=apartment_id).exclude(
+
                     Q(pk=contract_id)).filter(
 
                     Q(pending=True) &
@@ -44,7 +54,6 @@ def profile_view(request):
                     (Q(start_date__gt=start_date_accepted) &
                     Q(end_date__lt=end_date_accepted))).delete()
 
-
             #Brukeren trykte på avslå
             elif "decline" in request.POST:
                 contract.delete()
@@ -52,7 +61,8 @@ def profile_view(request):
             #Viser profilsiden dersom brukeren fremdeles er logget inn
             if request.user.is_authenticated:
                 context = {
-                    'my_apartments': Apartment.objects.filter(owner=request.user)
+                    'my_apartments': Apartment.objects.filter(owner=request.user),
+                    'owner_of': Apartment.objects.filter(Q(original_owner__iexact=request.user.email))
                 }
                 return render(request, 'profile_page/profile-page.html', context)
             else:
@@ -61,6 +71,14 @@ def profile_view(request):
 
         #Dersom brukeren trykker på knappen "slett bruker"
         else:
+            #Oppdaterer alle kontraktene og leilighetene slik at de ikke lenger har en
+            #utleier/eier
+            contracts = Contract.objects.filter(Q(apartment__original_owner__iexact=request.user.email))
+            contracts.update(owner_approved=True)
+            owner_of = Apartment.objects.filter(original_owner=request.user.email)
+            owner_of.update(original_owner=None)
+
+            #Sletter brukeren
             user = Profile.objects.get(pk=request.user.pk)
             user.delete()
             return redirect('landing-page')

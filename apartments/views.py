@@ -164,15 +164,18 @@ def apartment_detail(request, apartment_id, start_date, end_date):
                 Q(pending=False))).order_by('beds', 'monthly_cost').distinct().count()
 
         #Sjekker at bruker ikke prøver å opprette kontrakt med seg selv
-        if not apartment.owner==request.user:
+        if not apartment.owner==request.user and not apartment.original_owner==request.user.email:
 
             #Sjekker at det er en ledig apartment
             if apartment_count==1 and not (
                     start_date >= end_date
                     or start_date.date() < datetime.datetime.today().date()):
 
+                owner_approved = Apartment.objects.get(pk=apartment_id).original_owner is None
+
                 contract = Contract.objects.create(contract_text="", tenant=request.user,
-                                                   pending=True, start_date=start_date, end_date=end_date)
+                                                   pending=True, owner_approved=owner_approved,
+                                                   start_date=start_date, end_date=end_date)
 
                 contract_for_apartment = Apartment.objects.get(pk=apartment_id)
                 contract_for_apartment.contracts.add(contract)
@@ -208,9 +211,18 @@ def create_apartment(request):
 
         form = CreateApartmentForm(request.POST, request.FILES or None)
         print(form.errors)
-        if form.is_valid():
+
+        original_owner = form.cleaned_data["original_owner"]
+
+        if original_owner == request.user.email:
+            original_owner = None
+
+        owner_count = Profile.objects.filter(Q(email__iexact=original_owner)).count()
+
+        if form.is_valid() and (original_owner is None or owner_count == 1):
             apartment = form.save(commit=False)
             apartment.owner = Profile.objects.get(pk=request.user.pk)
+            apartment.original_owner = original_owner
             apartment.image1 = request.FILES['image1']
             print(apartment.image1)
 

@@ -53,6 +53,11 @@
                 {{ form.monthly_cost.errors }}
             </div>
             <div class="input-field fluid">
+                {{ form.original_owner }}
+                <label for="{{ form.original_owner.id_for_label }}">Email-adresse til utleier/eier</label>
+                {{ form.monthly_cost.errors }}
+            </div>
+            <div class="input-field fluid">
                 {{ form.image1 }}
                 <label for="{{ form.monthly_cost.id_for_label }}">Last opp et bilde</label>
                 {{ form.image1.errors }}
