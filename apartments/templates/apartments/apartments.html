@@ -65,9 +65,13 @@
                 popupAnchor: [0, -30]
             });
 
+            var custom_options = {'maxWidth': '140'}
+
             {% for apartment in apartments_map %}
+                var custom_popup = '<h5>{{apartment.title}}</h5><div style="width: 100%;"><div align="center"><a class="approve button primary" href="{% url 'apartment-detail' apartment_id=apartment.pk start_date=query.start_date end_date=query.end_date %}">Detaljer</a></div></div>'
+
                 L.marker([{{apartment.latitude}}, {{apartment.longitude}}], {icon: myIcon}).addTo(map)
-                    .bindPopup('<h4>{{apartment.title}}</h4><br><a class="approve button primary" href="{% url 'apartment-detail' apartment_id=apartment.pk start_date=query.start_date end_date=query.end_date %}">Detaljer</a>');
+                    .bindPopup(custom_popup, custom_options);
 
             {% endfor %}
         </script>
