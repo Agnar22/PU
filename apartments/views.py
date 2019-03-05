@@ -9,6 +9,7 @@ from authentication.models import Profile
 from .models import Apartment
 from .models import Contract
 from django.db.models import Q
+from geopy.geocoders import Nominatim
 
 
 def apartments(request):
@@ -33,8 +34,10 @@ def apartments(request):
                 or start_date_query < datetime.datetime.today().strftime('%Y-%m-%d')):
 
             apartments = Apartment.objects.none()
+            apartments_map = Apartment.objects.none()
 
         else:
+
             apartments = Apartment.objects.filter((
                 # Filtrer etter lokasjon
                 Q(city__icontains=location_query) |
@@ -47,41 +50,142 @@ def apartments(request):
                 # Filtrer etter ledig dato:
                 contracts__in=Contract.objects.filter(
                     Q(start_date__lte=start_date.date()) &
-                    Q(end_date__gte=start_date.date()))).exclude(
+                    Q(end_date__gte=start_date.date()) &
+                    Q(pending=False))).exclude(
 
                 contracts__in=Contract.objects.filter(
                     Q(start_date__lte=end_date.date()) &
-                    Q(end_date__gte=end_date.date()))).exclude(
+                    Q(end_date__gte=end_date.date()) &
+                    Q(pending=False))).exclude(
 
                 contracts__in=Contract.objects.filter(
                     Q(start_date__gt=start_date.date()) &
-                    Q(end_date__lt=end_date.date()))).order_by('beds', 'monthly_cost').distinct()
+                    Q(end_date__lt=end_date.date()) &
+                    Q(pending=False))).order_by('beds', 'monthly_cost').distinct()
+
+
+            #Leilighetene som skal vises på kartet skal ikke filtreres etter plassering
+            apartments_map = Apartment.objects.filter(
+
+                # Filtrer etter sengeplasser
+                Q(beds__gte=guests_query)).exclude(
+
+                #De som mangler koordinater kan ikke vises på kartet
+                Q(longitude__isnull=True)).exclude(
+                Q(latitude__isnull=True)).exclude(
+
+                # Filtrer etter ledig dato:
+                contracts__in=Contract.objects.filter(
+                    Q(start_date__lte=start_date.date()) &
+                    Q(end_date__gte=start_date.date()) &
+                    Q(pending=False))).exclude(
+
+                contracts__in=Contract.objects.filter(
+                    Q(start_date__lte=end_date.date()) &
+                    Q(end_date__gte=end_date.date()) &
+                    Q(pending=False))).exclude(
+
+                contracts__in=Contract.objects.filter(
+                    Q(start_date__gt=start_date.date()) &
+                    Q(end_date__lt=end_date.date()) &
+                    Q(pending=False))).order_by('beds', 'monthly_cost').distinct()
+
 
     # Dersom noe går galt returneres ingenting
     else:
         apartments = Apartment.objects.none()
+        apartments_map = Apartment.objects.none()
 
+
+    geolocator = Nominatim(user_agent="Apartment")
+    location = geolocator.geocode(location_query)
+
+    #Setter kartet til byen som ble søkt på
+    if location is not None:
+        lat = location.latitude
+        lon = location.longitude
+        zoom = 12
+
+    else:
+        lat = 55
+        lon = 25
+        zoom = 2
 
     context = {
         'apartments': apartments,
+        'apartments_map': apartments_map,
         'query': {
             'location': location_query,
             'guests': guests_query,
             'start_date': start_date_query,
             'end_date': end_date_query
         },
-        'days': delta.days
+        'days': delta.days,
+        'latitude': str(lat),
+        'longitude': str(lon),
+        'zoom': str(zoom)
     }
 
+    print((lat, lon, zoom))
     return render(request, 'apartments/apartments.html', context)
 
 
+
 def apartment_detail(request, apartment_id, start_date, end_date):
+
     apartment = Apartment.objects.get(pk=apartment_id)
 
     apartment_price = apartment.calculate_price(start_date, end_date)
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+
+    error_message = ""
+
+    #Hvis bruker prøver å opprette en ny kontrakt
+    if request.method=='POST':
+
+        #Sjekker at brukeren har en apartment som kan opprettes kontrakt på, ved å
+        #telle antall ledige leiligheter
+        apartment_count = Apartment.objects.filter(pk=apartment_id).exclude(
+
+            contracts__in=Contract.objects.filter(
+                Q(start_date__lte=start_date.date()) &
+                Q(end_date__gte=start_date.date()) &
+                Q(pending=False))).exclude(
+
+            contracts__in=Contract.objects.filter(
+                Q(start_date__lte=end_date.date()) &
+                Q(end_date__gte=end_date.date()) &
+                Q(pending=False))).exclude(
+
+            contracts__in=Contract.objects.filter(
+                Q(start_date__gt=start_date.date()) &
+                Q(end_date__lt=end_date.date()) &
+                Q(pending=False))).order_by('beds', 'monthly_cost').distinct().count()
+
+        #Sjekker at bruker ikke prøver å opprette kontrakt med seg selv
+        if not apartment.owner==request.user and not apartment.original_owner==request.user.email:
+
+            #Sjekker at det er en ledig apartment
+            if apartment_count==1 and not (
+                    start_date >= end_date
+                    or start_date.date() < datetime.datetime.today().date()):
+
+                owner_approved = Apartment.objects.get(pk=apartment_id).original_owner is None
+
+                contract = Contract.objects.create(contract_text="", tenant=request.user,
+                                                   pending=True, owner_approved=owner_approved,
+                                                   start_date=start_date, end_date=end_date)
+
+                contract_for_apartment = Apartment.objects.get(pk=apartment_id)
+                contract_for_apartment.contracts.add(contract)
+
+                error_message = "Sent contract - Approval pending"
+
+            else:
+                error_message = "Contract creation failed - Date not available"
+        else:
+            error_message = "Contract creation failed - This is your apartment"
 
     context = {
         'apartment': apartment,
@@ -90,9 +194,12 @@ def apartment_detail(request, apartment_id, start_date, end_date):
             'end_date': end_date
         },
         'apartment_price': apartment_price,
-        'owner':apartment.owner
-    }
+        'owner': apartment.owner,
+        'message': error_message}
+
     return render(request, 'apartments/apartment-detail.html', context)
+
+
 
 
 def create_apartment(request):
@@ -100,15 +207,35 @@ def create_apartment(request):
         form = CreateApartmentForm()
         return render(request, 'apartments/create-apartment.html', {'form': form})
     elif request.method == 'POST':
+        geolocator = Nominatim(user_agent="Apartment")
+
         form = CreateApartmentForm(request.POST, request.FILES or None)
         print(form.errors)
-        if form.is_valid():
+
+        original_owner = form.cleaned_data["original_owner"]
+
+        if original_owner == request.user.email:
+            original_owner = None
+
+        owner_count = Profile.objects.filter(Q(email__iexact=original_owner)).count()
+
+        if form.is_valid() and (original_owner is None or owner_count == 1):
             apartment = form.save(commit=False)
             apartment.owner = Profile.objects.get(pk=request.user.pk)
+            apartment.original_owner = original_owner
             apartment.image1 = request.FILES['image1']
             print(apartment.image1)
+
+            #Oppretter og lagrer longitude og latitude til adressen
+            location = geolocator.geocode(apartment.address + " " + apartment.city + " " + apartment.country)
+            if location is not None:
+                apartment.latitude = str(location.latitude)
+                apartment.longitude = str(location.longitude)
+
             apartment.save()
             return redirect('profile')
         else:
             print('failed')
             return render(request, 'apartments/create-apartment.html', {'form': form})
+
+

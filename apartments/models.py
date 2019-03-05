@@ -9,15 +9,11 @@ from imagekit.processors import ResizeToFit
 from authentication.models import Profile
 
 
-class ContractManager(models.Manager):
-    def get_queryset(self):
-        return super(ReadOnlyManager, self).get_queryset()\
-            .annotate(combined=Concat('first', " " 'second', output_field=models.CharField()))
-
-
 class Contract(models.Model):
     contract_text = models.TextField()
-    tenant = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    tenant = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="tenant", null=True)
+    pending = models.BooleanField()
+    owner_approved = models.BooleanField(null=True)
     start_date = models.DateField()
     end_date = models.DateField()
 
@@ -32,6 +28,8 @@ class Apartment(models.Model):
     country = models.CharField(max_length=60)
     city = models.CharField(max_length=60)
     address = models.CharField(max_length=100)
+    latitude = models.CharField(max_length=50, default=None, null=True)
+    longitude = models.CharField(max_length=50, default=None, null=True)
     beds = models.IntegerField()
     apartment_age = models.IntegerField()
     rating = models.IntegerField(validators=[MaxValueValidator(5), MinValueValidator(0)], default=0)
@@ -39,11 +37,15 @@ class Apartment(models.Model):
     vote_amount = models.PositiveIntegerField(default=0)
     size = models.PositiveIntegerField()
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True)
+    original_owner = models.EmailField(
+        max_length=255,
+        null=True
+    )
     contracts = models.ManyToManyField(Contract)
     image1 = ProcessedImageField(upload_to='apartments/',
-                                 processors =[ResizeToFit(2000, 2000,False)],
-                                 format ='JPEG',
-                                 options = {'quality': 85})
+                                 processors=[ResizeToFit(2000, 2000, False)],
+                                 format='JPEG',
+                                 options={'quality': 85})
 
     def __str__(self):
         return self.title
