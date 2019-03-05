@@ -18,15 +18,17 @@ class ApartmentTest(TestCase):
         request = RequestFactory().get(path)
         request.content_params
         response = apartments(request)
+        print(response.status_code)
 
         self.assertEqual(response.status_code, 200)
 
     def test_apartment_detail(self):
         apartment = mixer.blend(Apartment)
         pk = apartment.pk
+        print(pk)
         start_date = '2019-03-19'
         end_date = '2019-04-19'
-        path = reverse('apartment-detail', kwargs={'apartment-id': pk, 'start-date': start_date, 'end-date': end_date})
+        path = reverse('apartment-detail', kwargs={'apartment_id': pk, 'start_date': start_date, 'end_date': end_date})
         request = RequestFactory().get(path)
         response = apartment_detail(request, pk, start_date, end_date)
 
