@@ -5,7 +5,19 @@
 
 {% block body %}
     {% include 'navbar.html' %}
+
     <div class="container" id="profile-page">
+        <div class="scrim" v-if="deleteUserModalOpen"></div>
+        <div class="modal" :class="{open: deleteUserModalOpen}" v-if="deleteUserModalOpen">
+            <form method="post">
+                {% csrf_token %}
+                <h3>Er du sikker på at du vil slette brukeren din?</h3>
+                <div class="choice-buttons">
+                    <button class="button" @click="closeDeleteUserModal($event)">Avbryt</button>
+                    <button class="button error">Slett bruker</button>
+                </div>
+            </form>
+        </div>
         <div class="user">
             <h1>{{ request.user.first_name }} {{ request.user.last_name }}</h1>
             <div class="user-rating">
@@ -46,7 +58,8 @@
                                             {{ contract.end_date|date:"d.m.y" }}
                                         </li>
                                     {% elif not contract.pending %}
-                                        <li>Kontrakten med {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
+                                        <li>Kontrakten
+                                            med {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
                                             i perioden {{ contract.start_date|date:"d.m.y" }} -
                                             {{ contract.end_date|date:"d.m.y" }} krever godkjenning av utleier
                                         </li>
@@ -120,10 +133,6 @@
                         </div>
                     </div>
                 {% endfor %}
-
-
-
-
                 <a class="button" href="{% url 'create-apartment' %}">Opprett ny leilighet</a>
             </div>
             <div class="profile-settings">
@@ -147,11 +156,27 @@
                 <br><br>
                 <a href="{% url 'logout' %}" class="link">Logg ut</a>
                 <br><br><br><br>
-                <form action="" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="link error">Slett bruker</button>
-                </form>
+                <button class="link error" @click="openDeleteUserModal()">Slett bruker</button>
             </div>
         </div>
     </div>
+{% endblock %}
+{% block js %}
+    <script>
+        let profilePage = new Vue({
+            el: '#profile-page',
+            data: {
+                'deleteUserModalOpen': false
+            },
+            methods: {
+                openDeleteUserModal: function() {
+                    this.deleteUserModalOpen = true
+                },
+                closeDeleteUserModal: function(e) {
+                    e.preventDefault();
+                    this.deleteUserModalOpen = false
+                }
+            }
+        })
+    </script>
 {% endblock %}
