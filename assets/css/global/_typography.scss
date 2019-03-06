@@ -8,15 +8,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size: 2.25rem; // 36px
+  $h1: (576: 32, 992: 36);
+  font-size: least-squares-fit($h1);
 }
 
 h2 {
-  font-size: 1.875rem;
+  $h2: (576: 24, 992: 30);
+  font-size: least-squares-fit($h2);
 }
 
 h3 {
-  font-size: 1.5rem;
+  $h3: (576: 20, 992: 24);
+  font-size: least-squares-fit($h3);
 }
 
 h4 {
