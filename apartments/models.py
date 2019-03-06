@@ -13,7 +13,7 @@ class Contract(models.Model):
     contract_text = models.TextField()
     tenant = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="tenant", null=True)
     pending = models.BooleanField()
-    owner_approved = models.BooleanField(null=True)
+    owner_approved = models.BooleanField(null=True, blank=True)
     start_date = models.DateField()
     end_date = models.DateField()
 
