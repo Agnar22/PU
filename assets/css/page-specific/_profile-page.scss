@@ -3,16 +3,19 @@
   h1 {
     color: $primary-dark;
   }
+
   h2 {
-      color: $primary-dark;
-      margin-bottom: 2rem;
-    }
+    color: $primary-dark;
+    margin-bottom: 2rem;
+  }
 
   .profile-container {
     display: grid;
-    grid-template-columns: 2fr 1fr;
     grid-gap: 4rem;
     position: relative;
+    @media screen and (min-width: $lg) {
+      grid-template-columns: 2fr 1fr;
+    }
   }
 
   .my-apartments, .profile-settings {
@@ -33,76 +36,36 @@
     }
 
     .card {
+      ul {
+        margin-top: 1rem;
+        margin-left: 1.5rem;
+        color: $primary-dark;
 
-      > img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        margin: -1rem 0 -1rem -1rem;
-        object-fit: cover;
-        width: calc(160px + 1rem);
-        height: calc(100% + 2rem);
+        li {
+          list-style-type: circle;
+        }
+
       }
 
-      .apartment-description {
-        display: block;
-        padding: 1rem 1rem 1rem calc(160px + 1rem);
+      .contract {
+        margin: 1rem 0 0 -1rem;
+        list-style-type: none;
+        @extend .card;
+        font-size: 1.2rem;
+        line-height: 1.2em;
 
-        i {
-          display: block;
+        span {
           color: $dark-gray;
-          margin: 0.5rem 0;
-
-          img {
-            height: 18px;
-            width: 18px;
-            position: relative;
-            top: 2px;
-            margin-right: 0.5rem;
-          }
+          font-weight: bold;
         }
 
-        .rating {
+        form {
           margin-top: 1rem;
-          display: flex;
-          align-items: center;
-          color: $gray;
-
-          img {
-            margin-right: 4px;
-          }
         }
 
-        ul {
-          margin-top: 1rem;
-          margin-left: 1.5rem;
-          color: $primary-dark;
-
-          li {
-            list-style-type: circle;
-          }
-
-        }
-
-        .contract {
-          margin: 1rem 0 0 -1rem;
-          list-style-type: none;
-          @extend .card;
-          font-size: 1.2rem;
-          line-height: 1.2em;
-
-          span {
-            color: $dark-gray;
-            font-weight: bold;
-          }
-
-          form {
-            margin-top: 1rem;
-          }
-
-          .approve {
-            height: 32px;
-          }
+        .approve {
+          height: 32px;
+          margin-bottom: 1rem;
         }
       }
     }

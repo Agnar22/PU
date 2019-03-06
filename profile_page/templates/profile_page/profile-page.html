@@ -22,8 +22,8 @@
                 <h2>Mine leiligheter</h2>
 
                 {% for apartment in my_apartments %}
-                    <div class="card">
-                        <img src="{{ apartment.image1.url }}" alt="{{ apartment.title }}">
+                    <div class="card apartment-list-item">
+                        <img class="apartment-image" src="{{ apartment.image1.url }}" alt="{{ apartment.title }}">
                         <div class="apartment-description">
                             <h4>{{ apartment.title }}</h4>
                             <i><img src="{% static 'icons/pin.svg' %}" alt="pin-icon">{{ apartment.city }}</i>
@@ -75,8 +75,8 @@
 
 
                 {% for apartment in owner_of %}
-                    <div class="card">
-                        <img src="{{ apartment.image1.url }}" alt="{{ apartment.title }}">
+                    <div class="card apartment-list-item">
+                        <img class="apartment-image" src="{{ apartment.image1.url }}" alt="{{ apartment.title }}">
                         <div class="apartment-description">
                             <h4>{{ apartment.title }}</h4>
                             <i><img src="{% static 'icons/pin.svg' %}" alt="pin-icon">{{ apartment.city }}</i>
