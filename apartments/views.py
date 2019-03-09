@@ -170,6 +170,7 @@ def apartment_detail(request, apartment_id, start_date, end_date):
         form = CreateContractForm(request.POST)
         valid_form = form.is_valid()
         if valid_form:
+            #Fjerner alle duplikate emailer, og fjerner brukerens egen email-adresse dersom den ble skrevet inn
             emails = list(dict.fromkeys(form.cleaned_data["tenants"]))
             emails = [x.lower() for x in emails]
             while user_email.lower() in emails:
