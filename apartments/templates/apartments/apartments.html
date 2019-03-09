@@ -55,7 +55,7 @@
             var map = L.map('map').setView([{{latitude}}, {{longitude}}], {{zoom}});
             map.scrollWheelZoom.disable()
 
-            map.on('click', function() { map.scrollWheelZoom.enable(); });
+            map.on('mousedown', function() { map.scrollWheelZoom.enable(); });
             map.on('mouseout', function() { map.scrollWheelZoom.disable(); });
 
             L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png').addTo(map);
