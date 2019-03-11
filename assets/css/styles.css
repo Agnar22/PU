@@ -614,6 +614,9 @@ p a, .link {
     margin-bottom: 1rem; }
 
 #messages .user img {
-        width: 10px;
-        height: 10px; }
+        margin-top: 10%;
+        width: 42px;
+        height: 42px;
+        object-fit: cover;
+        border-radius: 100px; }
 /*# sourceMappingURL=styles.css.map */
