@@ -9,7 +9,6 @@
     <div id="messages"> 
 
         <div class="contacts">
-
             <div class="person-list">
                 {% for curr_info in info %}
                     <div class="user">
@@ -23,6 +22,21 @@
             </div>
         </div>
         <div class="messages">
+            <div class="person-list">
+                {% for message in messages %}
+                    <div class="user">
+                        <div class="user-rating">
+                            <p>{{ message.messager }}: {{ message.content }}</p>
+                        </div>
+                    </div>
+                {%  endfor %}
+                <form method="post" >
+                {% csrf_token %}
+                    <input type="text" name="message"/>
+                    <input type="hidden" name="receiver" value="{{ chatting_with.id }}"/>
+                    <input type="submit" class="button primary" value="Send">
+                </form>
+            </div>
         </div>
     </div>
 {% endblock %}
