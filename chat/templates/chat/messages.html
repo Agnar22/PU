@@ -5,22 +5,25 @@
 
 {% block body %}
 {% include 'navbar.html' %}
-    <div class="contacts">
+    <div id="messages"> 
 
-        <div class="person-list">
-            {% for person in persons %}
-                <div class="user">
-                    <img src="{% static 'img/girl.jpg' %}" alt="girl">
-                    <div class="user-rating">
-                        <p>{{  person.first_name }} {{ person.last_name}}</p>
-                        <p>{{ one_message.content }}</p>
+        <div class="contacts">
+
+            <div class="person-list">
+                {% for person in persons %}
+                    <div class="user">
+                        <img src="{% static 'img/girl.jpg' %}" alt="girl">
+                        <div class="user-rating">
+                            <p>{{  person.first_name }} {{ person.last_name}}</p>
+                            <p>{{ one_message.content }}</p>
+                        </div>
                     </div>
-                </div>
-            {%  endfor %}
+                {%  endfor %}
+            </div>
         </div>
-    </div>
-    <div class="messages">
+        <div class="messages">
 
 
+        </div>
     </div>
 {% endblock %}
