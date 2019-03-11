@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'landingpage',
     'apartments',
     'profile_page',
+    'chat',
     # Third party apps:
     'imagekit'
 ]

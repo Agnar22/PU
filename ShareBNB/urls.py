@@ -23,7 +23,8 @@ urlpatterns = [
     path('', include('authentication.urls')),
     path('', include('landingpage.urls')),
     path('apartments/', include('apartments.urls')),
-    path('', include('profile_page.urls'))
+    path('', include('profile_page.urls')),
+    path('chat/', include('chat.urls'))
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
