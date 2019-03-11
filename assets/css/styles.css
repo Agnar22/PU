@@ -613,6 +613,7 @@ p a, .link {
     height: 32px;
     margin-bottom: 1rem; }
 
-
-
+#messages .user img {
+        width: 10px;
+        height: 10px; }
 /*# sourceMappingURL=styles.css.map */

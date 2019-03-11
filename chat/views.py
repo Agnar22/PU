@@ -9,7 +9,7 @@ from django.db.models import Q
 # Create your views here.
 def messages(request):
     # Display all the chats and
-    if request.method('GET'):
+    if request.method=='GET':
         if request.user.is_authenticated:
             # Get all chats where this person is
             # Sort after last message recieved
@@ -22,7 +22,8 @@ def messages(request):
                     persons.append(chats[x].person1)
                 else:
                     persons.append(chats[x].person2)
-                one_message.append(chats[x].messages.objects.all().order_by('-time'))
+                print(persons)
+                one_message.append(chats[x].messages.all().order_by('-time'))
 
             # Display messages from last chat
             message_chat = chats[0].messages.order_by('-time')
