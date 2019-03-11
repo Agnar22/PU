@@ -35,8 +35,7 @@ def messages(request):
             else:
                 message_chat=""
             context = {
-                'messages': message_chat,
-                'persons': persons,
+                'info': [(message_chat[i], persons[i]) for i in range(len(message_chat))],
                 'one_message': one_message
             }
             return render(request, 'chat/messages.html', context)

@@ -11,12 +11,12 @@
         <div class="contacts">
 
             <div class="person-list">
-                {% for person in persons %}
+                {% for curr_info in info %}
                     <div class="user">
                         <img src="{% static 'img/girl.jpg' %}" alt="girl">
                         <div class="user-rating">
-                            <p>{{  person.first_name }} {{ person.last_name}}</p>
-                            <p>{{ one_message.content }}</p>
+                            <p>{{  curr_info.1.first_name }} {{ curr_info.1.last_name}}</p>
+                            <p>{{ curr_info.0.content }}</p>
                         </div>
                     </div>
                 {%  endfor %}
