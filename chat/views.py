@@ -24,10 +24,11 @@ def messages(request):
                     persons.append(chats[x].person2)
 
                 if len(chats[x].messages.all()) > 0:
-                    one_message.append(chats[x].messages.all().order_by('-time'))
+                    one_message.append(chats[x].messages.all().order_by('-time')[0])
                 else:
                     one_message.append()
-
+            print(one_message[0].content)
+            print(persons[0])
             # Display messages from last chat
             if len(chats)>0:
                 message_chat = chats[0].messages.order_by('-time')
