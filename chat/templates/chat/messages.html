@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load apartment_filters %}
+{% load contracts_sort %}
+
+{% block body %}
+{% include 'navbar.html' %}
+    <div class="contacts">
+
+        <div class="person-list">
+            {% for person in persons %}
+                <div class="user">
+                    <img src="{% static 'img/girl.jpg' %}" alt="girl">
+                    <div class="user-rating">
+                        <p>{{  person.first_name }} {{ person.last_name}}</p>
+                        <p>{{ one_message.content }}</p>
+                    </div>
+                </div>
+            {%  endfor %}
+        </div>
+    </div>
+    <div class="messages">
+
+
+    </div>
+{% endblock %}
