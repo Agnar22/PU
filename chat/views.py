@@ -22,16 +22,21 @@ def messages(request):
                     persons.append(chats[x].person1)
                 else:
                     persons.append(chats[x].person2)
-                print(persons)
-                one_message.append(chats[x].messages.all().order_by('-time'))
+
+                if len(chats[x].messages.all()) > 0:
+                    one_message.append(chats[x].messages.all().order_by('-time'))
+                else:
+                    one_message.append()
 
             # Display messages from last chat
-            message_chat = chats[0].messages.order_by('-time')
+            if len(chats)>0:
+                message_chat = chats[0].messages.order_by('-time')
+            else:
+                message_chat=""
             context = {
                 'messages': message_chat,
                 'persons': persons,
                 'one_message': one_message
-
             }
             return render(request, 'chat/messages.html', context)
         else:
