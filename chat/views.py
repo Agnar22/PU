@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect
-from apartments.forms import CreateApartmentForm
 from authentication.models import Profile
 from .models import Message
 from .models import Chat
