@@ -30,11 +30,11 @@ def render_chats(request, chat_person=None):
     # Find current displayed chat
     if chat_person is not None:
         print("chat", get_chat(request.user, chat_person))
-        message_chat = get_chat(request.user, chat_person)[0].messages.order_by('-time')
+        message_chat = get_chat(request.user, chat_person)[0].messages.order_by('time')
     # Display messages from last written chat
     else:
         if len(user_chats) > 0:
-            message_chat = user_chats[0].messages.order_by('-time')
+            message_chat = user_chats[0].messages.order_by('time')
         else:
             message_chat = ""
         chat_person = persons[0] if len(persons) > 0 else ""
@@ -103,14 +103,14 @@ def change_chat(request, chat_person_id):
         print("chatting with", chatting_with)
     except Exception as e:
         print(e)
-        chatting_with=None
+        chatting_with = None
     return render_chats(request, chat_person=chatting_with)
 
 
 # Create your views here.
 def chats(request):
-    last_chats=Chat.objects.filter(Q(person1=request.user) | Q(person2=request.user)).order_by('-last_message')
-    chat_person=None
-    if len(last_chats)>0:
+    last_chats = Chat.objects.filter(Q(person1=request.user) | Q(person2=request.user)).order_by('-last_message')
+    chat_person = None
+    if len(last_chats) > 0:
         chat_person = last_chats[0].person1 if request.user is not last_chats[0].person1 else last_chats[0].person2
     return change_chat(request, chat_person)

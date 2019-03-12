@@ -10,11 +10,11 @@ class Message(models.Model):
     content = models.TextField()
     messager = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="messager", null=True)
     reciever = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="reciever", null=True)
-    time = models.DateField()
+    time = models.TimeField()
 
 
 class Chat(models.Model):
     messages = models.ManyToManyField(Message, null=True)
     person1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="person1", null=True)
     person2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="person2", null=True)
-    last_message = models.DateField(null=True)
+    last_message = models.TimeField(null=True)
