@@ -14,7 +14,7 @@ class Message(models.Model):
 
 
 class Chat(models.Model):
-    messages = models.ManyToManyField(Message)
+    messages = models.ManyToManyField(Message, null=True)
     person1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="person1", null=True)
     person2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="person2", null=True)
-    last_message = models.DateField()
+    last_message = models.DateField(null=True)

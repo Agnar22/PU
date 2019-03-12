@@ -5,9 +5,33 @@
 
 {% block body %}
 {% include 'navbar.html' %}
+    <br><br><br><br><br>
+    {% for message in messages %}
+        <div {% if message.tags %} class="snackbar {{ message.tags }}"{% endif %}>
+            {% if message.tags == 'success' %}
+                <img src="{% static 'icons/snackbar/check-circle.svg' %}" alt="Checkmark">
+            {% elif  message.tags == 'warning' %}
+                <img src="{% static 'icons/snackbar/alert-triangle.svg' %}" alt="warning">
+            {% elif  message.tags == 'error' %}
+                <img src="{% static 'icons/snackbar/close_circle.svg' %}" alt="Error">
+            {% else %}
+                <img src="{% static 'icons/snackbar/information-circle.svg' %}" alt="Information">
+            {% endif %}
+            {{ message }}
+        </div>
+    {% endfor %}
 
-    <div id="messages"> 
-
+    <div id="messages">
+    <br><br><br><br><br>
+        <div class="add-persons">
+             <form method="post" >
+                {% csrf_token %}
+                <input type="text" name="person"/>
+                <input type="hidden" name="receiver" value="{{ chatting_with.id }}"/>
+                <input type="submit" name="Add" class="button primary" value="Add">
+            </form>
+            -----------------------------------------------
+        </div>
         <div class="contacts">
             <div class="person-list">
                 {% for curr_info in info %}
@@ -18,25 +42,25 @@
                             <p>{{ curr_info.0.content }}</p>
                         </div>
                     </div>
+                    --------------------------------------------
                 {%  endfor %}
             </div>
         </div>
-        <div class="messages">
-            <div class="person-list">
-                {% for message in messages %}
-                    <div class="user">
-                        <div class="user-rating">
-                            <p>{{ message.messager }}: {{ message.content }}</p>
-                        </div>
+        <div class="chat">
+            {% for message in messages %}
+                <div class="user">
+                    <div class="user-rating">
+                        <p>{{ message.messager }}: {{ message.content }}</p>
                     </div>
-                {%  endfor %}
-                <form method="post" >
-                {% csrf_token %}
-                    <input type="text" name="message"/>
-                    <input type="hidden" name="receiver" value="{{ chatting_with.id }}"/>
-                    <input type="submit" class="button primary" value="Send">
-                </form>
-            </div>
+                </div>
+
+            {%  endfor %}
+            <form method="post" >
+            {% csrf_token %}
+                <input type="text" name="message"/>
+                <input type="hidden" name="receiver" value="{{ chatting_with.id }}"/>
+                <input type="submit" name="Send" class="button primary" value="Send">
+            </form>
         </div>
     </div>
 {% endblock %}
