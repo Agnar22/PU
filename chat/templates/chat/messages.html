@@ -35,13 +35,13 @@
         <div class="contacts">
             <div class="person-list">
                 {% for curr_info in info %}
-                    <div class="user">
+                    <a class="user" href="{% url 'chat' chat_person_id=curr_info.1.pk %}" name="Choose_chat" value={{ curr_info.1.pk }}>
                         <img src="{% static 'img/girl.jpg' %}" alt="girl">
                         <div class="user-rating">
                             <p>{{  curr_info.1.first_name }} {{ curr_info.1.last_name}}</p>
                             <p>{{ curr_info.0.content }}</p>
                         </div>
-                    </div>
+                    </a>
                     --------------------------------------------
                 {%  endfor %}
             </div>
@@ -53,7 +53,6 @@
                         <p>{{ message.messager }}: {{ message.content }}</p>
                     </div>
                 </div>
-
             {%  endfor %}
             <form method="post" >
             {% csrf_token %}

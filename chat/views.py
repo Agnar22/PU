@@ -9,65 +9,108 @@ import datetime
 from django.contrib import messages
 
 
-# Create your views here.
-def chats(request, viewing_chat=None):
+def render_chats(request, chat_person=None):
+    # Get all chats where the user is
+    # Sort after last message recieved
+    user_chats = Chat.objects.filter(Q(person1=request.user) | Q(person2=request.user)).order_by('-last_message')
+
+    persons = []  # Persons the user is chatting with
+    one_message = []  # The last message in each chat
+    for x in range(0, len(user_chats)):
+        if user_chats[x].person1 == request.user:
+            persons.append(user_chats[x].person2)
+        else:
+            persons.append(user_chats[x].person1)
+
+        if len(user_chats[x].messages.all()) > 0:
+            one_message.append(user_chats[x].messages.all().order_by('-time')[0])
+        else:
+            one_message.append("")
+
+    # Find current displayed chat
+    if chat_person is not None:
+        print("chat", get_chat(request.user, chat_person))
+        message_chat = get_chat(request.user, chat_person)[0].messages.order_by('-time')
+    # Display messages from last written chat
+    else:
+        if len(user_chats) > 0:
+            message_chat = user_chats[0].messages.order_by('-time')
+        else:
+            message_chat = ""
+        chat_person = persons[0] if len(persons) > 0 else ""
+    context = {
+        'info': [(one_message[i], persons[i]) for i in range(len(one_message))],
+        'messages': message_chat,
+        'chatting_with': chat_person
+    }
+    return render(request, 'chat/messages.html', context)
+
+
+# Returning list of a chats between the two people
+def get_chat(person1, person2):
+    print(person1, person2)
+    chat_one = Chat.objects.filter(Q(person1=person1) & Q(person2=person2))
+    chat_two = Chat.objects.filter(Q(person1=person2) & Q(person2=person1))
+    print('chat_one', chat_one)
+    print('chat_two', chat_two)
+    return chat_one if len(chat_one) > 0 else chat_two
+
+
+# Send message
+def send_message(request):
+    print("changin chat")
+    message_content = request.POST.get('message', '')
+    receiver = request.POST.get('receiver', '')
+    curr_message = Message.objects.create(content=message_content, messager=request.user,
+                                          reciever=Profile.objects.get(id=receiver),
+                                          time=datetime.datetime.now())
+    # Finding the correct chat combination
+    chat = get_chat(request.user, receiver)
+    if len(chat) > 0:
+        chat[0].messages.add(curr_message)
+
+
+# Adding a new chat
+def add_chat(request):
+    name = request.POST.get('person', '').split()
+    if len(name) == 2:
+        try:
+            chatting_with = Profile.objects.get(first_name=name[0], last_name=name[1])
+            Chat.objects.create(person1=request.user, person2=chatting_with)
+        except Exception as e:
+            messages.error(request, 'Fant dessverre ikke brukeren, prøv på nytt')
+            print("Could not add chat\n", e)
+
+
+# Changing to chat with chat_person_id
+def change_chat(request, chat_person_id):
+    print("in change_chats function")
+    # Use must be authenticated
     if not request.user.is_authenticated:
         return redirect('landing-page')
 
     # Add new chat or send message or display other chat
     if request.method == 'POST':
-        # Send message
         if request.POST.get('Send', '') == 'Send':
-            message_content = request.POST.get('message', '')
-            receiver = request.POST.get('receiver', '')
-            curr_message = Message.objects.create(content=message_content, messager=request.user,
-                                                  reciever=Profile.objects.get(id=receiver),
-                                                  time=datetime.datetime.now())
-            # Finding the correct chat combination
-            chat_one = Chat.objects.filter(Q(person1=request.user) & Q(person2=receiver))
-            chat_two = Chat.objects.filter(Q(person1=receiver) & Q(person2=request.user))
-            if len(chat_one) > 0:
-                chat_one[0].messages.add(curr_message)
-            elif len(chat_two):
-                chat_two[0].messages.add(curr_message)
+            send_message(request)
 
         # Add new chat
         elif request.POST.get('Add', '') == 'Add':
-            name = request.POST.get('person', '').split()
-            if len(name) == 2:
-                try:
-                    chatting_with = Profile.objects.get(first_name=name[0], last_name=name[1])
-                    Chat.objects.create(person1=request.user, person2=chatting_with)
-                except Exception as e:
-                    messages.error(request, 'Fant dessverre ikke brukeren, prøv på nytt')
-                    print("Could not add chat\n", e)
+            add_chat(request)
 
-    # Display all the chats and
-    # Get all chats where this person is
-    # Sort after last message recieved
-    chats = Chat.objects.filter(Q(person1=request.user) | Q(person2=request.user)).order_by('-last_message')
+    try:
+        chatting_with = Profile.objects.get(id=chat_person_id)
+        print("chatting with", chatting_with)
+    except Exception as e:
+        print(e)
+        chatting_with=None
+    return render_chats(request, chat_person=chatting_with)
 
-    persons = []  # Persons the user is chatting with
-    one_message = []  # The last message in each chat
-    for x in range(0, len(chats)):
-        if chats[x].person1 == request.user:
-            persons.append(chats[x].person2)
-        else:
-            persons.append(chats[x].person1)
 
-        if len(chats[x].messages.all()) > 0:
-            one_message.append(chats[x].messages.all().order_by('-time')[0])
-        else:
-            one_message.append("")
-    # Display messages from last chat
-    if len(chats) > 0:
-        message_chat = chats[0].messages.order_by('-time')
-    else:
-        message_chat = ""
-    chatting_with = persons[0] if len(persons) > 0 else ""
-    context = {
-        'info': [(one_message[i], persons[i]) for i in range(len(one_message))],
-        'messages': message_chat,
-        'chatting_with': chatting_with
-    }
-    return render(request, 'chat/messages.html', context)
+# Create your views here.
+def chats(request):
+    last_chats=Chat.objects.filter(Q(person1=request.user) | Q(person2=request.user)).order_by('-last_message')
+    chat_person=None
+    if len(last_chats)>0:
+        chat_person = last_chats[0].person1 if request.user is not last_chats[0].person1 else last_chats[0].person2
+    return change_chat(request, chat_person)
