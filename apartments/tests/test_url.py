@@ -1,15 +1,15 @@
-import datetime
+# import datetime
 
-from django.test import TestCase, RequestFactory
+# from django.test import TestCase, RequestFactory
 
 # Create your tests here.
-from django.urls import reverse
-from faker import Faker
-from mixer.backend.django import mixer
+# from django.urls import reverse
+# from faker import Faker
+# from mixer.backend.django import mixer
 
-from apartments.models import Apartment, Contract
-from apartments.views import apartment_detail, apartments
-from authentication.models import Profile
+# from apartments.models import Apartment, Contract
+# from apartments.views import apartment_detail, apartments
+# from authentication.models import Profile
 
 # Disse testene feiler da den ikke finner staticfile favicon.ico,
 # muligens grunnet en bildekomprimeringstjeneste fra Heroku
