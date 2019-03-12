@@ -72,4 +72,4 @@ class MultiEmailWidgetTest(SimpleTestCase):
         self.assertEqual(1, len(pq('textarea', output)))
         self.assertEqual(
             pq('textarea', output).text(),
-            'foo@foo.fr\nbar@bar.fr')
+            'foo@foo.fr bar@bar.fr')
