@@ -17,7 +17,7 @@ def profile_view(request):
         else:
             return redirect('landing-page')
 
-    else: # POST
+    else:  # POST
         contract_id = request.POST.get("contract_id")
 
         if contract_id is not None:

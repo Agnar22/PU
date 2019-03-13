@@ -38,8 +38,6 @@ class CreateApartmentForm(forms.ModelForm):
 
         self.fields['beds'].widget.attrs['placeholder'] = "."
 
-        self.fields['apartment_age'].widget.attrs['placeholder'] = "."
-
         self.fields['monthly_cost'].widget.attrs['placeholder'] = "."
 
         self.fields['size'].widget.attrs['placeholder'] = "."
@@ -56,7 +54,6 @@ class CreateApartmentForm(forms.ModelForm):
             'city',
             'country',
             'beds',
-            'apartment_age',
             'monthly_cost',
             'size',
             'original_owner',

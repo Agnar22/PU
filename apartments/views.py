@@ -226,7 +226,6 @@ def apartment_detail(request, apartment_id, start_date, end_date):
     return render(request, 'apartments/apartment-detail.html', context)
 
 
-
 def create_apartment(request):
     if request.method == 'GET':
         form = CreateApartmentForm()
@@ -249,7 +248,6 @@ def create_apartment(request):
             apartment.owner = Profile.objects.get(pk=request.user.pk)
             apartment.original_owner = original_owner
             apartment.image1 = request.FILES['image1']
-            print(apartment.image1)
 
             #Oppretter og lagrer longitude og latitude til adressen
             location = geolocator.geocode(apartment.address + " " + apartment.city + " " + apartment.country)
@@ -264,3 +262,27 @@ def create_apartment(request):
             return render(request, 'apartments/create-apartment.html', {'form': form})
 
 
+def edit_apartment(request, apartment_id):
+    apartment = Apartment.objects.get(pk=apartment_id)
+
+    if request.method == 'GET':
+        form = CreateApartmentForm(instance=apartment)
+        return render(request, 'apartments/create-apartment.html', {'form': form})
+    else:
+        form = CreateApartmentForm(request.POST, request.FILES or None, instance=apartment)
+        geolocator = Nominatim(user_agent="Apartment")
+        if form.is_valid():
+            apartment = form.save(commit=False)
+            if request.FILES:
+                apartment.image1 = request.FILES['image1']
+            # Oppretter og lagrer longitude og latitude til adressen
+            location = geolocator.geocode(apartment.address + " " + apartment.city + " " + apartment.country)
+            if location is not None:
+                apartment.latitude = str(location.latitude)
+                apartment.longitude = str(location.longitude)
+            print(apartment.title)
+            apartment.save()
+            print(apartment.title)
+            return redirect('profile')
+        else:
+            return render(request, 'apartments/create-apartment.html', {'form': form})

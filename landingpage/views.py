@@ -49,4 +49,3 @@ def landing_page(request):
             else:
                 messages.error(request, 'Fant dessverre ikke brukeren, prøv på nytt')
                 return redirect('landing-page')
-

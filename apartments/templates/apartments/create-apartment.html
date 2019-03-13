@@ -63,7 +63,7 @@
                 {{ form.image1.errors }}
             </div>
             <br>
-            <input type="submit" class="button primary" value="Opprett leilighet">
+            <input type="submit" class="button primary" value="{% if 'edit' in request.path %}Lagre endringer{% else %}Opprett leiligheten{% endif %}">
         </form>
     </div>
 {% endblock body %}

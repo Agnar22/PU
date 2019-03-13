@@ -36,20 +36,20 @@ class Apartment(models.Model):
     country = models.CharField(max_length=60)
     city = models.CharField(max_length=60)
     address = models.CharField(max_length=100)
-    latitude = models.CharField(max_length=50, default=None, null=True)
-    longitude = models.CharField(max_length=50, default=None, null=True)
+    latitude = models.CharField(max_length=50, default=None, null=True, blank=True)
+    longitude = models.CharField(max_length=50, default=None, null=True, blank=True)
     beds = models.IntegerField()
-    apartment_age = models.IntegerField()
     rating = models.IntegerField(validators=[MaxValueValidator(5), MinValueValidator(0)], default=0)
     monthly_cost = models.PositiveIntegerField()
     vote_amount = models.PositiveIntegerField(default=0)
     size = models.PositiveIntegerField()
-    owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True)
+    owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, blank=True)
     original_owner = models.EmailField(
         max_length=255,
-        null=True
+        null=True,
+        blank=True
     )
-    contracts = models.ManyToManyField(Contract)
+    contracts = models.ManyToManyField(Contract, blank=True)
     image1 = ProcessedImageField(upload_to='apartments/',
                                  processors=[ResizeToFit(2000, 2000, False)],
                                  format='JPEG',
