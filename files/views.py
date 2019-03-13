@@ -6,7 +6,7 @@ import time
 from rest_framework import permissions, status, authentication
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .config_aws.py import (
+from .config_aws import (
     AWS_UPLOAD_BUCKET,
     AWS_UPLOAD_REGION,
     AWS_UPLOAD_ACCESS_KEY_ID,
@@ -114,4 +114,24 @@ class FilePolicyAPI(APIView):
             "url": url,
             "username": username_str,
         }
+        return Response(data, status=status.HTTP_200_OK)
+
+
+class FileUploadCompleteHandler(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [authentication.SessionAuthentication]
+
+    def post(self, request, *args, **kwargs):
+        file_id = request.POST.get('file')
+        size = request.POST.get('fileSize')
+        data = {}
+        type_ = request.POST.get('fileType')
+        if file_id:
+            obj = FileItem.objects.get(id=int(file_id))
+            obj.size = int(size)
+            obj.uploaded = True
+            obj.type = type_
+            obj.save()
+            data['id'] = obj.id
+            data['saved'] = True
         return Response(data, status=status.HTTP_200_OK)
