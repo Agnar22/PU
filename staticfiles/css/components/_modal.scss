@@ -1,0 +1,38 @@
+.scrim {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.6);
+  z-index: 10000;
+}
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 400px;
+  padding: 2rem;
+  box-shadow: $med-shadow;
+  z-index: 10001;
+  display: none;
+  text-align: center;
+  border-radius: $main-border-radius;
+  background-color: $white;
+
+  &.open {
+    display: block;
+  }
+
+  .choice-buttons {
+    margin-top: 2rem;
+    width: 100%;
+    display: flex;
+
+    .button {
+      width: 50%;
+      margin: 0 1rem;
+    }
+  }
+}
