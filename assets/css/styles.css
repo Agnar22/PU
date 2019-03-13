@@ -682,6 +682,16 @@ p a, .link {
           overflow-wrap: break-word;
           word-wrap: break-word;
           hyphens: auto; }
+        #chat .right-side #messages .chat-bubble .timestamp {
+          position: absolute;
+          right: 40px;
+          bottom: -17px;
+          color: #5B5A57; }
+        #chat .right-side #messages .chat-bubble img {
+          width: 42px;
+          height: 42px;
+          object-fit: cover;
+          border-radius: 21px; }
     #chat .right-side #chat-input {
       position: absolute;
       bottom: 0;

@@ -90,6 +90,18 @@
         p {
           @include text-wrap;
         }
+        .timestamp {
+            position: absolute;
+            right: 40px;
+            bottom: -17px;
+            color: $dark-gray;
+          }
+        img {
+          width: 42px;
+        height: 42px;
+        object-fit: cover;
+        border-radius: 21px;
+        }
       }
     }
 

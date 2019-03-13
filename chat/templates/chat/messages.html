@@ -51,8 +51,9 @@
                 {% for message in messages %}
                     <div class="chat-bubble-wrapper {% if message.messager.pk == request.user.pk %}you{% endif %}">
                         <div class="chat-bubble">
+                            <img src="{% static 'img/girl.jpg' %}" alt="girl">
                             <p>{{ message.content }}</p>
-                            <span class="timestamp">23:49</span>
+                            <span class="timestamp">{{ message.time }}</span>
                         </div>
                     </div>
                 {% endfor %}
