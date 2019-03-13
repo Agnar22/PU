@@ -6,6 +6,7 @@
 {% block body %}
 {% include 'navbar.html' %}
     <br><br><br><br><br>
+
     {% for message in messages %}
         <div {% if message.tags %} class="snackbar {{ message.tags }}"{% endif %}>
             {% if message.tags == 'success' %}
@@ -21,38 +22,33 @@
         </div>
     {% endfor %}
 
-    <div id="messages">
-    <br><br><br><br><br>
-        <div class="add-persons">
-             <form method="post" >
-                {% csrf_token %}
-                <input type="text" name="person"/>
-                <input type="hidden" name="receiver" value="{{ chatting_with.id }}"/>
-                <input type="submit" name="Add" class="button primary" value="Add">
-            </form>
-            -----------------------------------------------
-        </div>
-        <div class="contacts">
-            <div class="person-list">
-                {% for curr_info in info %}
-                    <a class="user" href="{% url 'chat' chat_person_id=curr_info.1.pk %}" name="Choose_chat" value={{ curr_info.1.pk }}>
-                        <img src="{% static 'img/girl.jpg' %}" alt="girl">
-                        <div class="user-rating">
-                            <p>{{  curr_info.1.first_name }} {{ curr_info.1.last_name}}</p>
-                            <p>{{ curr_info.0.content }}</p>
-                        </div>
-                    </a>
-                    --------------------------------------------
-                {%  endfor %}
+    <div class="wrapper">
+        <div class="left-side">
+            <div class="add-persons">
+                 <form method="post" >
+                    {% csrf_token %}
+                    <input type="text" name="person"/>
+                    <input type="hidden" name="receiver" value="{{ chatting_with.id }}"/>
+                    <input type="submit" name="Add" class="button primary" value="Add">
+                </form>
+                -----------------------------------------------
+            </div>
+            <div class="contacts">
+                <div class="user-rating">
+                    {% for curr_info in info %}
+                        <a class="user" href="{% url 'chat' chat_person_id=curr_info.1.pk %}" name="Choose_chat" value={{ curr_info.1.pk }}>
+                            <img src="{% static 'img/girl.jpg' %}" alt="girl">
+                                <p>{{  curr_info.1.first_name }} {{ curr_info.1.last_name}}</p>
+                                <p>{{ curr_info.0.content }}</p>
+                        </a>
+                        --------------------------------------------
+                    {%  endfor %}
+                </div>
             </div>
         </div>
-        <div class="chat">
+        <div class="user">
             {% for message in messages %}
-                <div class="user">
-                    <div class="user-rating">
                         <p>{{ message.messager }}: {{ message.content }}</p>
-                    </div>
-                </div>
             {%  endfor %}
             <form method="post" >
             {% csrf_token %}

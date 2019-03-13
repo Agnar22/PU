@@ -613,10 +613,15 @@ p a, .link {
     height: 32px;
     margin-bottom: 1rem; }
 
-#messages .user img {
+.wrapper .user img {
         margin-top: 10%;
         width: 42px;
         height: 42px;
         object-fit: cover;
         border-radius: 100px; }
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 30% 70%;
+}
 /*# sourceMappingURL=styles.css.map */
