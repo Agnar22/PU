@@ -10,6 +10,7 @@ from .models import Apartment
 from .models import Contract
 from django.db.models import Q
 from geopy.geocoders import Nominatim
+from django.contrib import messages
 
 
 def apartments(request):
@@ -140,8 +141,6 @@ def apartment_detail(request, apartment_id, start_date, end_date):
     end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
     emails = []
 
-    error_message = ""
-
     #Hvis bruker prøver å opprette en ny kontrakt
     if request.method=='POST':
         user_email = request.user.email
@@ -178,6 +177,7 @@ def apartment_detail(request, apartment_id, start_date, end_date):
 
         # Sjekker om brukeren har sendt en slik kontraktforespørsel tidligere
         contract_count = Contract.objects.filter(
+                Q(apartment=apartment_id) &
                 Q(start_date__iexact=start_date.date()) &
                 Q(end_date__iexact=end_date.date()) &
                 Q(pending=True) &
@@ -186,19 +186,19 @@ def apartment_detail(request, apartment_id, start_date, end_date):
 
 
         if apartment.owner==request.user or apartment.original_owner==user_email:
-            error_message = "Feil - Dette er din leilighet"
+            messages.error(request, "Dette er din leilighet!")
 
         elif apartment_count!=1 or start_date >= end_date or start_date.date() < datetime.datetime.today().date():
-            error_message = "Feil - Datoen er ikke tilgjengelig"
+            messages.error(request, "Datoen er ikke tilgjengelig!")
 
         elif not valid_form:
-            error_message = "Feil - Email-adressene er ugyldige"
+            messages.error(request, "Email-adressene er ugyldige!")
 
         elif apartment.owner.email in emails or apartment.original_owner in emails:
-            error_message = "Feil - Eier kan ikke leie sin egen leilighet"
+            messages.error(request, "Eier kan ikke leie sin egen leilighet!")
 
         elif contract_count > 0:
-            error_message = "Feil - Du har allerede sendt denne forespørselen"
+            messages.error(request, "Du har allerede sendt denne forespørselen!")
 
         else:
             owner_approved = Apartment.objects.get(pk=apartment_id).original_owner is None
@@ -210,7 +210,7 @@ def apartment_detail(request, apartment_id, start_date, end_date):
             contract_for_apartment = Apartment.objects.get(pk=apartment_id)
             contract_for_apartment.contracts.add(contract)
 
-            error_message = "Forespørsel om kontrakt er sendt"
+            messages.success(request, "Forespørsel om kontrakt er sendt!")
 
 
     context = {
@@ -221,7 +221,6 @@ def apartment_detail(request, apartment_id, start_date, end_date):
         },
         'apartment_price': apartment_price,
         'owner': apartment.owner,
-        'message': error_message,
         'form': CreateContractForm()}
 
     return render(request, 'apartments/apartment-detail.html', context)
