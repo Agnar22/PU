@@ -4,12 +4,13 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from apartments.forms import CreateApartmentForm
+from apartments.forms import CreateApartmentForm, CreateContractForm
 from authentication.models import Profile
 from .models import Apartment
 from .models import Contract
 from django.db.models import Q
 from geopy.geocoders import Nominatim
+from django.contrib import messages
 
 
 def apartments(request):
@@ -35,6 +36,7 @@ def apartments(request):
 
             apartments = Apartment.objects.none()
             apartments_map = Apartment.objects.none()
+            messages.error(request, "Ugyldig dato!")
 
         else:
 
@@ -95,6 +97,7 @@ def apartments(request):
     else:
         apartments = Apartment.objects.none()
         apartments_map = Apartment.objects.none()
+        messages.error(request, "Noe gikk galt!")
 
 
     geolocator = Nominatim(user_agent="Apartment")
@@ -138,11 +141,11 @@ def apartment_detail(request, apartment_id, start_date, end_date):
     apartment_price = apartment.calculate_price(start_date, end_date)
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
-
-    error_message = ""
+    emails = []
 
     #Hvis bruker prøver å opprette en ny kontrakt
     if request.method=='POST':
+        user_email = request.user.email
 
         #Sjekker at brukeren har en apartment som kan opprettes kontrakt på, ved å
         #telle antall ledige leiligheter
@@ -163,29 +166,54 @@ def apartment_detail(request, apartment_id, start_date, end_date):
                 Q(end_date__lt=end_date.date()) &
                 Q(pending=False))).order_by('beds', 'monthly_cost').distinct().count()
 
-        #Sjekker at bruker ikke prøver å opprette kontrakt med seg selv
-        if not apartment.owner==request.user and not apartment.original_owner==request.user.email:
 
-            #Sjekker at det er en ledig apartment
-            if apartment_count==1 and not (
-                    start_date >= end_date
-                    or start_date.date() < datetime.datetime.today().date()):
+        # Får tak i email-adressene til de brukerene brukeren leier sammen med
+        form = CreateContractForm(request.POST)
+        valid_form = form.is_valid()
+        if valid_form:
+            #Fjerner alle duplikate emailer, og fjerner brukerens egen email-adresse dersom den ble skrevet inn
+            emails = list(dict.fromkeys(form.cleaned_data["tenants"]))
+            emails = [x.lower() for x in emails]
+            while user_email.lower() in emails:
+                emails.remove(user_email.lower())
 
-                owner_approved = Apartment.objects.get(pk=apartment_id).original_owner is None
+        # Sjekker om brukeren har sendt en slik kontraktforespørsel tidligere
+        contract_count = Contract.objects.filter(
+                Q(apartment=apartment_id) &
+                Q(start_date__iexact=start_date.date()) &
+                Q(end_date__iexact=end_date.date()) &
+                Q(pending=True) &
+                (Q(tenants__contains=user_email) |
+                 Q(tenant__email__iexact=user_email))).distinct().count()
 
-                contract = Contract.objects.create(contract_text="", tenant=request.user,
-                                                   pending=True, owner_approved=owner_approved,
-                                                   start_date=start_date, end_date=end_date)
 
-                contract_for_apartment = Apartment.objects.get(pk=apartment_id)
-                contract_for_apartment.contracts.add(contract)
+        if apartment.owner==request.user or apartment.original_owner==user_email:
+            messages.error(request, "Dette er din leilighet!")
 
-                error_message = "Sent contract - Approval pending"
+        elif apartment_count!=1 or start_date >= end_date or start_date.date() < datetime.datetime.today().date():
+            messages.error(request, "Datoen er ikke tilgjengelig!")
 
-            else:
-                error_message = "Contract creation failed - Date not available"
+        elif not valid_form:
+            messages.error(request, "Email-adressene er ugyldige!")
+
+        elif apartment.owner.email in emails or apartment.original_owner in emails:
+            messages.error(request, "Eier kan ikke leie sin egen leilighet!")
+
+        elif contract_count > 0:
+            messages.error(request, "Du har allerede sendt denne forespørselen!")
+
         else:
-            error_message = "Contract creation failed - This is your apartment"
+            owner_approved = Apartment.objects.get(pk=apartment_id).original_owner is None
+
+            contract = Contract.objects.create(contract_text="", tenant=request.user,
+                                               tenants=emails, pending=True, owner_approved=owner_approved,
+                                               start_date=start_date, end_date=end_date)
+
+            contract_for_apartment = Apartment.objects.get(pk=apartment_id)
+            contract_for_apartment.contracts.add(contract)
+
+            messages.success(request, "Forespørsel om kontrakt er sendt!")
+
 
     context = {
         'apartment': apartment,
@@ -195,10 +223,9 @@ def apartment_detail(request, apartment_id, start_date, end_date):
         },
         'apartment_price': apartment_price,
         'owner': apartment.owner,
-        'message': error_message}
+        'form': CreateContractForm()}
 
     return render(request, 'apartments/apartment-detail.html', context)
-
 
 
 

@@ -1,6 +1,21 @@
 from django import forms
 
-from .models import Apartment
+from .models import Apartment, Contract
+from multi_email_field.forms import MultiEmailField
+
+
+class CreateContractForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CreateContractForm, self).__init__(*args, **kwargs)
+        self.fields['tenants'].widget.attrs['autocomplete'] = "off"
+        self.fields['tenants'].widget.attrs['placeholder'] = "."
+        self.fields['tenants'].required = False
+
+    class Meta:
+        model = Contract
+        fields = [
+            'tenants'
+        ]
 
 
 class CreateApartmentForm(forms.ModelForm):

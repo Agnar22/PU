@@ -10,6 +10,21 @@
 
 
 {% block body %}
+     {% for message in messages %}
+        <div {% if message.tags %} class="snackbar {{ message.tags }}"{% endif %}>
+            {% if message.tags == 'success' %}
+                <img src="{% static 'icons/snackbar/check-circle.svg' %}" alt="Checkmark">
+            {% elif  message.tags == 'warning' %}
+                <img src="{% static 'icons/snackbar/alert-triangle.svg' %}" alt="warning">
+            {% elif  message.tags == 'error' %}
+                <img src="{% static 'icons/snackbar/close_circle.svg' %}" alt="Error">
+            {% else %}
+                <img src="{% static 'icons/snackbar/information-circle.svg' %}" alt="Information">
+            {% endif %}
+            {{ message }}
+        </div>
+    {% endfor %}
+
     {% include 'navbar.html' %}
 
     <div class="container" id="apartments">
@@ -53,6 +68,10 @@
         <div id="map" style="width: 100%; height: 290px;"></div>
         <script>
             var map = L.map('map').setView([{{latitude}}, {{longitude}}], {{zoom}});
+            map.scrollWheelZoom.disable()
+
+            map.on('mousedown', function() { map.scrollWheelZoom.enable(); });
+            map.on('mouseout', function() { map.scrollWheelZoom.disable(); });
 
             L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png').addTo(map);
 
