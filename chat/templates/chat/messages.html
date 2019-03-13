@@ -4,16 +4,15 @@
 {% load contracts_sort %}
 
 {% block body %}
-{% include 'navbar.html' %}
-    <br><br><br><br><br>
+    {% include 'navbar.html' %}
 
     {% for message in messages %}
-        <div {% if message.tags %} class="snackbar {{ message.tags }}"{% endif %}>
+        <div class="snackbar {% if message.tags %}{{ message.tags }}"{% endif %}>
             {% if message.tags == 'success' %}
                 <img src="{% static 'icons/snackbar/check-circle.svg' %}" alt="Checkmark">
-            {% elif  message.tags == 'warning' %}
+            {% elif message.tags == 'warning' %}
                 <img src="{% static 'icons/snackbar/alert-triangle.svg' %}" alt="warning">
-            {% elif  message.tags == 'error' %}
+            {% elif message.tags == 'error' %}
                 <img src="{% static 'icons/snackbar/close_circle.svg' %}" alt="Error">
             {% else %}
                 <img src="{% static 'icons/snackbar/information-circle.svg' %}" alt="Information">
@@ -22,40 +21,56 @@
         </div>
     {% endfor %}
 
-    <div class="wrapper">
+    <div id="chat" class="wrapper">
         <div class="left-side">
             <div class="add-persons">
-                 <form method="post" >
+                <form method="post">
                     {% csrf_token %}
-                    <input type="text" name="person"/>
-                    <input type="hidden" name="receiver" value="{{ chatting_with.id }}"/>
-                    <input type="submit" name="Add" class="button primary" value="Add">
+                    <div class="input-field">
+                        <input type="text" name="person" placeholder="." id="receiver">
+                        <input type="hidden" name="receiver" value="{{ chatting_with.id }}">
+                        <label for="receiver">Mottaker</label>
+                        <input type="submit" name="Add" class="button primary" value="Add">
+                    </div>
                 </form>
-                -----------------------------------------------
             </div>
             <div class="contacts">
-                <div class="user-rating">
-                    {% for curr_info in info %}
-                        <a class="user" href="{% url 'chat' chat_person_id=curr_info.1.pk %}" name="Choose_chat" value={{ curr_info.1.pk }}>
-                            <img src="{% static 'img/girl.jpg' %}" alt="girl">
-                                <p>{{  curr_info.1.first_name }} {{ curr_info.1.last_name}}</p>
-                                <p>{{ curr_info.0.content }}</p>
-                        </a>
-                        --------------------------------------------
-                    {%  endfor %}
-                </div>
+                {% for curr_info in info %}
+                    <a class="user-chat" href="{% url 'chat' chat_person_id=curr_info.1.pk %}"
+                       name="Choose_chat" value={{ curr_info.1.pk }}>
+                        <img src="{% static 'img/girl.jpg' %}" alt="girl">
+                        <h6>{{ curr_info.1.first_name }} {{ curr_info.1.last_name }}</h6>
+                        <p>{{ curr_info.0.content }}</p>
+                        <h6 class="message-date">4. nov</h6>
+                    </a>
+                {% endfor %}
             </div>
         </div>
-        <div class="user">
-            {% for message in messages %}
-                        <p>{{ message.messager }}: {{ message.content }}</p>
-            {%  endfor %}
-            <form method="post" >
-            {% csrf_token %}
-                <input type="text" name="message"/>
+        <div class="right-side">
+            <div id="messages">
+                {% for message in messages %}
+                    <div class="chat-bubble-wrapper {% if message.messager.pk == request.user.pk %}you{% endif %}">
+                        <div class="chat-bubble">
+                            <p>{{ message.content }}</p>
+                            <span class="timestamp">23:49</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <form method="post" id="chat-input">
+                {% csrf_token %}
                 <input type="hidden" name="receiver" value="{{ chatting_with.id }}"/>
-                <input type="submit" name="Send" class="button primary" value="Send">
+                <div>
+                    <input type="text" name="message" placeholder="Skriv noe...">
+                    <input type="submit" name="Send" class="button" value="Send">
+                </div>
             </form>
         </div>
     </div>
+{% endblock %}
+{% block js %}
+    <script>
+        let element = document.getElementById("messages");
+        element.scrollTop = element.scrollHeight;
+    </script>
 {% endblock %}
