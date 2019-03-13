@@ -36,6 +36,7 @@ def apartments(request):
 
             apartments = Apartment.objects.none()
             apartments_map = Apartment.objects.none()
+            messages.error(request, "Ugyldig dato!")
 
         else:
 
@@ -96,6 +97,7 @@ def apartments(request):
     else:
         apartments = Apartment.objects.none()
         apartments_map = Apartment.objects.none()
+        messages.error(request, "Noe gikk galt!")
 
 
     geolocator = Nominatim(user_agent="Apartment")
