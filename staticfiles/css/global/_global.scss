@@ -1,0 +1,11 @@
+body {
+  background-color: $white;
+}
+.container {
+  margin: 5rem auto 1rem;
+  width: 90%;
+}
+
+img {
+  @include no-select;
+}
