@@ -4,10 +4,20 @@
 {% load apartment_filters %}
 
 {% block body %}
-{% if message != "" %}
-        <div class="snackbar warning" id="alert-div"><img src="{% static 'icons/snackbar/alert-triangle.svg' %}"
-                                                          alt="">{{ message }}</div>
-{% endif %}
+    {% for message in messages %}
+        <div {% if message.tags %} class="snackbar {{ message.tags }}"{% endif %}>
+            {% if message.tags == 'success' %}
+                <img src="{% static 'icons/snackbar/check-circle.svg' %}" alt="Checkmark">
+            {% elif  message.tags == 'warning' %}
+                <img src="{% static 'icons/snackbar/alert-triangle.svg' %}" alt="warning">
+            {% elif  message.tags == 'error' %}
+                <img src="{% static 'icons/snackbar/close_circle.svg' %}" alt="Error">
+            {% else %}
+                <img src="{% static 'icons/snackbar/information-circle.svg' %}" alt="Information">
+            {% endif %}
+            {{ message }}
+        </div>
+    {% endfor %}
 
     {% include 'navbar.html' %}
     <div id="apartment-detail">
