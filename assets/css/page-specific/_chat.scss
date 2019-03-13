@@ -87,20 +87,23 @@
         color: $white;
         max-width: 50%;
 
+
         p {
           @include text-wrap;
         }
         .timestamp {
-            position: absolute;
-            right: 40px;
+            left: 20px;
+          position: absolute;
             bottom: -17px;
             color: $dark-gray;
           }
         img {
+         position: absolute;
           width: 42px;
         height: 42px;
         object-fit: cover;
         border-radius: 21px;
+          left: -30px;
         }
       }
     }
