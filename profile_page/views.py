@@ -9,8 +9,19 @@ from django.db.models import Q
 def profile_view(request):
     if request.method == 'GET':
         if request.user.is_authenticated:
+
+            my_rented_apartments = Apartment.objects.filter(
+                Q(contracts__tenant__email__iexact=request.user.email) |
+                Q(contracts__tenants__contains=request.user.email)).distinct()
+
+            has_rented_apartments = my_rented_apartments.count() > 0
+            owns_apartments = Apartment.objects.filter(owner=request.user).count() > 0
+
             context = {
                 'my_apartments': Apartment.objects.filter(owner=request.user),
+                'my_rented_apartments': my_rented_apartments,
+                'has_rented_apartments': has_rented_apartments,
+                'owns_apartments': owns_apartments,
                 'owner_of': Apartment.objects.filter(Q(original_owner__iexact=request.user.email))
             }
             return render(request, 'profile_page/profile-page.html', context)
@@ -60,8 +71,18 @@ def profile_view(request):
 
             #Viser profilsiden dersom brukeren fremdeles er logget inn
             if request.user.is_authenticated:
+                my_rented_apartments = Apartment.objects.filter(
+                    Q(contracts__tenant__email__iexact=request.user.email) |
+                    Q(contracts__tenants__contains=request.user.email)).distinct()
+
+                has_rented_apartments = my_rented_apartments.count() > 0
+                owns_apartments = Apartment.objects.filter(owner=request.user).count() > 0
+
                 context = {
                     'my_apartments': Apartment.objects.filter(owner=request.user),
+                    'my_rented_apartments': my_rented_apartments,
+                    'has_rented_apartments': has_rented_apartments,
+                    'owns_apartments': owns_apartments,
                     'owner_of': Apartment.objects.filter(Q(original_owner__iexact=request.user.email))
                 }
                 return render(request, 'profile_page/profile-page.html', context)
