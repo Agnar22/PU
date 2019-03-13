@@ -7,6 +7,7 @@ from django.db.models import Q
 import time
 import datetime
 from django.contrib import messages
+from django.http import JsonResponse
 
 
 def render_chats(request, chat_person=None):
@@ -43,6 +44,8 @@ def render_chats(request, chat_person=None):
         'messages': message_chat,
         'chatting_with': chat_person
     }
+    if request.GET.get('from_vue'):
+        return JsonResponse({})
     return render(request, 'chat/messages.html', context)
 
 

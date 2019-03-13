@@ -68,10 +68,56 @@
             </form>
         </div>
     </div>
+
 {% endblock %}
 {% block js %}
     <script>
         let element = document.getElementById("messages");
         element.scrollTop = element.scrollHeight;
+
+        let chatRefresh = new Vue({
+            el: '',
+            delimiters: ['[{', '}]'],
+            data: {
+                'suggestions': [],
+                'courseQuery': '',
+                'selectedCourse': {},
+                'currentItem': 0
+            },
+            methods: {
+                generateSelectedText: function (course) {
+                    return `${course.name} - ${course.course_code}`
+                },
+                searchCourses: function () {
+                    $.ajax({
+                        type: 'GET',
+                        url: '{% url 'chat' chat_person_id=chatting_with.id %}',
+                        data: {
+                            'from_vue': true,
+                        },
+                        success: function (data) {
+                            console.log("success", data)
+                            this.suggestions = data.suggestions;
+                            info = data;
+                            console.log("Info", info)
+                            print(data)
+                            return data
+                        },
+                        error: function (data) {
+                            console.log("failed")
+                        }
+                    });
+                }
+            }
+        });
+
+
+        function print(param) {
+            item = param;
+            console.log("item", item.item)
+
+        }
+
+        response = chatRefresh.searchCourses()
     </script>
 {% endblock %}
