@@ -61,7 +61,7 @@
       overflow-y: scroll;
 
       .chat-bubble-wrapper {
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
         position: relative;
         width: 100%;
         display: flex;
@@ -83,6 +83,10 @@
             color: $dark-gray;
             position: relative;
             right: 0;
+            .timestamp {
+              left: auto;
+              right: 1.5rem;
+            }
           }
 
           img {

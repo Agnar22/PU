@@ -659,7 +659,7 @@ p a, .link {
       max-height: calc(100vh - 4rem - 80px);
       overflow-y: scroll; }
       #chat .right-side #messages .chat-bubble-wrapper {
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
         position: relative;
         width: 100%;
         display: flex; }
@@ -676,6 +676,9 @@ p a, .link {
             color: #5B5A57;
             position: relative;
             right: 0; }
+            #chat .right-side #messages .chat-bubble-wrapper.you .chat-bubble .timestamp {
+              left: auto;
+              right: 1.5rem; }
           #chat .right-side #messages .chat-bubble-wrapper.you img {
             display: none; }
       #chat .right-side #messages .chat-bubble {

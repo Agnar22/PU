@@ -41,7 +41,7 @@
                         {% include 'profile-picture.html' with user=curr_info.1 %}
                         <h6>{{ curr_info.1.first_name }} {{ curr_info.1.last_name }}</h6>
                         <p>{{ curr_info.0.content }}</p>
-                        <h6 class="message-date">4. nov</h6>
+                        <h6 class="message-date">{{ curr_info.0.time }}</h6>
                     </a>
                 {% endfor %}
             </div>
@@ -60,9 +60,9 @@
             </div>
             <form method="post" id="chat-input">
                 {% csrf_token %}
-                <input type="hidden" name="receiver" value="{{ chatting_with.id }}"/>
+                <input type="hidden" name="receiver" value="{{ chatting_with.id }}">
                 <div>
-                    <input type="text" name="message" placeholder="Skriv noe...">
+                    <input type="text" name="message" placeholder="Skriv noe..." autocomplete="off">
                     <input type="submit" name="Send" class="button" value="Send">
                 </div>
             </form>
