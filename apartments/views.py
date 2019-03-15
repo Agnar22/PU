@@ -178,12 +178,14 @@ def apartment_detail(request, apartment_id, start_date, end_date):
                 emails.remove(user_email.lower())
 
         # Sjekker om brukeren har sendt en slik kontraktforespørsel tidligere
-        contract_count = Contract.objects.filter(
-                Q(apartment=apartment_id) &
-                Q(start_date__iexact=start_date.date()) &
-                Q(end_date__iexact=end_date.date()) &
-                Q(pending=True) &
-                (Q(tenants__contains=user_email) | Q(tenant__email__exact=user_email))).distinct().count()
+        contract_count = 0
+                # Contract.objects.filter(
+                # Q(apartment=apartment_id) &
+                # Q(start_date__iexact=start_date.date()) &
+                # Q(end_date__iexact=end_date.date()) &
+                # Q(pending=True) &
+                # (Q(tenants__contains=user_email) |
+                #  Q(tenant__email__iexact=user_email))).distinct().count()
 
 
         if apartment.owner==request.user or apartment.original_owner==user_email:
