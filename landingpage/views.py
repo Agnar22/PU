@@ -11,7 +11,7 @@ from django.contrib import messages
 def landing_page(request):
     form = RegisterForm()
 
-    distinct_cities = Apartment.objects.values('city').annotate(total=Count('city')).count()
+    distinct_cities = Apartment.objects.values('city').distinct().count()
     distinct_apartments = Apartment.objects.all().count()
 
     if request.method == 'GET':
