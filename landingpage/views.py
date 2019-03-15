@@ -1,6 +1,8 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
+from django.db.models import Count
+from apartments.models import Apartment
 from authentication.forms import RegisterForm, LoginForm
 from authentication.models import Profile
 from django.contrib import messages
@@ -8,9 +10,15 @@ from django.contrib import messages
 
 def landing_page(request):
     form = RegisterForm()
+
+    distinct_cities = Apartment.objects.values('city').annotate(total=Count('city')).count()
+    distinct_apartments = Apartment.objects.all().count()
+
     if request.method == 'GET':
         context = {
-            'form': form
+            'form': form,
+            'distinct_cities': distinct_cities,
+            'distinct_apartments': distinct_apartments
         }
         return render(request, 'landingpage/landing-page.html', context)
 
@@ -37,7 +45,8 @@ def landing_page(request):
                         return redirect('/')
             else:
                 messages.warning(request, form.errors)
-            return render(request, 'landingpage/landing-page.html', {'form': form})
+            return render(request, 'landingpage/landing-page.html', {'form': form, 'distinct_cities': distinct_cities,
+                                                                    'distinct_apartments': distinct_apartments})
         else:
             email = request.POST.get("email").lower()
             password = request.POST.get("password")

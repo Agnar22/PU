@@ -25,7 +25,7 @@
         <div class="landing-page-wrapper">
             <div class="search-fields">
                 <h1>Finn ditt midlertidige<br> hjem med ShareBNB</h1>
-                <h4>Søk blant over 10 hjem i opptil 2 byer!</h4>
+                <h4>Søk blant over {{ distinct_apartments }} hjem i opptil {{ distinct_cities }} byer!</h4>
                 <form action="apartments/" method="get">
                     <div class="input-field fluid location">
                         <input name="location" id="location" type="text" placeholder="." required>
