@@ -663,6 +663,11 @@ p a, .link {
         position: relative;
         width: 100%;
         display: flex; }
+        #chat .right-side #messages .chat-bubble-wrapper:not(.you) .chat-bubble {
+          margin-left: calc(42px + 1rem);
+          max-width: calc(50% - 42px - 1rem); }
+          #chat .right-side #messages .chat-bubble-wrapper:not(.you) .chat-bubble .timestamp {
+            margin-left: calc(42px + 1rem); }
         #chat .right-side #messages .chat-bubble-wrapper.you {
           justify-content: flex-end; }
           #chat .right-side #messages .chat-bubble-wrapper.you .chat-bubble {
@@ -671,9 +676,11 @@ p a, .link {
             color: #5B5A57;
             position: relative;
             right: 0; }
+          #chat .right-side #messages .chat-bubble-wrapper.you img {
+            display: none; }
       #chat .right-side #messages .chat-bubble {
         display: inline-block;
-        padding: 0.5rem 2rem;
+        padding: 0.5rem 1.5rem;
         border-radius: 6px 100px 100px 100px;
         background-color: #53787D;
         color: #FCFCFC;
@@ -683,7 +690,7 @@ p a, .link {
           word-wrap: break-word;
           hyphens: auto; }
         #chat .right-side #messages .chat-bubble .timestamp {
-          left: 20px;
+          left: 1.5rem;
           position: absolute;
           bottom: -17px;
           color: #5B5A57; }
@@ -693,7 +700,8 @@ p a, .link {
           height: 42px;
           object-fit: cover;
           border-radius: 21px;
-          left: -30px; }
+          left: 0;
+          top: 0; }
     #chat .right-side #chat-input {
       position: absolute;
       bottom: 0;

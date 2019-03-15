@@ -66,6 +66,14 @@
         width: 100%;
         display: flex;
 
+        &:not(.you) .chat-bubble {
+          margin-left: calc(42px + 1rem);
+          max-width: calc(50% - 42px - 1rem);
+          .timestamp {
+            margin-left: calc(42px + 1rem);
+          }
+        }
+
         &.you {
           justify-content: flex-end;
 
@@ -76,12 +84,16 @@
             position: relative;
             right: 0;
           }
+
+          img {
+            display: none;
+          }
         }
       }
 
       .chat-bubble {
         display: inline-block;
-        padding: 0.5rem 2rem;
+        padding: 0.5rem 1.5rem;
         border-radius: $main-border-radius 100px 100px 100px;
         background-color: $primary-dark;
         color: $white;
@@ -91,19 +103,22 @@
         p {
           @include text-wrap;
         }
+
         .timestamp {
-            left: 20px;
+          left: 1.5rem;
           position: absolute;
-            bottom: -17px;
-            color: $dark-gray;
-          }
+          bottom: -17px;
+          color: $dark-gray;
+        }
+
         img {
-         position: absolute;
+          position: absolute;
           width: 42px;
-        height: 42px;
-        object-fit: cover;
-        border-radius: 21px;
-          left: -30px;
+          height: 42px;
+          object-fit: cover;
+          border-radius: 21px;
+          left: 0;
+          top: 0;
         }
       }
     }

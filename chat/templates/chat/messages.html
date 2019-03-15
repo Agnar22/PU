@@ -38,7 +38,7 @@
                 {% for curr_info in info %}
                     <a class="user-chat" href="{% url 'chat' chat_person_id=curr_info.1.pk %}"
                        name="Choose_chat" value={{ curr_info.1.pk }}>
-                        <img src="{% static 'img/girl.jpg' %}" alt="girl">
+                        {% include 'profile-picture.html' with user=curr_info.1 %}
                         <h6>{{ curr_info.1.first_name }} {{ curr_info.1.last_name }}</h6>
                         <p>{{ curr_info.0.content }}</p>
                         <h6 class="message-date">4. nov</h6>
@@ -51,7 +51,7 @@
                 {% for message in messages %}
                     <div class="chat-bubble-wrapper {% if message.messager.pk == request.user.pk %}you{% endif %}">
                         <div class="chat-bubble">
-                            <img src="{% static 'img/girl.jpg' %}" alt="girl">
+                            {% include 'profile-picture.html' with user=message.messager %}
                             <p>{{ message.content }}</p>
                             <span class="timestamp">{{ message.time }}</span>
                         </div>

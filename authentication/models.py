@@ -5,6 +5,8 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFit
 
 
 class ProfileManager(BaseUserManager):
@@ -52,6 +54,10 @@ class Profile(AbstractBaseUser):
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     phone_number = models.PositiveIntegerField()
+    profile_picture = ProcessedImageField(upload_to='apartments/',
+                                 processors=[ResizeToFit(300, 300, False)],
+                                 format='JPEG',
+                                 options={'quality': 85}, null=True, blank=True)
 
     objects = ProfileManager()
 
@@ -70,6 +76,11 @@ class Profile(AbstractBaseUser):
         # "Does the user have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
+
+    def save(self, *args, **kwargs):
+        if not self.first_name:
+            self.profile_picture = ''
+        super().save(*args, **kwargs)
 
     @property
     def is_staff(self):
