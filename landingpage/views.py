@@ -22,7 +22,7 @@ def landing_page(request):
                 user = form.save(commit=False)
 
                 # Cleaned (normalized) data
-                email = form.cleaned_data['email']
+                email = form.cleaned_data['email'].lower()
                 password = form.cleaned_data['password']
                 user.set_password(password)
                 user.save()
@@ -39,7 +39,7 @@ def landing_page(request):
                 messages.warning(request, form.errors)
             return render(request, 'landingpage/landing-page.html', {'form': form})
         else:
-            email = request.POST.get("email")
+            email = request.POST.get("email").lower()
             password = request.POST.get("password")
             user = authenticate(request, email=email, password=password)
             if user is not None:
