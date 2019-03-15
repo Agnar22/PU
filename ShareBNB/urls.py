@@ -19,17 +19,13 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.urls import path, include
 from django.views.generic.base import TemplateView
-from files.views import FilePolicyAPI, FileUploadCompleteHandler
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('authentication.urls')),
     path('', include('landingpage.urls')),
     path('apartments/', include('apartments.urls')),
-    path('', include('profile_page.urls')),
-    url(r'^upload/$', TemplateView.as_view(template_name='upload.html'), name='upload-home'),
-    url(r'^api/files/complete/$', FileUploadCompleteHandler.as_view(), name='upload-complete'),
-    url(r'^api/files/policy/$', FilePolicyAPI.as_view(), name='upload-policy'),
+    path('', include('profile_page.urls'))
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
