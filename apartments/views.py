@@ -251,8 +251,7 @@ def create_apartment(request):
 
             if original_owner is not None:
                 original_owner = original_owner.lower()
-
-            owner_count = Profile.objects.filter(Q(email__iexact=original_owner)).count()
+                owner_count = Profile.objects.filter(Q(email__iexact=original_owner)).count()
 
         if form.is_valid() and (original_owner is None or owner_count == 1):
             apartment = form.save(commit=False)
