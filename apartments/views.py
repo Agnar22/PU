@@ -244,12 +244,14 @@ def create_apartment(request):
 
         #Form.is_valid() må kalles for at cleaned_data skal funke
         if form.is_valid():
-            original_owner = form.cleaned_data["original_owner"].lower()
+            original_owner = form.cleaned_data["original_owner"]
 
             if original_owner == request.user.email:
                 original_owner = None
 
-            owner_count = Profile.objects.filter(Q(email__iexact=original_owner)).count()
+            if original_owner is not None:
+                original_owner = original_owner.lower()
+                owner_count = Profile.objects.filter(Q(email__iexact=original_owner)).count()
 
         if form.is_valid() and (original_owner is None or owner_count == 1):
             apartment = form.save(commit=False)
