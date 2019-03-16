@@ -234,17 +234,22 @@ def create_apartment(request):
         form = CreateApartmentForm()
         return render(request, 'apartments/create-apartment.html', {'form': form})
     elif request.method == 'POST':
+        original_owner = None
+        owner_count = 0
+
         geolocator = Nominatim(user_agent="Apartment")
 
         form = CreateApartmentForm(request.POST, request.FILES or None)
         print(form.errors)
 
-        original_owner = form.cleaned_data["original_owner"]
+        #Form.is_valid() må kalles for at cleaned_data skal funke
+        if form.is_valid():
+            original_owner = form.cleaned_data["original_owner"].lower()
 
-        if original_owner == request.user.email:
-            original_owner = None
+            if original_owner == request.user.email:
+                original_owner = None
 
-        owner_count = Profile.objects.filter(Q(email__iexact=original_owner)).count()
+            owner_count = Profile.objects.filter(Q(email__iexact=original_owner)).count()
 
         if form.is_valid() and (original_owner is None or owner_count == 1):
             apartment = form.save(commit=False)
