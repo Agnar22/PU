@@ -613,27 +613,4 @@ p a, .link {
     height: 32px;
     margin-bottom: 1rem; }
 
-#review {
-  text-align: center; }
-  #review h1, #review h3 {
-    color: #53787D; }
-  #review h3 {
-    margin-bottom: 1.5rem; }
-  #review .user-rating, #review .apartment-rating {
-    display: flex;
-    justify-content: space-between;
-    max-width: 480px;
-    margin: 0 auto; }
-    #review .user-rating .star, #review .apartment-rating .star {
-      display: inline;
-      cursor: pointer;
-      transition: transform 200ms ease-in-out; }
-      #review .user-rating .star:hover, #review .apartment-rating .star:hover {
-        transform: scale(1.2); }
-      #review .user-rating .star img, #review .apartment-rating .star img {
-        width: 48px;
-        height: 48px; }
-  #review .user-rating {
-    margin-bottom: 4rem; }
-
-/*# sourceMappingURL=styles.css.map */
+/*# sourceMappingURL=styles.fb855aea62a4.css.map */

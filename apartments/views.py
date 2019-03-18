@@ -271,5 +271,3 @@ def create_apartment(request):
         else:
             print('failed')
             return render(request, 'apartments/create-apartment.html', {'form': form})
-
-

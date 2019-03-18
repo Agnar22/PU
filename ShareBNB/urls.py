@@ -25,7 +25,8 @@ urlpatterns = [
     path('', include('authentication.urls')),
     path('', include('landingpage.urls')),
     path('apartments/', include('apartments.urls')),
-    path('', include('profile_page.urls'))
+    path('', include('profile_page.urls')),
+    path('review/', TemplateView.as_view(template_name='review_user_apartment.html'))
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
