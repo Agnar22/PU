@@ -47,9 +47,10 @@ class Apartment(models.Model):
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True)
     original_owner = models.EmailField(
         max_length=255,
-        null=True
+        null=True,
+        blank=True
     )
-    contracts = models.ManyToManyField(Contract)
+    contracts = models.ManyToManyField(Contract, blank=True)
     image1 = ProcessedImageField(upload_to='apartments/',
                                  processors=[ResizeToFit(2000, 2000, False)],
                                  format='JPEG',

@@ -36,6 +36,7 @@ def apartments(request):
 
             apartments = Apartment.objects.none()
             apartments_map = Apartment.objects.none()
+            messages.error(request, "Ugyldig dato!")
 
         else:
 
@@ -96,6 +97,7 @@ def apartments(request):
     else:
         apartments = Apartment.objects.none()
         apartments_map = Apartment.objects.none()
+        messages.error(request, "Noe gikk galt!")
 
 
     geolocator = Nominatim(user_agent="Apartment")
@@ -178,8 +180,8 @@ def apartment_detail(request, apartment_id, start_date, end_date):
         # Sjekker om brukeren har sendt en slik kontraktforespørsel tidligere
         contract_count = Contract.objects.filter(
                 Q(apartment=apartment_id) &
-                Q(start_date__iexact=start_date.date()) &
-                Q(end_date__iexact=end_date.date()) &
+                Q(start_date__exact=start_date.date()) &
+                Q(end_date__exact=end_date.date()) &
                 Q(pending=True) &
                 (Q(tenants__contains=user_email) |
                  Q(tenant__email__iexact=user_email))).distinct().count()
@@ -232,17 +234,24 @@ def create_apartment(request):
         form = CreateApartmentForm()
         return render(request, 'apartments/create-apartment.html', {'form': form})
     elif request.method == 'POST':
+        original_owner = None
+        owner_count = 0
+
         geolocator = Nominatim(user_agent="Apartment")
 
         form = CreateApartmentForm(request.POST, request.FILES or None)
         print(form.errors)
 
-        original_owner = form.cleaned_data["original_owner"]
+        #Form.is_valid() må kalles for at cleaned_data skal funke
+        if form.is_valid():
+            original_owner = form.cleaned_data["original_owner"]
 
-        if original_owner == request.user.email:
-            original_owner = None
+            if original_owner == request.user.email:
+                original_owner = None
 
-        owner_count = Profile.objects.filter(Q(email__iexact=original_owner)).count()
+            if original_owner is not None:
+                original_owner = original_owner.lower()
+                owner_count = Profile.objects.filter(Q(email__iexact=original_owner)).count()
 
         if form.is_valid() and (original_owner is None or owner_count == 1):
             apartment = form.save(commit=False)

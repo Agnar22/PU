@@ -4,3 +4,4 @@ from ShareBNB.base_settings import *
 
 DEBUG = True
 MEDIA_ROOT = os.path.join(BASE_DIR, 'assets', 'media')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

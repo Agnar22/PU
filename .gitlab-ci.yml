@@ -3,5 +3,6 @@ image: python:3.5
 all_tests:
   script:
    - pip install -r requirements.txt
+   - python manage.py collectstatic --noinput --pythonpath lib
    - python3 manage.py test -k
   when: on_success
