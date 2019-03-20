@@ -1,12 +1,22 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseForbidden
 
+import datetime
+
 from apartments.models import Apartment, Contract
 from authentication.models import Profile
 from django.db.models import Q
 
 
 def profile_view(request):
+
+    #Sletter ugyldige kontraktforespørsler
+    invalid_requests = Contract.objects.filter(
+        Q(start_date__lt=datetime.datetime.today().strftime('%Y-%m-%d')) &
+        (Q(pending=True) |
+         Q(owner_approved=False))
+        ).delete()
+
     if request.method == 'GET':
         if request.user.is_authenticated:
 

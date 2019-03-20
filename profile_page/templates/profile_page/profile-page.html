@@ -59,8 +59,17 @@
                                 {% for contract in apartment.contracts.all|sort_contracts %}
                                     {% is_co_rented_by_group contract as co_rented_group %}
                                     {% is_co_rented_by_single contract as co_rented_single %}
-                                    {% if not contract.pending and contract.owner_approved %}
+                                    {% is_finished contract as is_finished %}
+
+                                    {% if not contract.pending and contract.owner_approved and not is_finished %}
                                         <li>Leies av {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
+                                            {% if co_rented_single %}og {{ contract|calculate_tenant_amount }} annen {% endif %}
+                                            {% if co_rented_group %}og {{ contract|calculate_tenant_amount }} andre {% endif %}
+                                            i perioden {{ contract.start_date|date:"d.m.y" }} -
+                                            {{ contract.end_date|date:"d.m.y" }}
+                                        </li>
+                                    {% elif not contract.pending and contract.owner_approved and is_finished %}
+                                        <li>Leid av {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
                                             {% if co_rented_single %}og {{ contract|calculate_tenant_amount }} annen {% endif %}
                                             {% if co_rented_group %}og {{ contract|calculate_tenant_amount }} andre {% endif %}
                                             i perioden {{ contract.start_date|date:"d.m.y" }} -
