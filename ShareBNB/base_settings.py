@@ -140,7 +140,7 @@ MEDIA_URL = '/media/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-django_heroku.settings(locals())
+django_heroku.settings(locals(), test_runner=False)
 
 
 #Amazon Web Server for image hosting
