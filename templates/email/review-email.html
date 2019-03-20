@@ -1,0 +1,6 @@
+{% extends 'email/base-email.html' %}
+
+{% block email_body %}
+    <h1>Review noen</h1>
+    {% include 'email/email-button.html' with button_url="http://google.com" button_text="Google" %}
+{% endblock %}
