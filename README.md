@@ -3,7 +3,7 @@ ShareBNB is a service for renting apartments and homes. This is a service for pe
 
 ShareBNB is created in the course TDT4140 at NTNU as a learning exercise.
 
-# Installasjon
+# Installation and use
 1. Clone the project to your computer with `git clone <url>`
 2. Navigate to the cloned directory
 3. **(Optional)** Create a virtual environment and activate it before step *5.*<br>
