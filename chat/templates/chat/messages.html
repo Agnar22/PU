@@ -40,7 +40,7 @@
                        name="Choose_chat" value={{ curr_info.1.pk }}>
                         {% include 'profile-picture.html' with user=curr_info.1 %}
                         <h6>{{ curr_info.1.first_name }} {{ curr_info.1.last_name }}</h6>
-                        <p>{{ curr_info.0.content }}</p>
+                        <p id={{ curr_info.1.pk }}>{{ curr_info.0.content }}</p>
                         <h6 class="message-date">{{ curr_info.0.time }}</h6>
                     </a>
                 {% endfor %}
@@ -77,18 +77,10 @@
 
         let chatRefresh = new Vue({
             el: '',
-            delimiters: ['[{', '}]'],
-            data: {
-                'suggestions': [],
-                'courseQuery': '',
-                'selectedCourse': {},
-                'currentItem': 0
-            },
+            delimiters: [],
+            data: {},
             methods: {
-                generateSelectedText: function (course) {
-                    return `${course.name} - ${course.course_code}`
-                },
-                searchCourses: function () {
+                refreshMessages: function () {
                     $.ajax({
                         type: 'GET',
                         url: '{% url 'chat' chat_person_id=chatting_with.id %}',
@@ -97,11 +89,7 @@
                         },
                         success: function (data) {
                             console.log("success", data)
-                            this.suggestions = data.suggestions;
-                            info = data;
-                            console.log("Info", info)
-                            print(data)
-                            return data
+                            updateLastMessage(data)
                         },
                         error: function (data) {
                             console.log("failed")
@@ -112,12 +100,16 @@
         });
 
 
-        function print(param) {
-            item = param;
-            console.log("item", item.item)
+        function updateLastMessage(param) {
+            for (let num=0; num<param.last_message.length; num++){
+                document.getElementById(param.persons[num]).innerHTML=param.last_message[num];
+            }
+        }
+        function updateChatMessages(param) {
 
         }
-
-        response = chatRefresh.searchCourses()
+        setInterval(function() {
+            chatRefresh.refreshMessages()
+        }, 1000);
     </script>
 {% endblock %}

@@ -28,6 +28,10 @@ def render_chats(request, chat_person=None):
         else:
             one_message.append("")
 
+    if request.GET.get('from_vue'):
+        return JsonResponse({'last_message': [message.content if not message == "" else "" for message in one_message],
+                             'persons': [person.pk for person in persons]})
+
     # Find current displayed chat
     if chat_person is not None:
         print("chat", get_chat(request.user, chat_person))
@@ -44,8 +48,6 @@ def render_chats(request, chat_person=None):
         'messages': message_chat,
         'chatting_with': chat_person
     }
-    if request.GET.get('from_vue'):
-        return JsonResponse({})
     return render(request, 'chat/messages.html', context)
 
 
