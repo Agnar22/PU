@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from apartments.forms import CreateApartmentForm, CreateContractForm
 from authentication.models import Profile
-from .models import Apartment
+from .models import Apartment, ApartmentImage
 from .models import Contract
 from django.db.models import Q
 from geopy.geocoders import Nominatim
@@ -257,8 +257,8 @@ def create_apartment(request):
             apartment = form.save(commit=False)
             apartment.owner = Profile.objects.get(pk=request.user.pk)
             apartment.original_owner = original_owner
-            apartment.image1 = request.FILES['image1']
-            print(apartment.image1)
+            files = request.FILES.getlist('image1')
+            apartment.image1 = files[0]
 
             #Oppretter og lagrer longitude og latitude til adressen
             location = geolocator.geocode(apartment.address + " " + apartment.city + " " + apartment.country)
@@ -267,6 +267,12 @@ def create_apartment(request):
                 apartment.longitude = str(location.longitude)
 
             apartment.save()
+
+            print(files[0])
+            for f in files:
+                image = ApartmentImage.objects.create(mainimage=f, image_for=apartment)
+
+
             return redirect('profile')
         else:
             print('failed')

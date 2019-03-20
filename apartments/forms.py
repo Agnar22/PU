@@ -47,6 +47,8 @@ class CreateApartmentForm(forms.ModelForm):
         self.fields['original_owner'].widget.attrs['placeholder'] = "."
         self.fields['original_owner'].required = False
 
+        self.fields['image1'].widget.attrs['multiple'] = True
+
     class Meta:
         model = Apartment
         fields = [

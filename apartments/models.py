@@ -29,7 +29,6 @@ class Contract(models.Model):
     def get_main_tenant(self):
         return self.tenants[0]
 
-
 class Apartment(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=100000)
@@ -74,3 +73,14 @@ class Apartment(models.Model):
             self.vote_amount = 0
             self.rating = 0
         super().save(*args, **kwargs)
+
+
+
+class ApartmentImage(models.Model):
+    mainimage = ProcessedImageField(upload_to='apartments/',
+                                 processors=[ResizeToFit(2000, 2000, False)],
+                                 format='JPEG',
+                                 options={'quality': 85})
+
+    image_for = models.ForeignKey(Apartment, on_delete=models.CASCADE)
+

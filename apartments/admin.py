@@ -1,7 +1,14 @@
 from django.contrib import admin
 
-from .models import Apartment, Contract
+from .models import Apartment, Contract, ApartmentImage
 
+
+class ImageAdmin(admin.ModelAdmin):
+    list_display = ['__str__']
+    fields = ('mainimage', 'image_for')
+
+    class Meta:
+        model = ApartmentImage
 
 class ContractAdmin(admin.ModelAdmin):
     list_display = ['__str__']
@@ -21,3 +28,4 @@ class ApartmentAdmin(admin.ModelAdmin):
 
 admin.site.register(Apartment, ApartmentAdmin)
 admin.site.register(Contract, ContractAdmin)
+admin.site.register(ApartmentImage, ImageAdmin)
