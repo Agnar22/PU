@@ -58,9 +58,8 @@
                 {{ form.monthly_cost.errors }}
             </div>
             <div class="input-field fluid">
-                {{ form.image1 }}
-                <label for="{{ form.monthly_cost.id_for_label }}">Last opp et bilde</label>
-                {{ form.image1.errors }}
+                <input type="file" id="images" name="images" multiple>
+                <label for="images">Last opp et bilde</label>
             </div>
             <br>
             <input type="submit" class="button primary" value="Opprett leilighet">

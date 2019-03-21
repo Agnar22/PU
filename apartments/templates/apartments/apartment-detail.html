@@ -22,7 +22,9 @@
     {% include 'navbar.html' %}
     <div id="apartment-detail">
         <div class="apartment-images">
-            <img src="{{ apartment.image1.url }}" alt="Apartment image">
+            {% for image in apartment.images.all %}
+                <img src="{{ apartment.images.all|get_first_image_url }}" alt="Apartment image">
+            {% endfor %}
         </div>
         <div class="apartment-info">
             <h1>{{ apartment.title }}</h1>

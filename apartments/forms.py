@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import widgets
 
 from .models import Apartment, Contract
 from multi_email_field.forms import MultiEmailField
@@ -47,8 +48,6 @@ class CreateApartmentForm(forms.ModelForm):
         self.fields['original_owner'].widget.attrs['placeholder'] = "."
         self.fields['original_owner'].required = False
 
-        self.fields['image1'].widget.attrs['multiple'] = True
-
     class Meta:
         model = Apartment
         fields = [
@@ -62,5 +61,4 @@ class CreateApartmentForm(forms.ModelForm):
             'monthly_cost',
             'size',
             'original_owner',
-            'image1',
         ]
