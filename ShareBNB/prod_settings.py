@@ -2,7 +2,7 @@ from ShareBNB.base_settings import *
 
 # Override base.py settings here
 
-DEBUG = True
+DEBUG = False
 MEDIA_ROOT = os.path.join(BASE_DIR, 'assets', 'media')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 

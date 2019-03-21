@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Apartment, Contract
+from .models import Apartment, Contract, ApartmentImage
 
 
 class ContractAdmin(admin.ModelAdmin):
@@ -13,7 +13,7 @@ class ContractAdmin(admin.ModelAdmin):
 
 class ApartmentAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'rating', 'city']
-    fields = ('title', 'description', 'country', 'city', 'address', 'latitude', 'longitude', 'beds', 'apartment_age', 'rating', 'monthly_cost', 'original_owner', 'vote_amount', 'size', 'image1', 'owner', 'contracts')
+    fields = ('title', 'description', 'country', 'city', 'address', 'latitude', 'longitude', 'beds', 'apartment_age', 'rating', 'monthly_cost', 'original_owner', 'vote_amount', 'size', 'images', 'owner', 'contracts')
 
     class Meta:
         model = Apartment

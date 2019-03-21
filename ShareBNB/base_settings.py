@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '=aj_3z5rf$!z5o+r#*&h-r3vmu%q)vor-6mlu_1#x%ja((*5z*'
 
-ALLOWED_HOSTS = ['sharebb.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['sharebb.herokuapp.com', 'localhost', '127.0.0.1']
 
 AUTH_USER_MODEL = 'authentication.profile'
 
@@ -141,8 +141,3 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 django_heroku.settings(locals(), test_runner=False)
-
-
-
-
-

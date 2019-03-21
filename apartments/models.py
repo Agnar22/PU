@@ -51,10 +51,6 @@ class Apartment(models.Model):
         blank=True
     )
     contracts = models.ManyToManyField(Contract, blank=True)
-    image1 = ProcessedImageField(upload_to='apartments/',
-                                 processors=[ResizeToFit(2000, 2000, False)],
-                                 format='JPEG',
-                                 options={'quality': 85})
 
     def __str__(self):
         return self.title
@@ -74,3 +70,11 @@ class Apartment(models.Model):
             self.vote_amount = 0
             self.rating = 0
         super().save(*args, **kwargs)
+
+
+class ApartmentImage(models.Model):
+    image = ProcessedImageField(upload_to='apartments/',
+                                 processors=[ResizeToFit(2000, 2000, False)],
+                                 format='JPEG',
+                                 options={'quality': 85})
+    image_for = models.ForeignKey(Apartment, on_delete=models.CASCADE)
