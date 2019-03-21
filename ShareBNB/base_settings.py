@@ -46,7 +46,17 @@ INSTALLED_APPS = [
     'profile_page',
     # Third party apps:
     'imagekit',
-    'storages'
+    'storages',
+    'django_nose'
+
+]
+# Use nose to run all tests
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# Tell nose to measure coverage on the 'foo' and 'bar' apps
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=apartments, authentication, chat, landingpage, multi_email_field, profile_page',
 ]
 
 MIDDLEWARE = [
