@@ -268,10 +268,7 @@ def create_apartment(request):
 
             print(files[0])
             for f in files:
-                image = ApartmentImage.objects.create(image=f)
-                apartment.images.add(image)
-
-            apartment.save()
+                image = ApartmentImage.objects.create(image=f, image_for=apartment)
 
             return redirect('profile')
         else:

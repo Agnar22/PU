@@ -8,9 +8,9 @@
         <div {% if message.tags %} class="snackbar {{ message.tags }}"{% endif %}>
             {% if message.tags == 'success' %}
                 <img src="{% static 'icons/snackbar/check-circle.svg' %}" alt="Checkmark">
-            {% elif  message.tags == 'warning' %}
+            {% elif message.tags == 'warning' %}
                 <img src="{% static 'icons/snackbar/alert-triangle.svg' %}" alt="warning">
-            {% elif  message.tags == 'error' %}
+            {% elif message.tags == 'error' %}
                 <img src="{% static 'icons/snackbar/close_circle.svg' %}" alt="Error">
             {% else %}
                 <img src="{% static 'icons/snackbar/information-circle.svg' %}" alt="Information">
@@ -22,9 +22,14 @@
     {% include 'navbar.html' %}
     <div id="apartment-detail">
         <div class="apartment-images">
-            {% for image in apartment.images.all %}
-                <img src="{{ apartment.images.all|get_first_image_url }}" alt="Apartment image">
+            {% for image in apartment.apartmentimage_set.all %}
+                <img src="{{ image.image.url }}" alt="Apartment image" class="{% if forloop.first %}active{% endif %}">
             {% endfor %}
+            <div id="left-arrow" onclick="prevImage()"></div>
+            <div id="right-arrow" onclick="nextImage()"></div>
+            <div class="ellipses">
+                {% for i in apartment.apartmentimage_set.all %}<div class="ellipse {% if forloop.first %}active{% endif %}"></div>{% endfor %}
+            </div>
         </div>
         <div class="apartment-info">
             <h1>{{ apartment.title }}</h1>
@@ -45,7 +50,7 @@
             <div class="user">
                 <img src="{% static 'img/girl.jpg' %}" alt="girl">
                 <div class="user-rating">
-                    <p>{{  owner.first_name }} {{ owner.last_name}}</p>
+                    <p>{{ owner.first_name }} {{ owner.last_name }}</p>
                     {% for i in i|rjust:4 %}
                         <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="">
                     {% endfor %}
@@ -62,15 +67,47 @@
             </div>
             <br><br>
             {% if request.user.is_authenticated %}
-            <form method="post" >
-                {% csrf_token %}
-                <div class="input-field fluid" style="width: 100%">
-                    {{ form.tenants }}
-                    <label for="{{ form.tenants.id_for_label }}">Email-adressene til de du leier sammen med; en per linje</label>
-                    {{ form.tenants.errors }}
-                </div>
-                <input type="submit" class="button primary" value="Send {{  owner.first_name }} en forespørsel om kontrakt">
-            </form>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input-field fluid" style="width: 100%">
+                        {{ form.tenants }}
+                        <label for="{{ form.tenants.id_for_label }}">Email-adressene til de du leier sammen med; en per
+                            linje</label>
+                        {{ form.tenants.errors }}
+                    </div>
+                    <input type="submit" class="button primary"
+                           value="Send {{ owner.first_name }} en forespørsel om kontrakt">
+                </form>
             {% endif %}
-    </div>
+        </div>
 {% endblock body %}
+{% block js %}
+    <script>
+        let activeImageIndex = 0;
+        let apartmentImages = $('.apartment-images img');
+        let dots = $('.ellipse');
+
+        function nextImage() {
+            if (activeImageIndex < apartmentImages.length - 1) {
+                activeImageIndex++;
+            } else {
+                activeImageIndex = 0;
+            }
+            changeImage(activeImageIndex);
+        }
+        function prevImage() {
+            if (activeImageIndex > 0) {
+                activeImageIndex--;
+            } else {
+                activeImageIndex = apartmentImages.length - 1;
+            }
+            changeImage(activeImageIndex);
+        }
+        function changeImage(index) {
+            dots.removeClass('active');
+            dots.eq(index).addClass('active');
+            apartmentImages.removeClass('active');
+            apartmentImages.eq(index).addClass('active');
+        }
+    </script>
+{% endblock %}

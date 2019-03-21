@@ -30,13 +30,6 @@ class Contract(models.Model):
         return self.tenants[0]
 
 
-class ApartmentImage(models.Model):
-    image = ProcessedImageField(upload_to='apartments/',
-                                 processors=[ResizeToFit(2000, 2000, False)],
-                                 format='JPEG',
-                                 options={'quality': 85})
-
-
 class Apartment(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=100000)
@@ -58,7 +51,6 @@ class Apartment(models.Model):
         blank=True
     )
     contracts = models.ManyToManyField(Contract, blank=True)
-    images = models.ManyToManyField(ApartmentImage)
 
     def __str__(self):
         return self.title
@@ -79,3 +71,10 @@ class Apartment(models.Model):
             self.rating = 0
         super().save(*args, **kwargs)
 
+
+class ApartmentImage(models.Model):
+    image = ProcessedImageField(upload_to='apartments/',
+                                 processors=[ResizeToFit(2000, 2000, False)],
+                                 format='JPEG',
+                                 options={'quality': 85})
+    image_for = models.ForeignKey(Apartment, on_delete=models.CASCADE)

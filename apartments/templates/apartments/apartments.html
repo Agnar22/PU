@@ -97,7 +97,7 @@
         <div class="apartment-list">
             {% for apartment in apartments %}
             <a class="apartment-list-item card clickable" href="{% url 'apartment-detail' apartment_id=apartment.pk start_date=query.start_date end_date=query.end_date %}">
-                <img class="apartment-image" src="{{ apartment.images.all|get_first_image_url }}" alt="">
+                <img class="apartment-image" src="{{ apartment.apartmentimage_set.all|get_first_image_url }}" alt="">
                 <h4>{{ apartment.title }}</h4>
                 <i><img src="{% static 'icons/pin.svg' %}" alt="">{{ apartment.city }}</i>
                 <i><img src="{% static 'icons/house.svg' %}" alt="">{{ apartment.size }} m<sup>2</sup></i>

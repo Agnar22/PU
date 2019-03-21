@@ -1,19 +1,80 @@
 #apartment-detail {
   position: relative;
   .apartment-images {
+    position: relative;
+    display: grid;
     height: calc(#{$navigation-height} + 30vh);
+    grid-template-columns: 100vw;
+    height: 400px;
     @media screen and (min-width: $xxl) {
       position: fixed;
       top: 0;
       left: 0;
       height: 100vh;
       width: 50vw;
+      grid-template-columns: 50vw;
+    }
+
+    #left-arrow, #right-arrow {
+      position: absolute;
+      top: 50%;
+      left: 1rem;
+      transform: translateY(-50%) rotate(45deg);
+      border: 0px solid $white;
+      border-left-width: 2px;
+      border-bottom-width: 2px;
+      height: 24px;
+      width: 24px;
+      cursor: pointer;
+      transition: transform 200ms ease-in-out;
+      &:hover {
+        transform: translateY(-50%) rotate(45deg) scale(1.1);
+      }
+    }
+    #right-arrow {
+      right: 1rem;
+      left: auto;
+      transform: translateY(-50%) rotate(225deg);
+      &:hover {
+        transform: translateY(-50%) rotate(225deg) scale(1.1);
+      }
+    }
+
+    .ellipses {
+      position: absolute;
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+
+      .ellipse {
+        cursor: pointer;
+        $ellipse-size: 8px;
+        display: inline-block;
+        background-color: $light-gray;
+        width: $ellipse-size;
+        height: $ellipse-size;
+        border-radius: 20px;
+        margin-right: 8px;
+
+        &.active {
+          background-color: $primary;
+        }
+      }
     }
 
     img {
-      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
       height: 100%;
       width: 100%;
+      object-fit: cover;
+      &:not(.active) {
+        display: none;
+      }
+      @media screen and (min-width: $xxl) {
+        height: 100vh;
+      }
     }
   }
   .apartment-info {
