@@ -4,7 +4,7 @@ from .models import Apartment, Contract, ApartmentImage
 
 
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ['__str__']
+    list_display = ['image_for']
     fields = ('mainimage', 'image_for')
 
     class Meta:
