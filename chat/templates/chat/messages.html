@@ -21,6 +21,7 @@
         </div>
     {% endfor %}
 
+
     <div id="chat" class="wrapper">
         <div class="left-side">
             <div class="add-persons">
@@ -72,6 +73,7 @@
 {% endblock %}
 {% block js %}
     <script>
+        let curr_message_ids ={{ message_ids }};
         let element = document.getElementById("messages");
         element.scrollTop = element.scrollHeight;
 
@@ -88,8 +90,9 @@
                             'from_vue': true,
                         },
                         success: function (data) {
-                            console.log("success", data)
-                            updateLastMessage(data)
+                            console.log("success", data);
+                            updateLastMessage(data);
+                            updateChatMessages(data);
                         },
                         error: function (data) {
                             console.log("failed")
@@ -99,16 +102,47 @@
             }
         });
 
-
+        //Displaying last message
         function updateLastMessage(param) {
-            for (let num=0; num<param.last_message.length; num++){
-                document.getElementById(param.persons[num]).innerHTML=param.last_message[num];
+            for (let num = 0; num < param.last_message.length; num++) {
+                document.getElementById(param.persons[num]).innerHTML = param.last_message[num];
             }
         }
-        function updateChatMessages(param) {
 
+        //Adding messages from the other user to chat
+        function updateChatMessages(param) {
+            //Iterating through given message ids
+            for (let idx = 0; idx < param.messages.length; idx++) {
+                //If this is a new message
+                if (curr_message_ids.indexOf(param.message_ids[idx]) < 0) {
+                    let wrapper = document.createElement("div");
+                    wrapper.className = "chat-bubble-wrapper";
+
+                    let bubble = document.createElement("div");
+                    bubble.className = "chat-bubble";
+
+                    let content = document.createElement("p");
+                    content.innerHTML = param.messages[idx];
+
+                    let timestamp = document.createElement("span");
+                    timestamp.className = "timestamp";
+                    timestamp.innerHTML = param.message_time[idx].substring(0, 5);
+
+
+                    bubble.appendChild(content);
+                    bubble.appendChild(timestamp);
+                    wrapper.appendChild(bubble);
+
+                    let element1 = document.getElementById('messages');
+                    element1.appendChild(wrapper);
+
+                    curr_message_ids.push(param.message_ids[idx]);
+                }
+            }
         }
-        setInterval(function() {
+
+
+        setInterval(function () {
             chatRefresh.refreshMessages()
         }, 1000);
     </script>

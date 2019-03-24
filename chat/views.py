@@ -28,13 +28,8 @@ def render_chats(request, chat_person=None):
         else:
             one_message.append("")
 
-    if request.GET.get('from_vue'):
-        return JsonResponse({'last_message': [message.content if not message == "" else "" for message in one_message],
-                             'persons': [person.pk for person in persons]})
-
     # Find current displayed chat
     if chat_person is not None:
-        print("chat", get_chat(request.user, chat_person))
         message_chat = get_chat(request.user, chat_person)[0].messages.order_by('time')
     # Display messages from last written chat
     else:
@@ -46,24 +41,29 @@ def render_chats(request, chat_person=None):
     context = {
         'info': [(one_message[i], persons[i]) for i in range(len(one_message))],
         'messages': message_chat,
+        'message_ids':[message.pk for message in message_chat],
         'chatting_with': chat_person
     }
+    if request.GET.get('from_vue'):
+        return JsonResponse({'last_message': [message.content if not message == "" else "" for message in one_message],
+                             'persons': [person.pk for person in persons],
+                             'chatting_with': chat_person.pk,
+                             'messages': [message.content if not message == "" else "" for message in message_chat],
+                             'message_ids': [message.pk for message in message_chat],
+                             'message_time':[message.time for message in message_chat]})
+
     return render(request, 'chat/messages.html', context)
 
 
 # Returning list of a chats between the two people
 def get_chat(person1, person2):
-    print(person1, person2)
     chat_one = Chat.objects.filter(Q(person1=person1) & Q(person2=person2))
     chat_two = Chat.objects.filter(Q(person1=person2) & Q(person2=person1))
-    print('chat_one', chat_one)
-    print('chat_two', chat_two)
     return chat_one if len(chat_one) > 0 else chat_two
 
 
 # Send message
 def send_message(request):
-    print("changin chat")
     message_content = request.POST.get('message', '')
     receiver = request.POST.get('receiver', '')
     curr_message = Message.objects.create(content=message_content, messager=request.user,
@@ -89,7 +89,6 @@ def add_chat(request):
 
 # Changing to chat with chat_person_id
 def change_chat(request, chat_person_id):
-    print("in change_chats function")
     # Use must be authenticated
     if not request.user.is_authenticated:
         return redirect('landing-page')
@@ -105,7 +104,6 @@ def change_chat(request, chat_person_id):
 
     try:
         chatting_with = Profile.objects.get(id=chat_person_id)
-        print("chatting with", chatting_with)
     except Exception as e:
         print(e)
         chatting_with = None
