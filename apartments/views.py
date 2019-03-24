@@ -269,7 +269,6 @@ def create_apartment(request):
 
 
             for f in files:
-                print(f)
                 image = ApartmentImage.objects.create(image=f, image_for=apartment)
 
             return redirect('profile')
