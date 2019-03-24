@@ -252,10 +252,11 @@ def create_apartment(request):
                 original_owner = original_owner.lower()
                 owner_count = Profile.objects.filter(Q(email__iexact=original_owner)).count()
 
-        if form.is_valid() and (original_owner is None or owner_count == 1):
+        if form.is_valid() and len(request.FILES.getlist('images')) <= 21 and (original_owner is None or owner_count == 1):
             apartment = form.save(commit=False)
             apartment.owner = Profile.objects.get(pk=request.user.pk)
             apartment.original_owner = original_owner
+            apartment.city = apartment.city.lower().capitalize()
             files = request.FILES.getlist('images')
 
             # Oppretter og lagrer longitude og latitude til adressen
@@ -266,8 +267,9 @@ def create_apartment(request):
 
             apartment.save()
 
-            print(files[0])
+
             for f in files:
+                print(f)
                 image = ApartmentImage.objects.create(image=f, image_for=apartment)
 
             return redirect('profile')
