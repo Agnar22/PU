@@ -11,6 +11,7 @@ class Message(models.Model):
     messager = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="messager", null=True)
     reciever = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="reciever", null=True)
     time = models.TimeField()
+    date = models.DateField(null=True)
 
 
 class Chat(models.Model):

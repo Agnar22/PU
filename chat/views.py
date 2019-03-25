@@ -36,21 +36,23 @@ def render_chats(request, chat_person=None):
         if len(user_chats) > 0:
             message_chat = user_chats[0].messages.order_by('time')
         else:
-            message_chat = ""
-        chat_person = persons[0] if len(persons) > 0 else ""
+            message_chat = []
+        chat_person = persons[0] if len(persons) > 0 else None
     context = {
         'info': [(one_message[i], persons[i]) for i in range(len(one_message))],
         'messages': message_chat,
-        'message_ids':[message.pk for message in message_chat],
-        'chatting_with': chat_person
+        'message_ids': [message.pk for message in message_chat],
+        'chatting_with': chat_person,
+        'chatting': chat_person != None
     }
+
     if request.GET.get('from_vue'):
         return JsonResponse({'last_message': [message.content if not message == "" else "" for message in one_message],
                              'persons': [person.pk for person in persons],
-                             'chatting_with': chat_person.pk,
+                             'chatting_with': chat_person.pk if chat_person != None else None,
                              'messages': [message.content if not message == "" else "" for message in message_chat],
                              'message_ids': [message.pk for message in message_chat],
-                             'message_time':[message.time for message in message_chat]})
+                             'message_time': [message.time for message in message_chat]})
 
     return render(request, 'chat/messages.html', context)
 
@@ -68,7 +70,8 @@ def send_message(request):
     receiver = request.POST.get('receiver', '')
     curr_message = Message.objects.create(content=message_content, messager=request.user,
                                           reciever=Profile.objects.get(id=receiver),
-                                          time=datetime.datetime.now())
+                                          time=datetime.datetime.now(),
+                                          date=datetime.datetime.today())
     # Finding the correct chat combination
     chat = get_chat(request.user, receiver)
     if len(chat) > 0:
@@ -95,7 +98,7 @@ def change_chat(request, chat_person_id):
 
     # Add new chat or send message or display other chat
     if request.method == 'POST':
-        if request.POST.get('Send', '') == 'Send':
+        if request.POST.get('Send', '') == 'Send' and request.POST.get('receiver') != '':
             send_message(request)
 
         # Add new chat

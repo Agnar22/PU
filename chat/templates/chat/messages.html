@@ -85,7 +85,7 @@
                 refreshMessages: function () {
                     $.ajax({
                         type: 'GET',
-                        url: '{% url 'chat' chat_person_id=chatting_with.id %}',
+                        url: '{% if chatting %}{% url 'chat' chat_person_id=chatting_with.id %}{% else %}{% url 'chat' %}{% endif %}',
                         data: {
                             'from_vue': true,
                         },
