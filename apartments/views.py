@@ -267,13 +267,20 @@ def create_apartment(request):
 
             apartment.save()
 
-
-            for f in files:
-                image = ApartmentImage.objects.create(image=f, image_for=apartment)
+            #Checks if all the uploaded files are images
+            try:
+                for f in files:
+                    image = ApartmentImage.objects.create(image=f, image_for=apartment)
+            except:
+                print('non image-file uploaded')
+                messages.error(request, "Du kan kun laste opp bilder!")
+                apartment.delete()
+                return render(request, 'apartments/create-apartment.html', {'form': form})
 
             return redirect('profile')
         else:
             print('failed')
+            messages.error(request, "Noe gikk galt, prøv igjen!")
             return render(request, 'apartments/create-apartment.html', {'form': form})
 
 
