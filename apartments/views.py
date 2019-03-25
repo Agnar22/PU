@@ -252,10 +252,11 @@ def create_apartment(request):
                 original_owner = original_owner.lower()
                 owner_count = Profile.objects.filter(Q(email__iexact=original_owner)).count()
 
-        if form.is_valid() and (original_owner is None or owner_count == 1):
+        if form.is_valid() and len(request.FILES.getlist('images')) <= 21 and (original_owner is None or owner_count == 1):
             apartment = form.save(commit=False)
             apartment.owner = Profile.objects.get(pk=request.user.pk)
             apartment.original_owner = original_owner
+            apartment.city = apartment.city.lower().capitalize()
             files = request.FILES.getlist('images')
 
             # Oppretter og lagrer longitude og latitude til adressen
@@ -266,13 +267,20 @@ def create_apartment(request):
 
             apartment.save()
 
-            print(files[0])
-            for f in files:
-                image = ApartmentImage.objects.create(image=f, image_for=apartment)
+            #Checks if all the uploaded files are images
+            try:
+                for f in files:
+                    image = ApartmentImage.objects.create(image=f, image_for=apartment)
+            except:
+                print('non image-file uploaded')
+                messages.error(request, "Du kan kun laste opp bilder!")
+                apartment.delete()
+                return render(request, 'apartments/create-apartment.html', {'form': form})
 
             return redirect('profile')
         else:
             print('failed')
+            messages.error(request, "Noe gikk galt, prøv igjen!")
             return render(request, 'apartments/create-apartment.html', {'form': form})
 
 
