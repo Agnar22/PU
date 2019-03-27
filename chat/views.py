@@ -13,7 +13,8 @@ from django.http import JsonResponse
 def render_chats(request, chat_person=None):
     # Get all chats where the user is
     # Sort after last message recieved
-    user_chats = Chat.objects.filter(Q(person1=request.user) | Q(person2=request.user)).order_by('-last_message')
+    user_chats = Chat.objects.filter(Q(person1=request.user) | Q(person2=request.user)).order_by('-last_message_date',
+                                                                                                 '-last_message')
 
     persons = []  # Persons the user is chatting with
     one_message = []  # The last message in each chat
@@ -24,17 +25,17 @@ def render_chats(request, chat_person=None):
             persons.append(user_chats[x].person1)
 
         if len(user_chats[x].messages.all()) > 0:
-            one_message.append(user_chats[x].messages.all().order_by('-time')[0])
+            one_message.append(user_chats[x].messages.all().order_by('-date', '-time')[0])
         else:
             one_message.append("")
 
     # Find current displayed chat
     if chat_person is not None:
-        message_chat = get_chat(request.user, chat_person)[0].messages.order_by('time')
+        message_chat = get_chat(request.user, chat_person)[0].messages.order_by('date', 'time')
     # Display messages from last written chat
     else:
         if len(user_chats) > 0:
-            message_chat = user_chats[0].messages.order_by('time')
+            message_chat = user_chats[0].messages.order_by('date', 'time')
         else:
             message_chat = []
         chat_person = persons[0] if len(persons) > 0 else None
@@ -75,7 +76,11 @@ def send_message(request):
     # Finding the correct chat combination
     chat = get_chat(request.user, receiver)
     if len(chat) > 0:
+        print('time', curr_message.time, curr_message.date)
         chat[0].messages.add(curr_message)
+        chat[0].last_message = curr_message.time
+        chat[0].last_message_date = curr_message.date
+        chat[0].save()
 
 
 # Adding a new chat

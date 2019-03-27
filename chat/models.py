@@ -19,3 +19,4 @@ class Chat(models.Model):
     person1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="person1", null=True)
     person2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="person2", null=True)
     last_message = models.TimeField(null=True)
+    last_message_date = models.DateField(null=True)
