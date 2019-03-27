@@ -7,6 +7,8 @@
 {% block body %}
     {% include 'navbar.html' %}
 
+    <script>alert("HEI")</script>
+
     <div class="container" id="profile-page">
         <div class="scrim" v-if="deleteUserModalOpen"></div>
         <div class="modal" :class="{open: deleteUserModalOpen}" v-if="deleteUserModalOpen">
