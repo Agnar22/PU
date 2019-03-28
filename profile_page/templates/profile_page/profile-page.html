@@ -2,9 +2,11 @@
 {% load static %}
 {% load apartment_filters %}
 {% load contracts_sort %}
+{% load contracts_tenants %}
 
 {% block body %}
     {% include 'navbar.html' %}
+
 
     <div class="container" id="profile-page">
         <div class="scrim" v-if="deleteUserModalOpen"></div>
@@ -31,11 +33,14 @@
         </div>
         <div class="profile-container">
             <div class="my-apartments">
-                <h2>Mine leiligheter</h2>
+
+                {% if owns_apartments %}
+                    <h2>Mine leiligheter</h2>
+                {% endif %}
 
                 {% for apartment in my_apartments %}
                     <div class="card apartment-list-item">
-                        <img class="apartment-image" src="{{ apartment.image1.url }}" alt="{{ apartment.title }}">
+                        <img class="apartment-image" src="{{ apartment.apartmentimage_set.all|get_first_image_url }}" alt="{{ apartment.title }}">
                         <div class="apartment-description">
                             <h4>{{ apartment.title }}</h4>
                             <i><img src="{% static 'icons/pin.svg' %}" alt="pin-icon">{{ apartment.city }}</i>
@@ -51,21 +56,39 @@
                                 {{ apartment.vote_amount }}
                             </div>
                             <ul>
+
                                 {% for contract in apartment.contracts.all|sort_contracts %}
-                                    {% if not contract.pending and contract.owner_approved %}
+                                    {% is_co_rented_by_group contract as co_rented_group %}
+                                    {% is_co_rented_by_single contract as co_rented_single %}
+                                    {% is_finished contract as is_finished %}
+
+                                    {% if not contract.pending and contract.owner_approved and not is_finished %}
                                         <li>Leies av {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
+                                            {% if co_rented_single %}og {{ contract|calculate_tenant_amount }} annen {% endif %}
+                                            {% if co_rented_group %}og {{ contract|calculate_tenant_amount }} andre {% endif %}
+                                            i perioden {{ contract.start_date|date:"d.m.y" }} -
+                                            {{ contract.end_date|date:"d.m.y" }}
+                                        </li>
+                                    {% elif not contract.pending and contract.owner_approved and is_finished %}
+                                        <li>Leid av {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
+                                            {% if co_rented_single %}og {{ contract|calculate_tenant_amount }} annen {% endif %}
+                                            {% if co_rented_group %}og {{ contract|calculate_tenant_amount }} andre {% endif %}
                                             i perioden {{ contract.start_date|date:"d.m.y" }} -
                                             {{ contract.end_date|date:"d.m.y" }}
                                         </li>
                                     {% elif not contract.pending %}
                                         <li>Kontrakten
                                             med {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
+                                            {% if co_rented_single %}og {{ contract|calculate_tenant_amount }} annen {% endif %}
+                                            {% if co_rented_group %}og {{ contract|calculate_tenant_amount }} andre {% endif %}
                                             i perioden {{ contract.start_date|date:"d.m.y" }} -
                                             {{ contract.end_date|date:"d.m.y" }} krever godkjenning av utleier
                                         </li>
                                     {% else %}
                                         <li class="contract">
                                             {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
+                                            {% if co_rented_single %}og {{ contract|calculate_tenant_amount }} annen {% endif %}
+                                            {% if co_rented_group %}og {{ contract|calculate_tenant_amount }} andre {% endif %}
                                             ønsker å leie i perioden:<br>
                                             <span>{{ contract.start_date|date:'d. F Y' }} -
                                                 {{ contract.end_date|date:'d. F Y'}}</span>
@@ -89,7 +112,7 @@
 
                 {% for apartment in owner_of %}
                     <div class="card apartment-list-item">
-                        <img class="apartment-image" src="{{ apartment.image1.url }}" alt="{{ apartment.title }}">
+                        <img class="apartment-image" src="{{ apartment.apartmentimage_set.all|get_first_image_url }}" alt="{{ apartment.title }}">
                         <div class="apartment-description">
                             <h4>{{ apartment.title }}</h4>
                             <i><img src="{% static 'icons/pin.svg' %}" alt="pin-icon">{{ apartment.city }}</i>
@@ -106,14 +129,20 @@
                             </div>
                             <ul>
                                 {% for contract in apartment.contracts.all|sort_contracts_owner %}
+                                    {% is_co_rented_by_group contract as co_rented_group %}
+                                    {% is_co_rented_by_single contract as co_rented_single %}
                                     {% if not contract.pending and contract.owner_approved %}
                                         <li>Leies av {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
+                                            {% if co_rented_single %}og {{ contract|calculate_tenant_amount }} annen {% endif %}
+                                            {% if co_rented_group %}og {{ contract|calculate_tenant_amount }} andre {% endif %}
                                             i perioden {{ contract.start_date|date:"d.m.y" }} -
                                             {{ contract.end_date|date:"d.m.y" }}
                                         </li>
                                     {% elif not contract.pending %}
                                         <li class="contract">
                                             {{ contract.tenant.first_name }} {{ contract.tenant.last_name }}
+                                            {% if co_rented_single %}og {{ contract|calculate_tenant_amount }} annen {% endif %}
+                                            {% if co_rented_group %}og {{ contract|calculate_tenant_amount }} andre {% endif %}
                                             ønsker å leie i perioden:<br>
                                             <span>{{ contract.start_date|date:'d. F Y' }} -
                                                 {{ contract.end_date|date:'d. F Y'}}</span>
@@ -133,8 +162,69 @@
                         </div>
                     </div>
                 {% endfor %}
+
+
+
+
+
+                {% if has_rented_apartments %}
+                    <br><br><br>
+                    <h2>Leiligheter jeg leier</h2>
+                {% endif %}
+                {% for apartment in my_rented_apartments %}
+                    <div class="card apartment-list-item">
+                        <img class="apartment-image" src="{{ apartment.apartmentimage_set.all|get_first_image_url }}" alt="{{ apartment.title }}">
+                        <div class="apartment-description">
+                            <h4>{{ apartment.title }}</h4>
+                            <i><img src="{% static 'icons/pin.svg' %}" alt="pin-icon">{{ apartment.city }}</i>
+                            <i><img src="{% static 'icons/house.svg' %}" alt="house-icon">{{ apartment.size }}
+                                m<sup>2</sup></i>
+                            <div class="rating">
+                                {% for i in apartment.rating|yellow_stars %}
+                                    <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="yellow star">
+                                {% endfor %}
+                                {% for i in apartment.rating|gray_stars %}
+                                    <img src="{% static 'icons/rating/gray_star.svg' %}" alt="yellow star">
+                                {% endfor %}
+                                {{ apartment.vote_amount }}
+                            </div>
+                            <ul>
+
+                                {% for contract in apartment.contracts.all|sort_contracts%}
+                                    {% filter_contracts contract request.user.email as is_renter %}
+
+                                    {% if is_renter %}
+                                        {% is_co_rented_by_group contract as co_rented_group %}
+                                        {% is_co_rented_by_single contract as co_rented_single %}
+                                        {% if not contract.pending and contract.owner_approved %}
+                                            <li>Leies av deg
+                                                {% if co_rented_single %}og {{ contract|calculate_tenant_amount }} annen {% endif %}
+                                                {% if co_rented_group %}og {{ contract|calculate_tenant_amount }} andre {% endif %}
+                                                i perioden {{ contract.start_date|date:"d.m.y" }} -
+                                                {{ contract.end_date|date:"d.m.y" }}
+                                            </li>
+                                        {% else %}
+                                            <li>
+                                                Du
+                                                {% if co_rented_single %}og {{ contract|calculate_tenant_amount }} annen {% endif %}
+                                                {% if co_rented_group %}og {{ contract|calculate_tenant_amount }} andre {% endif %}
+                                                venter på godkjenning av leie i perioden:<br>
+                                                <span>{{ contract.start_date|date:'d. F Y' }} -
+                                                    {{ contract.end_date|date:'d. F Y'}}</span>
+                                            </li>
+                                            <br>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endfor %}
+
                 <a class="button" href="{% url 'create-apartment' %}">Opprett ny leilighet</a>
             </div>
+
+
             <div class="profile-settings">
                 <h2>Brukerinnstillinger</h2>
                 <form method="post">

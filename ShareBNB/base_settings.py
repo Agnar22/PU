@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import django_heroku
 
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -23,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '=aj_3z5rf$!z5o+r#*&h-r3vmu%q)vor-6mlu_1#x%ja((*5z*'
 
-ALLOWED_HOSTS = ['sharebb.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['sharebb.herokuapp.com', 'localhost', '127.0.0.1']
 
 AUTH_USER_MODEL = 'authentication.profile'
 
@@ -36,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     # Our apps:
     'authentication',
     'landingpage',
@@ -43,11 +46,13 @@ INSTALLED_APPS = [
     'profile_page',
     'chat',
     # Third party apps:
-    'imagekit'
+    'imagekit',
+    'storages'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -129,9 +134,11 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'assets')]
 
+
 MEDIA_URL = '/media/'
+
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-django_heroku.settings(locals())
+django_heroku.settings(locals(), test_runner=False)

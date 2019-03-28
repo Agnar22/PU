@@ -1,0 +1,43 @@
+#navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: $navigation-height;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  box-shadow: $med-shadow;
+  z-index: 10000;
+  background-color: $white;
+
+  a {
+    text-decoration: none;
+    color: $black;
+  }
+
+  a.logo {
+    position: absolute;
+    left: 5%;
+    img, h4 {
+      display: inline;
+    }
+    img {
+      height: 28px;
+      width: auto;
+    }
+    h4 {
+      color: $primary;
+    }
+  }
+
+  .chat {
+    position: absolute;
+    right: calc(5% + 48px);
+  }
+
+  .user-icon {
+    position: absolute;
+    right: 5%;
+  }
+
+}
