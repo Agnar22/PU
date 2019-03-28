@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load apartment_filters %}
+{% load contracts_sort %}
+
+{% block body %}
+    {% include 'navbar.html' %}
+    
+    <div id="chat" class="wrapper">
+        <div class="left-side">
+            <div class="add-persons">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input-field">
+                        <input type="text" name="person" placeholder="." id="receiver">
+                        <input type="hidden" name="receiver" value="{{ chatting_with.id }}">
+                        <label for="receiver">Mottaker</label>
+                        <input type="submit" name="Add" class="button primary" value="Add">
+                    </div>
+                </form>
+            </div>
+            <div class="contacts">
+                {% for curr_info in info %}
+                    <a class="user-chat" href="{% url 'chat' chat_person_id=curr_info.1.pk %}"
+                       name="Choose_chat" value={{ curr_info.1.pk }}>
+                        {% include 'profile-picture.html' with user=curr_info.1 %}
+                        <h6>{{ curr_info.1.first_name }} {{ curr_info.1.last_name }}</h6>
+                        <p id={{ curr_info.1.pk }}>{{ curr_info.0.content }}</p>
+                        <h6 class="message-date">{{ curr_info.0.time }}</h6>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="right-side">
+            <div id="messages">
+                {% for message in messages %}
+                    <div class="chat-bubble-wrapper {% if message.messager.pk == request.user.pk %}you{% endif %}">
+                        <div class="chat-bubble">
+                            {% include 'profile-picture.html' with user=message.messager %}
+                            <p>{{ message.content }}</p>
+                            <span class="timestamp">{{ message.time }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <form method="post" id="chat-input">
+                {% csrf_token %}
+                <input type="hidden" name="receiver" value="{{ chatting_with.id }}">
+                <div>
+                    <input type="text" name="message" placeholder="Skriv noe..." autocomplete="off">
+                    <input type="submit" name="Send" class="button" value="Send">
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script>
+        let curr_message_ids ={{ message_ids }};
+        let element = document.getElementById("messages");
+        element.scrollTop = element.scrollHeight;
+
+        let chatRefresh = new Vue({
+            el: '',
+            delimiters: [],
+            data: {},
+            methods: {
+                refreshMessages: function () {
+                    $.ajax({
+                        type: 'GET',
+                        url: '{% if chatting %}{% url 'chat' chat_person_id=chatting_with.id %}{% else %}{% url 'chat' %}{% endif %}',
+                        data: {
+                            'from_vue': true,
+                        },
+                        success: function (data) {
+                            console.log("success", data);
+                            updateLastMessage(data);
+                            updateChatMessages(data);
+                        },
+                        error: function (data) {
+                            console.log("failed")
+                        }
+                    });
+                }
+            }
+        });
+
+        //Displaying last message
+        function updateLastMessage(param) {
+            for (let num = 0; num < param.last_message.length; num++) {
+                document.getElementById(param.persons[num]).innerHTML = param.last_message[num];
+            }
+        }
+
+        //Adding messages from the other user to chat
+        function updateChatMessages(param) {
+            //Iterating through given message ids
+            for (let idx = 0; idx < param.messages.length; idx++) {
+                //If this is a new message
+                if (curr_message_ids.indexOf(param.message_ids[idx]) < 0) {
+                    let wrapper = document.createElement("div");
+                    wrapper.className = "chat-bubble-wrapper";
+
+                    let bubble = document.createElement("div");
+                    bubble.className = "chat-bubble";
+                    bubble.innerHTML="{% include 'profile-picture.html' with user=chatting_with %}";
+
+
+                    let content = document.createElement("p");
+                    content.innerHTML = param.messages[idx];
+
+                    let timestamp = document.createElement("span");
+                    timestamp.className = "timestamp";
+                    timestamp.innerHTML = param.message_time[idx].substring(0, 5);
+
+
+                    //bubble.appendChild(image);
+                    bubble.appendChild(content);
+                    bubble.appendChild(timestamp);
+                    wrapper.appendChild(bubble);
+
+                    let element1 = document.getElementById('messages');
+                    element1.appendChild(wrapper);
+
+                    curr_message_ids.push(param.message_ids[idx]);
+                }
+            }
+        }
+
+
+        setInterval(function () {
+            chatRefresh.refreshMessages()
+        }, 1000);
+    </script>
+{% endblock %}
