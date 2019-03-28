@@ -18,6 +18,7 @@ class Contract(models.Model):
     owner_approved = models.BooleanField(null=True, blank=True)
     start_date = models.DateField()
     end_date = models.DateField()
+    review_made = models.BooleanField(default=False)
 
     def __str__(self):
         return '' + str(self.start_date.strftime("%d.%m.%Y")) + ' - ' + \
@@ -42,6 +43,7 @@ class Apartment(models.Model):
     apartment_age = models.IntegerField()
     rating = models.IntegerField(validators=[MaxValueValidator(5), MinValueValidator(0)], default=0)
     monthly_cost = models.PositiveIntegerField()
+    vote_sum = models.PositiveIntegerField(default=0)
     vote_amount = models.PositiveIntegerField(default=0)
     size = models.PositiveIntegerField()
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True)
@@ -68,6 +70,11 @@ class Apartment(models.Model):
         apartment_price = round(self.monthly_cost / 30 * delta.days)
 
         return apartment_price
+
+    def update_rating(self, new_rating):
+        self.vote_amount += 1
+        self.vote_sum += abs(new_rating)
+        self.rating = round(self.vote_sum / self.vote_amount)
 
     def save(self, *args, **kwargs):
         if not self.title:

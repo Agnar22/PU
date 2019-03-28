@@ -9,12 +9,19 @@ from authentication.models import Profile
 from django.db.models import Q
 
 
+# Updates the rating of an object (user/apartment in this instance).
+# Rated is the rating the current object was rated in the review
+def update_rating(object, rated):
+    object.update_rating(rated)
+    object.save()
+
 def get_review(tenant_pk, subtenant_pk, apartment_pk, contract_pk):
     # for obj in CompleteReview.objects.all():
     #     print('tenant', obj.review_of_tenant.user_to_be_reviewed.pk, tenant_pk, obj.review_of_tenant)
     #     print('subtenant', obj.review_of_subtenant.user_to_be_reviewed.pk, subtenant_pk)
     #     print('apartment', obj.apartment_review.apartment_to_be_reviewed.pk, apartment_pk)
     #     print('contract', obj.contract.pk, contract_pk)
+    #     print()
     query_set = CompleteReview.objects.filter(Q(review_of_tenant__user_to_be_reviewed__pk=tenant_pk) &
                                               Q(review_of_subtenant__user_to_be_reviewed__pk=subtenant_pk) &
                                               Q(apartment_review__apartment_to_be_reviewed__pk=apartment_pk) &
@@ -32,9 +39,11 @@ def review(request):
 
 def user_and_apartment_review(request, tenant_pk, subtenant_pk, apartment_pk, contract_pk):
     if not request.user.is_authenticated:
+        print('not authenticated')
         return redirect('landing-page')
 
     if request.user == Apartment.owner:
+        print('tenan is logged in')
         return user_review(request, subtenant_pk, apartment_pk, contract_pk)
 
     # User_id, apartment_id and authenticated user matches (a matching review model is available)
@@ -43,11 +52,13 @@ def user_and_apartment_review(request, tenant_pk, subtenant_pk, apartment_pk, co
 
     # The requested review does not exist
     if active_review == None:
-        return redirect('landing-page')
+        print('review does not exist')
+        return render(request, 'review/review_not_found.html')
 
     # It has already been reviewed
     if active_review.apartment_review.has_reviewed:
-        return render(request, 'review/review_not_found.html')
+        print('already been reviewed')
+        return render(request, 'review/already_reviewed.html')
 
     # Get a request form for the subtenant
     if request.method == 'GET':
@@ -82,18 +93,20 @@ def user_and_apartment_review(request, tenant_pk, subtenant_pk, apartment_pk, co
         # Review of apartment
         active_review.apartment_review.review = int(request.POST.get('apartment_rating'))
         active_review.apartment_review.has_reviewed = True
+        update_rating(active_review.apartment_review.apartment_to_be_reviewed, int(request.POST.get('apartment_rating')))
         active_review.apartment_review.save()
 
         # Review of tenant
         active_review.review_of_tenant.review = int(request.POST.get('tenant_rating'))
         active_review.review_of_tenant.has_reviewed = True
+        update_rating(active_review.review_of_tenant.user_to_be_reviewed, int(request.POST.get('tenant_rating')))
         active_review.review_of_tenant.save()
 
         # Update active_review if both has reviewed
         if active_review.review_of_tenant.has_reviewed and active_review.review_of_subtenant.has_reviewed:
             active_review.is_finished = True
             active_review.save()
-
+        return render(request, 'review/sent_review.html')
     return redirect('landing-page')
 
 
