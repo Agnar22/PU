@@ -85,14 +85,13 @@ def send_message(request):
 
 # Adding a new chat
 def add_chat(request):
-    name = request.POST.get('person', '').split()
-    if len(name) == 2:
-        try:
-            chatting_with = Profile.objects.get(first_name=name[0], last_name=name[1])
-            Chat.objects.create(person1=request.user, person2=chatting_with)
-        except Exception as e:
-            messages.error(request, 'Fant dessverre ikke brukeren, prøv på nytt')
-            print("Could not add chat\n", e)
+    added_email = request.POST.get('person')
+    try:
+        chatting_with = Profile.objects.get(Q(email__iexact=added_email))
+        Chat.objects.create(person1=request.user, person2=chatting_with)
+    except Exception as e:
+        messages.error(request, 'Fant dessverre ikke brukeren, prøv på nytt')
+        print("Could not add chat\n", e)
 
 
 # Changing to chat with chat_person_id
