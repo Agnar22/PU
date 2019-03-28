@@ -125,6 +125,7 @@
                                     <img src="{% static 'icons/rating/gray_star.svg' %}" alt="yellow star">
                                 {% endfor %}
                                 {{ apartment.vote_amount }}
+
                             </div>
                             <ul>
                                 {% for contract in apartment.contracts.all|sort_contracts_owner %}

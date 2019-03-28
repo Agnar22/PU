@@ -7,6 +7,8 @@ from apartments.models import Apartment, Contract
 from authentication.models import Profile
 from django.db.models import Q
 
+from emails.emails import send_review_email
+
 
 def profile_view(request):
 
