@@ -54,6 +54,7 @@ class Profile(AbstractBaseUser):
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     phone_number = models.PositiveIntegerField()
+    is_admin = models.BooleanField(default=False)
     profile_picture = ProcessedImageField(upload_to='apartments/',
                                  processors=[ResizeToFit(300, 300, False)],
                                  format='JPEG',
@@ -86,4 +87,4 @@ class Profile(AbstractBaseUser):
     def is_staff(self):
         # "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
-        return True
+        return self.is_admin

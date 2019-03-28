@@ -1,16 +1,37 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseForbidden
 
+import datetime
+
 from apartments.models import Apartment, Contract
 from authentication.models import Profile
 from django.db.models import Q
 
 
 def profile_view(request):
+
+    #Sletter ugyldige kontraktforespørsler
+    invalid_requests = Contract.objects.filter(
+        Q(start_date__lt=datetime.datetime.today().strftime('%Y-%m-%d')) &
+        (Q(pending=True) |
+         Q(owner_approved=False))
+        ).delete()
+
     if request.method == 'GET':
         if request.user.is_authenticated:
+
+            my_rented_apartments = Apartment.objects.filter(
+                Q(contracts__tenant__email__iexact=request.user.email) |
+                Q(contracts__tenants__contains=request.user.email)).distinct()
+
+            has_rented_apartments = my_rented_apartments.count() > 0
+            owns_apartments = Apartment.objects.filter(owner=request.user).count() > 0
+
             context = {
                 'my_apartments': Apartment.objects.filter(owner=request.user),
+                'my_rented_apartments': my_rented_apartments,
+                'has_rented_apartments': has_rented_apartments,
+                'owns_apartments': owns_apartments,
                 'owner_of': Apartment.objects.filter(Q(original_owner__iexact=request.user.email))
             }
             return render(request, 'profile_page/profile-page.html', context)
@@ -60,8 +81,18 @@ def profile_view(request):
 
             #Viser profilsiden dersom brukeren fremdeles er logget inn
             if request.user.is_authenticated:
+                my_rented_apartments = Apartment.objects.filter(
+                    Q(contracts__tenant__email__iexact=request.user.email) |
+                    Q(contracts__tenants__contains=request.user.email)).distinct()
+
+                has_rented_apartments = my_rented_apartments.count() > 0
+                owns_apartments = Apartment.objects.filter(owner=request.user).count() > 0
+
                 context = {
                     'my_apartments': Apartment.objects.filter(owner=request.user),
+                    'my_rented_apartments': my_rented_apartments,
+                    'has_rented_apartments': has_rented_apartments,
+                    'owns_apartments': owns_apartments,
                     'owner_of': Apartment.objects.filter(Q(original_owner__iexact=request.user.email))
                 }
                 return render(request, 'profile_page/profile-page.html', context)

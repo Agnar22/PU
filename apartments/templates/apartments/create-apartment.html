@@ -3,6 +3,20 @@
 {% load static %}
 
 {% block body %}
+    {% for message in messages %}
+        <div {% if message.tags %} class="snackbar {{ message.tags }}"{% endif %}>
+            {% if message.tags == 'success' %}
+                <img src="{% static 'icons/snackbar/check-circle.svg' %}" alt="Checkmark">
+            {% elif message.tags == 'warning' %}
+                <img src="{% static 'icons/snackbar/alert-triangle.svg' %}" alt="warning">
+            {% elif message.tags == 'error' %}
+                <img src="{% static 'icons/snackbar/close_circle.svg' %}" alt="Error">
+            {% else %}
+                <img src="{% static 'icons/snackbar/information-circle.svg' %}" alt="Information">
+            {% endif %}
+            {{ message }}
+        </div>
+    {% endfor %}
     {% include 'navbar.html' %}
     <div class="container">
         <form method="post" enctype="multipart/form-data">
@@ -54,13 +68,12 @@
             </div>
             <div class="input-field fluid">
                 {{ form.original_owner }}
-                <label for="{{ form.original_owner.id_for_label }}">Email-adresse til utleier/eier</label>
+                <label for="{{ form.original_owner.id_for_label }}">Epost-adressen til eier av leiligheten</label>
                 {{ form.monthly_cost.errors }}
             </div>
             <div class="input-field fluid">
-                {{ form.image1 }}
-                <label for="{{ form.monthly_cost.id_for_label }}">Last opp et bilde</label>
-                {{ form.image1.errors }}
+                <input type="file" id="images" name="images" multiple required>
+                <label for="images">Last opp et bilde</label>
             </div>
             <br>
             <input type="submit" class="button primary" value="Opprett leilighet">

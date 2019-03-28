@@ -9,10 +9,18 @@ class RegisterForm(forms.ModelForm):
         super(RegisterForm, self).__init__(*args, **kwargs)
         self.fields['email'].widget.attrs['autocomplete'] = "email"
         self.fields['email'].widget.attrs['placeholder'] = "email"
+
         self.fields['first_name'].widget.attrs['autocomplete'] = "given-name"
+        self.fields['first_name'].widget.attrs['placeholder'] = "given-name"
+
         self.fields['last_name'].widget.attrs['autocomplete'] = "family-name"
+        self.fields['last_name'].widget.attrs['placeholder'] = "family-name"
+
         self.fields['phone_number'].widget.attrs['autocomplete'] = "tel-national"
+        self.fields['phone_number'].widget.attrs['placeholder'] = "tel-national"
+
         self.fields['password'].widget.attrs['autocomplete'] = "new-password"
+        self.fields['password'].widget.attrs['placeholder'] = "new-password"
     
     class Meta:
         model = User

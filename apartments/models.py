@@ -6,12 +6,14 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFit
 
+from multi_email_field.fields import MultiEmailField as MultiEmailField
 from authentication.models import Profile
 
 
 class Contract(models.Model):
-    contract_text = models.TextField()
+    contract_text = models.TextField(null=True, blank=True)
     tenant = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="tenant", null=True)
+    tenants = MultiEmailField(null=True, blank=True)
     pending = models.BooleanField()
     owner_approved = models.BooleanField(null=True, blank=True)
     start_date = models.DateField()
@@ -20,6 +22,12 @@ class Contract(models.Model):
     def __str__(self):
         return '' + str(self.start_date.strftime("%d.%m.%Y")) + ' - ' + \
                str(self.end_date.strftime("%d.%m.%Y"))
+
+    def calculate_tenants(self):
+        return len(self.tenants)
+
+    def get_main_tenant(self):
+        return self.tenants[0]
 
 
 class Apartment(models.Model):
@@ -39,13 +47,10 @@ class Apartment(models.Model):
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True)
     original_owner = models.EmailField(
         max_length=255,
-        null=True
+        null=True,
+        blank=True
     )
-    contracts = models.ManyToManyField(Contract)
-    image1 = ProcessedImageField(upload_to='apartments/',
-                                 processors=[ResizeToFit(2000, 2000, False)],
-                                 format='JPEG',
-                                 options={'quality': 85})
+    contracts = models.ManyToManyField(Contract, blank=True)
 
     def __str__(self):
         return self.title
@@ -65,3 +70,11 @@ class Apartment(models.Model):
             self.vote_amount = 0
             self.rating = 0
         super().save(*args, **kwargs)
+
+
+class ApartmentImage(models.Model):
+    image = ProcessedImageField(upload_to='apartments/',
+                                 processors=[ResizeToFit(2000, 2000, False)],
+                                 format='JPEG',
+                                 options={'quality': 85})
+    image_for = models.ForeignKey(Apartment, on_delete=models.CASCADE)

@@ -519,18 +519,66 @@ p a, .link {
 #apartment-detail {
   position: relative; }
   #apartment-detail .apartment-images {
-    height: calc(4rem + 30vh); }
+    position: relative;
+    display: grid;
+    height: calc(4rem + 30vh);
+    grid-template-columns: 100vw;
+    height: 400px; }
     @media screen and (min-width: 81.25em) {
       #apartment-detail .apartment-images {
         position: fixed;
         top: 0;
         left: 0;
         height: 100vh;
-        width: 50vw; } }
+        width: 50vw;
+        grid-template-columns: 50vw; } }
+    #apartment-detail .apartment-images #left-arrow, #apartment-detail .apartment-images #right-arrow {
+      position: absolute;
+      top: 50%;
+      left: 1rem;
+      transform: translateY(-50%) rotate(45deg);
+      border: 0px solid #FCFCFC;
+      border-left-width: 2px;
+      border-bottom-width: 2px;
+      height: 24px;
+      width: 24px;
+      cursor: pointer;
+      transition: transform 200ms ease-in-out; }
+      #apartment-detail .apartment-images #left-arrow:hover, #apartment-detail .apartment-images #right-arrow:hover {
+        transform: translateY(-50%) rotate(45deg) scale(1.1); }
+    #apartment-detail .apartment-images #right-arrow {
+      right: 1rem;
+      left: auto;
+      transform: translateY(-50%) rotate(225deg); }
+      #apartment-detail .apartment-images #right-arrow:hover {
+        transform: translateY(-50%) rotate(225deg) scale(1.1); }
+    #apartment-detail .apartment-images .ellipses {
+      position: absolute;
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%); }
+      #apartment-detail .apartment-images .ellipses .ellipse {
+        cursor: pointer;
+        display: inline-block;
+        background-color: #F1F1F1;
+        width: 8px;
+        height: 8px;
+        border-radius: 20px;
+        margin-right: 8px; }
+        #apartment-detail .apartment-images .ellipses .ellipse.active {
+          background-color: #70B991; }
     #apartment-detail .apartment-images img {
-      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
       height: 100%;
-      width: 100%; }
+      width: 100%;
+      object-fit: cover; }
+      #apartment-detail .apartment-images img:not(.active) {
+        display: none; }
+      @media screen and (min-width: 81.25em) {
+        #apartment-detail .apartment-images img {
+          height: 100vh; } }
   #apartment-detail .apartment-info {
     padding: 5%; }
     @media screen and (min-width: 81.25em) {

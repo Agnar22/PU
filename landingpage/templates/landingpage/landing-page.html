@@ -25,7 +25,7 @@
         <div class="landing-page-wrapper">
             <div class="search-fields">
                 <h1>Finn ditt midlertidige<br> hjem med ShareBNB</h1>
-                <h4>Søk blant over 10 hjem i opptil 2 byer!</h4>
+                <h4>Søk blant over {{ distinct_apartments }} hjem i opptil {{ distinct_cities }} byer!</h4>
                 <form action="apartments/" method="get">
                     <div class="input-field fluid location">
                         <input name="location" id="location" type="text" placeholder="." required>
@@ -77,10 +77,10 @@
                         {% csrf_token %}
                         <div class="input-field fluid">
                             <input type="email" name="email" id="email" placeholder="." autocomplete="email">
-                            <label for="email">Epost</label>
+                            <label for="email">E-post</label>
                         </div>
                         <div class="input-field fluid">
-                            <input type="password" name="password" autocomplete="current-password" id="password">
+                            <input type="password" name="password" autocomplete="current-password" id="password" placeholder=".">
                             <label for="password">Passord</label>
                         </div>
                         <input class="button primary" type="submit" value="Logg inn">
