@@ -16,9 +16,9 @@ class Migration(migrations.Migration):
             name='is_admin',
             field=models.BooleanField(default=False),
         ),
-        migrations.AddField(
-            model_name='profile',
-            name='profile_picture',
-            field=imagekit.models.fields.ProcessedImageField(blank=True, null=True, upload_to='apartments/'),
-        ),
+        # migrations.AddField(
+        #     model_name='profile',
+        #     name='profile_picture',
+        #     field=imagekit.models.fields.ProcessedImageField(blank=True, null=True, upload_to='apartments/'),
+        # ),
     ]
