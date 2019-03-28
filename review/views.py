@@ -42,8 +42,8 @@ def user_and_apartment_review(request, tenant_pk, subtenant_pk, apartment_pk, co
         print('not authenticated')
         return redirect('landing-page')
 
-    if request.user == Apartment.owner:
-        print('tenan is logged in')
+    if request.user.pk == tenant_pk:
+        print('tenant is logged in')
         return user_review(request, subtenant_pk, apartment_pk, contract_pk)
 
     # User_id, apartment_id and authenticated user matches (a matching review model is available)
@@ -117,13 +117,15 @@ def user_review(request, subtenant_pk, apartment_pk, contract_pk):
 
     # The requested review does not exist
     if active_review == None:
-        return redirect('landing-page')
-
-    # It has already been reviewed
-    if active_review.apartment_review.has_reviewed:
+        print('review does not exist')
         return render(request, 'review/review_not_found.html')
 
-    # Get a request form
+    # It has already been reviewed
+    if active_review.review_of_subtenant.has_reviewed:
+        print('already been reviewed')
+        return render(request, 'review/already_reviewed.html')
+
+    # Get a request form for the subtenant
     if request.method == 'GET':
         # return request page
         context = {
@@ -134,14 +136,29 @@ def user_review(request, subtenant_pk, apartment_pk, contract_pk):
             'apartment': apartment_pk,
             'contract': contract_pk
         }
-        return render(request, 'review/review_user_apartment.html', context)
+        return render(request, 'review/review_user.html', context)
 
-    if request.methd == 'POST':
+    if request.method == 'POST':
+        # Subtenant is not rated
+        if  request.POST.get('subtenant_rating') == '-1':
+            context = {
+                'subtenant_first': active_review.review_of_subtenant.user_to_be_reviewed.first_name,
+                'subtenant_last': active_review.review_of_subtenant.user_to_be_reviewed.last_name,
+                'tenant': tenant_pk,
+                'subtenant': subtenant_pk,
+                'apartment': apartment_pk,
+                'contract': contract_pk
+            }
+            return render(request, 'review/review_user.html', context)
+
         # Review of subtenant
-        active_review.review_of_subtenant.review = int(request.POST.get('subtenant_review'))
+        active_review.review_of_subtenant.review = int(request.POST.get('subtenant_rating'))
         active_review.review_of_subtenant.has_reviewed = True
+        update_rating(active_review.review_of_subtenant.user_to_be_reviewed, int(request.POST.get('subtenant_rating')))
+        active_review.review_of_subtenant.save()
 
         if active_review.review_of_tenant.has_reviewed and active_review.review_of_subtenant.has_reviewed:
             active_review.is_finished = True
-
+            active_review.save()
+        return render(request, 'review/sent_review.html')
     return redirect('landing-page')

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load apartment_filters %}
+{% load static %}
+
+{% block body %}
+    <div class="container" id="review">
+        <h1>Da har {{ subtenant_first}} {{ subtenant_last }} sin kontrakt utgått!</h1>
+        <br><br><br><br>
+        <h3>Hva syntes du om {{ tenant_first}} {{ tenant_last }} som leietaker?</h3>
+        <div class="user-rating">
+            <div class="star" v-for="(star, i) of userStars" @mouseover="selectStars(true, i)"
+                 @mouseleave="resetStars(true)" @click="setRating(true, i)">
+                <img v-if="star" src="{% static 'icons/rating/yellow_star.svg' %}" alt="yellow star">
+                <img v-else src="{% static 'icons/rating/gray_star.svg' %}" alt="yellow star">
+                <p>[{i + 1}]</p>
+            </div>
+        </div>
+        <form method="post" href="{% url 'review' tenant_pk=tenant subtenant_pk=subtenant apartment_pk=apartment contract_pk=contract %}">
+            <input type="hidden" id="subtenant_rating" name="subtenant_rating" value="-1"/>
+            {% csrf_token %}
+            <button class="button primary" name="send_review" type="submit">Send din tilbakemelding</button>
+        </form>
+    </div>
+{% endblock body %}
+{% block js %}
+    <script>
+        let review = new Vue({
+            el: '#review',
+            delimiters: ['[{', '}]'],
+            data: {
+                selectedUserStars: 0,
+                userStars: [1, 0, 0, 0, 0]
+            },
+            methods: {
+                selectStars: function (isUser, index) {
+                    let stars = []
+                    for (let i = 0; i < 5; i++) {
+                        if (i <= index) {
+                            stars[i] = 1;
+                        } else {
+                            stars[i] = 0;
+                        }
+                    }
+                    this.userStars = stars
+                },
+                resetStars: function (isUser) {
+                    this.selectStars(true, this.selectedUserStars);
+                },
+                setRating: function (isUser, index) {
+                    this.selectedUserStars = index;
+                    document.getElementById("subtenant_rating").value=index;
+                    console.log(index, document.getElementById("subtenant_rating").value);
+
+                }
+            }
+        })
+    </script>
+{% endblock js %}
