@@ -56,9 +56,9 @@ class Profile(AbstractBaseUser):
     phone_number = models.PositiveIntegerField()
     is_admin = models.BooleanField(default=False)
     profile_picture = ProcessedImageField(upload_to='apartments/',
-                                 processors=[ResizeToFit(300, 300, False)],
-                                 format='JPEG',
-                                 options={'quality': 85}, null=True, blank=True)
+                                          processors=[ResizeToFit(300, 300, False)],
+                                          format='JPEG',
+                                          options={'quality': 85}, null=True, blank=True)
 
     objects = ProfileManager()
 
