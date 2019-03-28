@@ -5,23 +5,7 @@
 
 {% block body %}
     {% include 'navbar.html' %}
-
-    {% for message in messages %}
-        <div class="snackbar {% if message.tags %}{{ message.tags }}"{% endif %}>
-            {% if message.tags == 'success' %}
-                <img src="{% static 'icons/snackbar/check-circle.svg' %}" alt="Checkmark">
-            {% elif message.tags == 'warning' %}
-                <img src="{% static 'icons/snackbar/alert-triangle.svg' %}" alt="warning">
-            {% elif message.tags == 'error' %}
-                <img src="{% static 'icons/snackbar/close_circle.svg' %}" alt="Error">
-            {% else %}
-                <img src="{% static 'icons/snackbar/information-circle.svg' %}" alt="Information">
-            {% endif %}
-            {{ message }}
-        </div>
-    {% endfor %}
-
-
+    
     <div id="chat" class="wrapper">
         <div class="left-side">
             <div class="add-persons">
@@ -120,6 +104,8 @@
 
                     let bubble = document.createElement("div");
                     bubble.className = "chat-bubble";
+                    bubble.innerHTML="{% include 'profile-picture.html' with user=chatting_with %}";
+
 
                     let content = document.createElement("p");
                     content.innerHTML = param.messages[idx];
@@ -128,6 +114,8 @@
                     timestamp.className = "timestamp";
                     timestamp.innerHTML = param.message_time[idx].substring(0, 5);
 
+
+                    //bubble.appendChild(image);
                     bubble.appendChild(content);
                     bubble.appendChild(timestamp);
                     wrapper.appendChild(bubble);
