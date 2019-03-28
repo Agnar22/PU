@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
+from emails.emails import send_review_email
 
 from django.db.models import Count
 from apartments.models import Apartment
@@ -33,8 +34,8 @@ def filter_contracts():
 
 
 # Sending email with url
-def send_email(mail, url):
-    pass
+def send_email(receiver, url):
+    send_review_email(url, receiver)
 
 
 # Creating new review models for expired contracts
@@ -52,7 +53,7 @@ def create_review_models():
                                       review_of_tenant=tenant_review,
                                       review_of_subtenant=subtenant_review,
                                       contract=contracts[x])
-        url = "https://sharebnb.herokuapp.com/to_review/" + str(apartments[x].owner.pk) + "/" + str(contracts[x].tenant.pk)\
+        url = "https://sharebb.herokuapp.com/to_review/" + str(apartments[x].owner.pk) + "/" + str(contracts[x].tenant.pk)\
                                                     + "/" + str(apartments[x].pk) + "/" + str(contracts[x].pk)
         send_email(contracts[x].tenant.email, url)
         send_email(apartments[x].owner.email, url)
