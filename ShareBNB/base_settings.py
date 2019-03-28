@@ -144,6 +144,9 @@ LOGOUT_REDIRECT_URL = '/'
 django_heroku.settings(locals(), test_runner=False)
 
 
-
-
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ikkesvar.sharebnb@gmail.com'
+EMAIL_HOST_PASSWORD = 'zX\y8k<,kD#C%qLnX`H,'
