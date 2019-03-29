@@ -4,6 +4,7 @@ ShareBNB is an online marketplace and hospitality service which allows for users
 ### Motivation
 In the subject TDT4140 at NTNU we will work together as a team to create an application. The product owner/customer requested that we developed an application which is accessible via a website. We manage the project using the agile management process Scrum.
 
+
 # Installation and use
 1. Clone the project to your computer with `git clone <url>`
 2. Navigate to the cloned directory
