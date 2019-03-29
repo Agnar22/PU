@@ -23,5 +23,5 @@ staging:
 test_on_heroku:
   type: deploy
   script:
-    - dpl --provider=heroku --app=sharebb --api-key=$HEROKU_STAGING_API_KEY
+    # - dpl --provider=heroku --app=sharebb --api-key=$HEROKU_STAGING_API_KEY
     - heroku run python manage.py --exit-code --app sharebb
