@@ -37,10 +37,10 @@
         <div class="user">
             <h1>{{ request.user.first_name }} {{ request.user.last_name }}</h1>
             <div class="user-rating">
-                {% for i in 4|yellow_stars %}
+                {% for i in request.user.rating|yellow_stars %}
                     <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="yellow star">
                 {% endfor %}
-                {% for i in 4|gray_stars %}
+                {% for i in request.user.rating|gray_stars %}
                     <img src="{% static 'icons/rating/gray_star.svg' %}" alt="Gray star">
                 {% endfor %}
             </div>

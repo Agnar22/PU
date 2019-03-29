@@ -44,10 +44,12 @@
                 <img src="{% static 'img/girl.jpg' %}" alt="girl">
                 <div class="user-rating">
                     <p>{{  owner.first_name }} {{ owner.last_name}}</p>
-                    {% for i in i|rjust:4 %}
+                    {% for i in owner.rating|yellow_stars %}
                         <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="">
                     {% endfor %}
-                    <img src="{% static 'icons/rating/gray_star.svg' %}" alt="">
+                    {% for i in owner.rating|gray_stars %}
+                        <img src="{% static 'icons/rating/gray_star.svg' %}" alt="Gray star">
+                    {% endfor %}
                 </div>
             </div>
             <div class="mapouter">
