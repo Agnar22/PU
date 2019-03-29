@@ -11,7 +11,7 @@
     <div class="container" id="profile-page">
         <div class="scrim" v-if="deleteUserModalOpen"></div>
         <div class="modal" :class="{open: deleteUserModalOpen}" v-if="deleteUserModalOpen">
-            <form method="post">
+            <form method="post" action="/delete-user">
                 {% csrf_token %}
                 <h3>Er du sikker på at du vil slette brukeren din?</h3>
                 <div class="choice-buttons">
