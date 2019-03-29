@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load apartment_filters %}
+{% load static %}
+
+{% block body %}
+    <div class="container" id="review">
+        <h1>Hvordan var ditt siste opphold med ShareBNB?</h1>
+        <br><br><br><br>
+        <h3>Hva syntes du om Per Traulsen som vært?</h3>
+        <div class="user-rating">
+            <div class="star" v-for="(star, i) of userStars" @mouseover="selectStars(true, i)"
+                 @mouseleave="resetStars(true)" @click="setRating(true, i)">
+                <img v-if="star" src="{% static 'icons/rating/yellow_star.svg' %}" alt="yellow star">
+                <img v-else src="{% static 'icons/rating/gray_star.svg' %}" alt="yellow star">
+                <p>[{i + 1}]</p>
+            </div>
+        </div>
+        <h3>Hva syntes du om leiligheten i Kongens gate 1?</h3>
+        <div class="apartment-rating">
+            <div class="star" v-for="(star, i) of apartmentStars" @mouseover="selectStars(false, i)"
+                 @mouseleave="resetStars(false)" @click="setRating(false, i)">
+                <img v-if="star" src="{% static 'icons/rating/yellow_star.svg' %}" alt="yellow star">
+                <img v-else src="{% static 'icons/rating/gray_star.svg' %}" alt="yellow star">
+                <p>[{i + 1}]</p>
+            </div>
+        </div>
+        <br><br><br><br>
+        <div class="button primary">Send din tilbakemelding</div>
+    </div>
+{% endblock body %}
+{% block js %}
+    <script>
+        let review = new Vue({
+            el: '#review',
+            delimiters: ['[{', '}]'],
+            data: {
+                selectedUserStars: 0,
+                userStars: [1, 0, 0, 0, 0],
+                apartmentStars: [1, 0, 0, 0, 0],
+                selectedApartmentStars: 0
+            },
+            methods: {
+                selectStars: function (isUser, index) {
+                    let stars = []
+                    for (let i = 0; i < 5; i++) {
+                        if (i <= index) {
+                            stars[i] = 1;
+                        } else {
+                            stars[i] = 0;
+                        }
+                    }
+                    if (isUser) {
+                        this.userStars = stars
+                    } else {
+                        this.apartmentStars = stars
+                    }
+                },
+                resetStars: function (isUser) {
+                    if (isUser) {
+                        this.selectStars(true, this.selectedUserStars);
+                    } else {
+                        this.selectStars(false, this.selectedApartmentStars);
+                    }
+                },
+                setRating: function (isUser, index) {
+                    if (isUser) {
+                        this.selectedUserStars = index
+                    } else {
+                        this.selectedApartmentStars = index
+                    }
+                }
+            }
+        })
+    </script>
+{% endblock js %}

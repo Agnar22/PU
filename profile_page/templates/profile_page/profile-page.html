@@ -5,6 +5,21 @@
 {% load contracts_tenants %}
 
 {% block body %}
+    {% for message in messages %}
+        <div {% if message.tags %} class="snackbar {{ message.tags }}"{% endif %}>
+            {% if message.tags == 'success' %}
+                <img src="{% static 'icons/snackbar/check-circle.svg' %}" alt="Checkmark">
+            {% elif  message.tags == 'warning' %}
+                <img src="{% static 'icons/snackbar/alert-triangle.svg' %}" alt="warning">
+            {% elif  message.tags == 'error' %}
+                <img src="{% static 'icons/snackbar/close_circle.svg' %}" alt="Error">
+            {% else %}
+                <img src="{% static 'icons/snackbar/information-circle.svg' %}" alt="Information">
+            {% endif %}
+            {{ message }}
+        </div>
+    {% endfor %}
+
     {% include 'navbar.html' %}
 
 
@@ -23,10 +38,10 @@
         <div class="user">
             <h1>{{ request.user.first_name }} {{ request.user.last_name }}</h1>
             <div class="user-rating">
-                {% for i in 4|yellow_stars %}
+                {% for i in request.user.rating|yellow_stars %}
                     <img src="{% static 'icons/rating/yellow_star.svg' %}" alt="yellow star">
                 {% endfor %}
-                {% for i in 4|gray_stars %}
+                {% for i in request.user.rating|gray_stars %}
                     <img src="{% static 'icons/rating/gray_star.svg' %}" alt="Gray star">
                 {% endfor %}
             </div>
@@ -126,6 +141,7 @@
                                     <img src="{% static 'icons/rating/gray_star.svg' %}" alt="yellow star">
                                 {% endfor %}
                                 {{ apartment.vote_amount }}
+
                             </div>
                             <ul>
                                 {% for contract in apartment.contracts.all|sort_contracts_owner %}

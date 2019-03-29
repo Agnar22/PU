@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load apartment_filters %}
+{% load static %}
+
+{% block body %}
+    <div class="container" id="review">
+        <h1>Hvordan var ditt siste opphold med ShareBNB?</h1>
+        <br><br><br><br>
+        <h3>Hva syntes du om {{ tenant_first}} {{ tenant_last }} som vert?</h3>
+        <div class="user-rating">
+            <div class="star" v-for="(star, i) of userStars" @mouseover="selectStars(true, i)"
+                 @mouseleave="resetStars(true)" @click="setRating(true, i)">
+                <img v-if="star" src="{% static 'icons/rating/yellow_star.svg' %}" alt="yellow star">
+                <img v-else src="{% static 'icons/rating/gray_star.svg' %}" alt="yellow star">
+                <p>[{i + 1}]</p>
+            </div>
+        </div>
+        <h3>Hva syntes du om leiligheten i {{ apartment_object.address }}?</h3>
+        <div class="apartment-rating">
+            <div class="star" v-for="(star, i) of apartmentStars" @mouseover="selectStars(false, i)"
+                 @mouseleave="resetStars(false)" @click="setRating(false, i)">
+                <img v-if="star" src="{% static 'icons/rating/yellow_star.svg' %}" alt="yellow star">
+                <img v-else src="{% static 'icons/rating/gray_star.svg' %}" alt="yellow star">
+                <p>[{i + 1}]</p>
+            </div>
+        </div>
+        <br><br><br><br>
+        <form method="post" href="{% url 'review' tenant_pk=tenant subtenant_pk=subtenant apartment_pk=apartment contract_pk=contract %}">
+            <input type="hidden" id="apartment_rating" name="apartment_rating" value="-1"/>
+            <input type="hidden" id="tenant_rating" name="tenant_rating" value="-1"/>
+            {% csrf_token %}
+            <button class="button primary" name="send_review" type="submit">Send din tilbakemelding</button>
+        </form>
+    </div>
+{% endblock body %}
+{% block js %}
+    <script>
+        let review = new Vue({
+            el: '#review',
+            delimiters: ['[{', '}]'],
+            data: {
+                selectedUserStars: 0,
+                userStars: [1, 0, 0, 0, 0],
+                apartmentStars: [1, 0, 0, 0, 0],
+                selectedApartmentStars: 0
+            },
+            methods: {
+                selectStars: function (isUser, index) {
+                    let stars = []
+                    for (let i = 0; i < 5; i++) {
+                        if (i <= index) {
+                            stars[i] = 1;
+                        } else {
+                            stars[i] = 0;
+                        }
+                    }
+                    if (isUser) {
+                        this.userStars = stars
+                    } else {
+                        this.apartmentStars = stars
+                    }
+                },
+                resetStars: function (isUser) {
+                    if (isUser) {
+                        this.selectStars(true, this.selectedUserStars);
+                        //document.getElementById("tenant_rating").innerHTML="";
+                    } else {
+                        this.selectStars(false, this.selectedApartmentStars);
+                        //document.getElementById("apartment_rating").innerHTML="";
+                    }
+                },
+                setRating: function (isUser, index) {
+                    if (isUser) {
+                        this.selectedUserStars = index;
+                        document.getElementById("tenant_rating").value=index;
+                        console.log(index, document.getElementById("tenant_rating").value);
+                    } else {
+                        this.selectedApartmentStars = index;
+                        document.getElementById("apartment_rating").value=index;
+                    }
+                }
+            }
+        })
+    </script>
+{% endblock js %}

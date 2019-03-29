@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from django.core.validators import MaxValueValidator, MinValueValidator
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFit
 
@@ -45,7 +46,6 @@ class ProfileManager(BaseUserManager):
 
 
 class Profile(AbstractBaseUser):
-
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -62,6 +62,10 @@ class Profile(AbstractBaseUser):
 
     objects = ProfileManager()
 
+    rating = models.IntegerField(validators=[MaxValueValidator(5), MinValueValidator(0)], default=0)
+    vote_sum = models.PositiveIntegerField(default=0)
+    vote_amount = models.PositiveIntegerField(default=0)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'phone_number']
 
@@ -77,6 +81,11 @@ class Profile(AbstractBaseUser):
         # "Does the user have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
+
+    def update_rating(self, new_rating):
+        self.vote_amount += 1
+        self.vote_sum += abs(new_rating)
+        self.rating = round(self.vote_sum / self.vote_amount)
 
     def save(self, *args, **kwargs):
         if not self.first_name:

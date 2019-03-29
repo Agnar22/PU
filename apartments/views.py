@@ -143,8 +143,8 @@ def apartment_detail(request, apartment_id, start_date, end_date):
     end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
     emails = []
 
-    # Hvis bruker prøver å opprette en ny kontrakt
-    if request.method =='POST':
+    #Hvis bruker prøver å opprette en ny kontrakt
+    if request.method=='POST' and "send_contract" in request:
         user_email = request.user.email
 
         # Sjekker at brukeren har en apartment som kan opprettes kontrakt på, ved å
@@ -214,7 +214,6 @@ def apartment_detail(request, apartment_id, start_date, end_date):
 
             messages.success(request, "Forespørsel om kontrakt er sendt!")
 
-
     context = {
         'apartment': apartment,
         'query': {
@@ -282,5 +281,3 @@ def create_apartment(request):
             print('failed')
             messages.error(request, "Noe gikk galt, prøv igjen!")
             return render(request, 'apartments/create-apartment.html', {'form': form})
-
-

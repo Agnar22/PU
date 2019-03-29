@@ -1,0 +1,9 @@
+{% extends 'email/base-email.html' %}
+{% load static %}
+
+{% block email_body %}
+    <h1>Ditt opphold er nå over!</h1>
+    <h3>Din mening er viktig for oss og kan hjelpe oss med å forbedre våre tjenester. Gi oss gjerne en tilbakemelding på hvordan du opplevde ditt opphold ved å trykke på knappen under.</h3>
+    <br>
+    {% include 'email/email-button.html' with button_url=url button_text="Vurder" %}
+{% endblock %}
