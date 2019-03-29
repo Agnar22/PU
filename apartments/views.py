@@ -143,12 +143,12 @@ def apartment_detail(request, apartment_id, start_date, end_date):
     end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
     emails = []
 
-    #Hvis bruker prøver å opprette en ny kontrakt
-    if request.method=='POST':
+    # Hvis bruker prøver å opprette en ny kontrakt
+    if request.method =='POST':
         user_email = request.user.email
 
-        #Sjekker at brukeren har en apartment som kan opprettes kontrakt på, ved å
-        #telle antall ledige leiligheter
+        # Sjekker at brukeren har en apartment som kan opprettes kontrakt på, ved å
+        # telle antall ledige leiligheter
         apartment_count = Apartment.objects.filter(pk=apartment_id).exclude(
 
             contracts__in=Contract.objects.filter(
