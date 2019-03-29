@@ -144,7 +144,7 @@ def apartment_detail(request, apartment_id, start_date, end_date):
     emails = []
 
     #Hvis bruker prøver å opprette en ny kontrakt
-    if request.method=='POST':
+    if request.method=='POST' and "send_contract" in request:
         user_email = request.user.email
 
         #Sjekker at brukeren har en apartment som kan opprettes kontrakt på, ved å
@@ -213,7 +213,6 @@ def apartment_detail(request, apartment_id, start_date, end_date):
             contract_for_apartment.contracts.add(contract)
 
             messages.success(request, "Forespørsel om kontrakt er sendt!")
-
 
     context = {
         'apartment': apartment,

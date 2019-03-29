@@ -67,7 +67,14 @@
                     <label for="{{ form.tenants.id_for_label }}">Email-adressene til de du leier sammen med; en per linje</label>
                     {{ form.tenants.errors }}
                 </div>
-                <input type="submit" class="button primary" value="Send {{  owner.first_name }} en forespørsel om kontrakt">
+                <input type="submit" name="send_contract" class="button primary" value="Send {{  owner.first_name }} en forespørsel om kontrakt">
+            </form>
+            <br>
+            <form method="post" action="/chat">
+                <input type="hidden" name="apartment_email" value="{{ owner.email }}"/>
+                {% csrf_token %}
+                <input type="submit" name="apartment_chat" class="button primary"
+                       value="Send {{  owner.first_name }} en melding">
             </form>
             {% endif %}
 
