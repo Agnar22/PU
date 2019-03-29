@@ -22,6 +22,7 @@
 
     {% include 'navbar.html' %}
 
+
     <div class="container" id="profile-page">
         <div class="scrim" v-if="deleteUserModalOpen"></div>
         <div class="modal" :class="{open: deleteUserModalOpen}" v-if="deleteUserModalOpen">
@@ -54,7 +55,7 @@
 
                 {% for apartment in my_apartments %}
                     <div class="card apartment-list-item">
-                        <img class="apartment-image" src="{{ apartment.image1.url }}" alt="{{ apartment.title }}">
+                        <img class="apartment-image" src="{{ apartment.apartmentimage_set.all|get_first_image_url }}" alt="{{ apartment.title }}">
                         <div class="apartment-description">
                             <h4>{{ apartment.title }}</h4>
                             <i><img src="{% static 'icons/pin.svg' %}" alt="pin-icon">{{ apartment.city }}</i>
@@ -126,7 +127,7 @@
 
                 {% for apartment in owner_of %}
                     <div class="card apartment-list-item">
-                        <img class="apartment-image" src="{{ apartment.image1.url }}" alt="{{ apartment.title }}">
+                        <img class="apartment-image" src="{{ apartment.apartmentimage_set.all|get_first_image_url }}" alt="{{ apartment.title }}">
                         <div class="apartment-description">
                             <h4>{{ apartment.title }}</h4>
                             <i><img src="{% static 'icons/pin.svg' %}" alt="pin-icon">{{ apartment.city }}</i>
@@ -188,7 +189,7 @@
                 {% endif %}
                 {% for apartment in my_rented_apartments %}
                     <div class="card apartment-list-item">
-                        <img class="apartment-image" src="{{ apartment.image1.url }}" alt="{{ apartment.title }}">
+                        <img class="apartment-image" src="{{ apartment.apartmentimage_set.all|get_first_image_url }}" alt="{{ apartment.title }}">
                         <div class="apartment-description">
                             <h4>{{ apartment.title }}</h4>
                             <i><img src="{% static 'icons/pin.svg' %}" alt="pin-icon">{{ apartment.city }}</i>
@@ -238,12 +239,6 @@
 
                 <a class="button" href="{% url 'create-apartment' %}">Opprett ny leilighet</a>
             </div>
-
-
-
-
-
-
 
 
             <div class="profile-settings">

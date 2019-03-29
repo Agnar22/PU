@@ -1,7 +1,8 @@
 # ShareBNB
-ShareBNB is a service for renting apartments and homes. This is a service for people who want to earn some extra money by renting out their homes. Or for people who need a home in a new city for a short period of time.
+ShareBNB is an online marketplace and hospitality service which allows for users to arrange or offer lodging. The primary focus is to give hosts the opportunity to sublease their rented apartment(s), and for guests to search for lodging using filter such as dates and location. Apartment owners will be able to access rental information and be given the chance to decline requests for sublease.
 
-ShareBNB is created in the course TDT4140 at NTNU as a learning exercise.
+### Motivation
+In the subject TDT4140 at NTNU we will work together as a team to create an application. The product owner/customer requested that we developed an application which is accessible via a website. We manage the project using the agile management process Scrum.
 
 # Installation and use
 1. Clone the project to your computer with `git clone <url>`
@@ -35,7 +36,7 @@ Tobias Wulvik<br>
 # License
 The MIT License (MIT)
 
-Copyright (c) 2019 Gruppe 15
+Copyright © 2019 Gruppe 15 (see above)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

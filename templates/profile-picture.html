@@ -1,0 +1,1 @@
+{% load static %}{% if user.profile_picture %}<img src='{{ user.profile_picture.url }}' alt='{{ user.first_name }} profile picture'>{% else %}<img src='{% static 'img/profile-pic-dummy.jpg' %}' alt='{{ user.first_name }} profile picture'>{% endif %}

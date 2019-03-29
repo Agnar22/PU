@@ -3,6 +3,29 @@ image: python:3.5
 all_tests:
   script:
    - pip install -r requirements.txt
+   - python manage.py makemigrations --merge
+   - python manage.py migrate
    - python manage.py collectstatic --noinput --pythonpath lib
    - python3 manage.py test -k
   when: on_success
+
+
+staging:
+  type: deploy
+  script:
+  - apt-get update -qy
+  - apt-get install -y ruby-dev
+  - gem install dpl
+  - dpl --provider=heroku --app=sharebb --api-key=$HEROKU_STAGING_API_KEY
+  only:
+  - master
+
+production:
+  type: deploy
+  script:
+  - apt-get update -qy
+  - apt-get install -y ruby-dev
+  - gem install dpl
+  - dpl --provider=heroku --app=sharebb --api-key=$HEROKU_PRODUCTION_API_KEY
+  only:
+  - tags

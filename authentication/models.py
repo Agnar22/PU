@@ -87,6 +87,11 @@ class Profile(AbstractBaseUser):
         self.vote_sum += abs(new_rating)
         self.rating = round(self.vote_sum / self.vote_amount)
 
+    def save(self, *args, **kwargs):
+        if not self.first_name:
+            self.profile_picture = ''
+        super().save(*args, **kwargs)
+
     @property
     def is_staff(self):
         # "Is the user a member of staff?"
