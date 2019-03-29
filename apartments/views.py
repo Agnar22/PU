@@ -147,8 +147,8 @@ def apartment_detail(request, apartment_id, start_date, end_date):
     if request.method=='POST' and "send_contract" in request:
         user_email = request.user.email
 
-        #Sjekker at brukeren har en apartment som kan opprettes kontrakt på, ved å
-        #telle antall ledige leiligheter
+        # Sjekker at brukeren har en apartment som kan opprettes kontrakt på, ved å
+        # telle antall ledige leiligheter
         apartment_count = Apartment.objects.filter(pk=apartment_id).exclude(
 
             contracts__in=Contract.objects.filter(
