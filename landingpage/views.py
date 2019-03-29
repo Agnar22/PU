@@ -54,7 +54,6 @@ def send_email(receiver, url):
 # Creating new review models for expired contracts
 def create_review_models():
     contracts = filter_contracts()
-    print(contracts)
     for contract in contracts:
         apartment = contract_apartments_match(contract)
         print(contract, apartment)

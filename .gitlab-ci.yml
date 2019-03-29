@@ -20,12 +20,8 @@ staging:
   only:
   - master
 
-production:
+test_on_heroku:
   type: deploy
   script:
-  - apt-get update -qy
-  - apt-get install -y ruby-dev
-  - gem install dpl
-  - dpl --provider=heroku --app=sharebb --api-key=$HEROKU_PRODUCTION_API_KEY
-  only:
-  - tags
+    - dpl --provider=heroku --app=sharebb --api-key=$HEROKU_STAGING_API_KEY
+    - heroku run python manage. --exit-code --app sharebb
