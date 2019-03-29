@@ -14,23 +14,36 @@ from django.contrib import messages
 from django.db.models import Q
 
 
-def contract_apartments_match(contract, apartments):
-    for apartment in apartments.all():
-        if contract in apartment.contracts.all():
-            return apartment
-    return None
+def contract_apartments_match(contract):
+    try:
+        return Apartment.objects.get(Q(contracts__in=[contract]))
+    except:
+        return None
+
+    # for apartment in apartments.all():
+    #     if contract in apartment.contracts.all():
+    #         return apartment
+    # return None
 
 
 # Finding expired contracts that are not yet used in a review
 def filter_contracts():
-    contracts_set = Contract.objects.filter(Q(review_made=False) & Q(pending=False))
-    contracts = [contract for contract in contracts_set if contract.end_date < datetime.datetime.today().date()]
-    for contract in contracts:
-        contract.review_made = True
-        contract.save()
-    all_apartments = Apartment.objects.all()
-    apartments = [contract_apartments_match(contract, all_apartments) for contract in contracts]
-    return contracts, apartments
+    contracts = Contract.objects.filter(
+        Q(review_made=False) &
+        Q(pending=False) &
+        Q(owner_approved=True) &
+        Q(end_date__lt=datetime.datetime.today().strftime('%Y-%m-%d')))
+
+    return contracts
+
+    # contracts_set = Contract.objects.filter(Q(review_made=False) & Q(pending=False))
+    # contracts = [contract for contract in contracts_set if contract.end_date < datetime.datetime.today().date()]
+    # for contract in contracts:
+    #     contract.review_made = True
+    #     contract.save()
+    # all_apartments = Apartment.objects.all()
+    # apartments = [contract_apartments_match(contract, all_apartments) for contract in contracts]
+    # return contracts, apartments
 
 
 # Sending email with url
@@ -40,23 +53,45 @@ def send_email(receiver, url):
 
 # Creating new review models for expired contracts
 def create_review_models():
-    contracts, apartments = filter_contracts()
-    for x in range(len(contracts)):
-        print(contracts[x], apartments[x])
-        subtenant_review = UserReview.objects.create(user_to_be_reviewed=contracts[x].tenant,
-                                                     user_to_review=apartments[x].owner)
-        tenant_review = UserReview.objects.create(user_to_be_reviewed=apartments[x].owner,
-                                                  user_to_review=contracts[x].tenant)
-        apartment_review = ApartmentReview.objects.create(apartment_to_be_reviewed=apartments[x],
-                                                          user_to_review=contracts[x].tenant)
+    contracts = filter_contracts()
+    print(contracts)
+    for contract in contracts:
+        apartment = contract_apartments_match(contract)
+        print(contract, apartment)
+        subtenant_review = UserReview.objects.create(user_to_be_reviewed=contract.tenant,
+                                                     user_to_review=apartment.owner)
+        tenant_review = UserReview.objects.create(user_to_be_reviewed=apartment.owner,
+                                                  user_to_review=contract.tenant)
+        apartment_review = ApartmentReview.objects.create(apartment_to_be_reviewed=apartment,
+                                                          user_to_review=contract.tenant)
         CompleteReview.objects.create(apartment_review=apartment_review,
                                       review_of_tenant=tenant_review,
                                       review_of_subtenant=subtenant_review,
-                                      contract=contracts[x])
-        url = "https://sharebb.herokuapp.com/to_review/" + str(apartments[x].owner.pk) + "/" + str(contracts[x].tenant.pk)\
-                                                    + "/" + str(apartments[x].pk) + "/" + str(contracts[x].pk)
-        send_email(contracts[x].tenant.email, url)
-        send_email(apartments[x].owner.email, url)
+                                      contract=contract)
+        url = "https://sharebb.herokuapp.com/to_review/" + str(apartment.owner.pk) + "/" + str(contract.tenant.pk) \
+              + "/" + str(apartment.pk) + "/" + str(contract.pk)
+        send_email(contract.tenant.email, url)
+        send_email(apartment.owner.email, url)
+
+    contracts.update(review_made=True)
+
+    # contracts, apartments = filter_contracts()
+    # for x in range(len(contracts)):
+    #     print(contracts[x], apartments[x])
+    #     subtenant_review = UserReview.objects.create(user_to_be_reviewed=contracts[x].tenant,
+    #                                                  user_to_review=apartments[x].owner)
+    #     tenant_review = UserReview.objects.create(user_to_be_reviewed=apartments[x].owner,
+    #                                               user_to_review=contracts[x].tenant)
+    #     apartment_review = ApartmentReview.objects.create(apartment_to_be_reviewed=apartments[x],
+    #                                                       user_to_review=contracts[x].tenant)
+    #     CompleteReview.objects.create(apartment_review=apartment_review,
+    #                                   review_of_tenant=tenant_review,
+    #                                   review_of_subtenant=subtenant_review,
+    #                                   contract=contracts[x])
+    #     url = "https://sharebb.herokuapp.com/to_review/" + str(apartments[x].owner.pk) + "/" + str(contracts[x].tenant.pk)\
+    #                                                 + "/" + str(apartments[x].pk) + "/" + str(contracts[x].pk)
+    #     send_email(contracts[x].tenant.email, url)
+    #     send_email(apartments[x].owner.email, url)
 
 
 def landing_page(request):
