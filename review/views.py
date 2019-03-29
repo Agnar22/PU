@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
 
 from django.db.models import Count
 from apartments.models import Apartment, Contract
@@ -7,6 +8,8 @@ from review.models import CompleteReview, ApartmentReview, UserReview
 from authentication.forms import RegisterForm, LoginForm
 from authentication.models import Profile
 from django.db.models import Q
+from django.contrib import messages
+
 
 
 # Updates the rating of an object (user/apartment in this instance).
@@ -52,13 +55,12 @@ def user_and_apartment_review(request, tenant_pk, subtenant_pk, apartment_pk, co
 
     # The requested review does not exist
     if active_review == None:
-        print('review does not exist')
-        return render(request, 'review/review_not_found.html')
-
+        messages.error(request, "Noe gikk galt, prøv igjen")
+        return HttpResponseRedirect('/profile')
     # It has already been reviewed
     if active_review.apartment_review.has_reviewed:
-        print('already been reviewed')
-        return render(request, 'review/already_reviewed.html')
+        messages.warning(request, "Du har allerede gitt denne tilbakemelding!")
+        return HttpResponseRedirect('/profile')
 
     # Get a request form for the subtenant
     if request.method == 'GET':
@@ -71,6 +73,7 @@ def user_and_apartment_review(request, tenant_pk, subtenant_pk, apartment_pk, co
             'tenant': tenant_pk,
             'subtenant': subtenant_pk,
             'apartment': apartment_pk,
+            'apartment_object': Apartment.objects.get(pk=apartment_pk),
             'contract': contract_pk
         }
         return render(request, 'review/review_user_apartment.html', context)
@@ -86,6 +89,7 @@ def user_and_apartment_review(request, tenant_pk, subtenant_pk, apartment_pk, co
                 'tenant': tenant_pk,
                 'subtenant': subtenant_pk,
                 'apartment': apartment_pk,
+                'apartment_object': Apartment.objects.get(pk=apartment_pk),
                 'contract': contract_pk
             }
             return render(request, 'review/review_user_apartment.html', context)
@@ -106,7 +110,8 @@ def user_and_apartment_review(request, tenant_pk, subtenant_pk, apartment_pk, co
         if active_review.review_of_tenant.has_reviewed and active_review.review_of_subtenant.has_reviewed:
             active_review.is_finished = True
             active_review.save()
-        return render(request, 'review/sent_review.html')
+        messages.success(request, "Tilbakemelding sendt!")
+        return HttpResponseRedirect('/profile')
     return redirect('landing-page')
 
 
@@ -117,13 +122,13 @@ def user_review(request, subtenant_pk, apartment_pk, contract_pk):
 
     # The requested review does not exist
     if active_review == None:
-        print('review does not exist')
-        return render(request, 'review/review_not_found.html')
+        messages.error(request, "Noe gikk galt, prøv igjen")
+        return HttpResponseRedirect('/profile')
 
     # It has already been reviewed
     if active_review.review_of_subtenant.has_reviewed:
-        print('already been reviewed')
-        return render(request, 'review/already_reviewed.html')
+        messages.warning(request, "Du har allerede gitt denne tilbakemelding!")
+        return HttpResponseRedirect('/profile')
 
     # Get a request form for the subtenant
     if request.method == 'GET':
@@ -134,6 +139,7 @@ def user_review(request, subtenant_pk, apartment_pk, contract_pk):
             'tenant': tenant_pk,
             'subtenant': subtenant_pk,
             'apartment': apartment_pk,
+            'apartment_object': Apartment.objects.get(pk=apartment_pk),
             'contract': contract_pk
         }
         return render(request, 'review/review_user.html', context)
@@ -147,6 +153,7 @@ def user_review(request, subtenant_pk, apartment_pk, contract_pk):
                 'tenant': tenant_pk,
                 'subtenant': subtenant_pk,
                 'apartment': apartment_pk,
+                'apartment_object': Apartment.objects.get(pk=apartment_pk),
                 'contract': contract_pk
             }
             return render(request, 'review/review_user.html', context)
@@ -160,5 +167,7 @@ def user_review(request, subtenant_pk, apartment_pk, contract_pk):
         if active_review.review_of_tenant.has_reviewed and active_review.review_of_subtenant.has_reviewed:
             active_review.is_finished = True
             active_review.save()
-        return render(request, 'review/sent_review.html')
+        messages.success(request, "Tilbakemelding sendt!")
+        return HttpResponseRedirect('/profile')
+
     return redirect('landing-page')

@@ -15,7 +15,7 @@
                 <p>[{i + 1}]</p>
             </div>
         </div>
-        <h3>Hva syntes du om leiligheten i {{ apartment.address }}?</h3>
+        <h3>Hva syntes du om leiligheten i {{ apartment_object.address }}?</h3>
         <div class="apartment-rating">
             <div class="star" v-for="(star, i) of apartmentStars" @mouseover="selectStars(false, i)"
                  @mouseleave="resetStars(false)" @click="setRating(false, i)">

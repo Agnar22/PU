@@ -6,7 +6,7 @@
     <div class="container" id="review">
         <h1>Da har {{ subtenant_first}} {{ subtenant_last }} sin kontrakt utgått!</h1>
         <br><br><br><br>
-        <h3>Hva syntes du om {{ tenant_first}} {{ tenant_last }} som leietaker?</h3>
+        <h3>Hva syntes du om {{ subtenant_first}} {{ subtenant_last }} som leietaker?</h3>
         <div class="user-rating">
             <div class="star" v-for="(star, i) of userStars" @mouseover="selectStars(true, i)"
                  @mouseleave="resetStars(true)" @click="setRating(true, i)">
