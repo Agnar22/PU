@@ -519,18 +519,66 @@ p a, .link {
 #apartment-detail {
   position: relative; }
   #apartment-detail .apartment-images {
-    height: calc(4rem + 30vh); }
+    position: relative;
+    display: grid;
+    height: calc(4rem + 30vh);
+    grid-template-columns: 100vw;
+    height: 400px; }
     @media screen and (min-width: 81.25em) {
       #apartment-detail .apartment-images {
         position: fixed;
         top: 0;
         left: 0;
         height: 100vh;
-        width: 50vw; } }
+        width: 50vw;
+        grid-template-columns: 50vw; } }
+    #apartment-detail .apartment-images #left-arrow, #apartment-detail .apartment-images #right-arrow {
+      position: absolute;
+      top: 50%;
+      left: 1rem;
+      transform: translateY(-50%) rotate(45deg);
+      border: 0px solid #FCFCFC;
+      border-left-width: 2px;
+      border-bottom-width: 2px;
+      height: 24px;
+      width: 24px;
+      cursor: pointer;
+      transition: transform 200ms ease-in-out; }
+      #apartment-detail .apartment-images #left-arrow:hover, #apartment-detail .apartment-images #right-arrow:hover {
+        transform: translateY(-50%) rotate(45deg) scale(1.1); }
+    #apartment-detail .apartment-images #right-arrow {
+      right: 1rem;
+      left: auto;
+      transform: translateY(-50%) rotate(225deg); }
+      #apartment-detail .apartment-images #right-arrow:hover {
+        transform: translateY(-50%) rotate(225deg) scale(1.1); }
+    #apartment-detail .apartment-images .ellipses {
+      position: absolute;
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%); }
+      #apartment-detail .apartment-images .ellipses .ellipse {
+        cursor: pointer;
+        display: inline-block;
+        background-color: #F1F1F1;
+        width: 8px;
+        height: 8px;
+        border-radius: 20px;
+        margin-right: 8px; }
+        #apartment-detail .apartment-images .ellipses .ellipse.active {
+          background-color: #70B991; }
     #apartment-detail .apartment-images img {
-      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
       height: 100%;
-      width: 100%; }
+      width: 100%;
+      object-fit: cover; }
+      #apartment-detail .apartment-images img:not(.active) {
+        display: none; }
+      @media screen and (min-width: 81.25em) {
+        #apartment-detail .apartment-images img {
+          height: 100vh; } }
   #apartment-detail .apartment-info {
     padding: 5%; }
     @media screen and (min-width: 81.25em) {
@@ -612,5 +660,119 @@ p a, .link {
   #profile-page .my-apartments .card .contract .approve {
     height: 32px;
     margin-bottom: 1rem; }
+
+#chat {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  margin-top: 4rem; }
+  #chat .left-side {
+    border-right: 1px solid #53787D; }
+    #chat .left-side .user-chat {
+      position: relative;
+      display: block;
+      width: 100%;
+      padding: 0.5rem 1rem 0.5rem calc(42px + 1.5rem); }
+      #chat .left-side .user-chat:hover {
+        background-color: #F1F1F1; }
+      #chat .left-side .user-chat img {
+        position: absolute;
+        top: 50%;
+        left: 0.5rem;
+        transform: translateY(-50%);
+        width: 42px;
+        height: 42px;
+        object-fit: cover;
+        border-radius: 21px; }
+      #chat .left-side .user-chat h6 {
+        color: #53787D; }
+      #chat .left-side .user-chat p {
+        text-overflow: ellipsis;
+        width: 100%;
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden; }
+      #chat .left-side .user-chat .message-date {
+        position: absolute;
+        top: 0.5rem;
+        right: 1rem; }
+  #chat .right-side {
+    position: relative;
+    min-height: calc(100vh - 4rem); }
+    #chat .right-side #messages {
+      position: absolute;
+      bottom: 80px;
+      left: 0;
+      width: 100%;
+      padding: 1rem;
+      max-height: calc(100vh - 4rem - 80px);
+      overflow-y: scroll; }
+      #chat .right-side #messages .chat-bubble-wrapper {
+        margin-bottom: 2rem;
+        position: relative;
+        width: 100%;
+        display: flex; }
+        #chat .right-side #messages .chat-bubble-wrapper:not(.you) .chat-bubble {
+          margin-left: calc(42px + 1rem);
+          max-width: calc(50% - 42px - 1rem); }
+          #chat .right-side #messages .chat-bubble-wrapper:not(.you) .chat-bubble .timestamp {
+            margin-left: calc(42px + 1rem); }
+        #chat .right-side #messages .chat-bubble-wrapper.you {
+          justify-content: flex-end; }
+          #chat .right-side #messages .chat-bubble-wrapper.you .chat-bubble {
+            border-radius: 100px 6px 100px 100px;
+            background-color: #F1F1F1;
+            color: #5B5A57;
+            position: relative;
+            right: 0; }
+            #chat .right-side #messages .chat-bubble-wrapper.you .chat-bubble .timestamp {
+              left: auto;
+              right: 1.5rem; }
+          #chat .right-side #messages .chat-bubble-wrapper.you img {
+            display: none; }
+      #chat .right-side #messages .chat-bubble {
+        display: inline-block;
+        padding: 0.5rem 1.5rem;
+        border-radius: 6px 100px 100px 100px;
+        background-color: #53787D;
+        color: #FCFCFC;
+        max-width: 50%; }
+        #chat .right-side #messages .chat-bubble p {
+          overflow-wrap: break-word;
+          word-wrap: break-word;
+          hyphens: auto; }
+        #chat .right-side #messages .chat-bubble .timestamp {
+          left: 1.5rem;
+          position: absolute;
+          bottom: -17px;
+          color: #5B5A57; }
+        #chat .right-side #messages .chat-bubble img {
+          position: absolute;
+          width: 42px;
+          height: 42px;
+          object-fit: cover;
+          border-radius: 21px;
+          left: 0;
+          top: 0; }
+    #chat .right-side #chat-input {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      left: 0;
+      padding: 1rem;
+      background-color: #F1F1F1; }
+      #chat .right-side #chat-input div {
+        display: grid;
+        grid-template-columns: 1fr 120px;
+        grid-gap: 1rem; }
+      #chat .right-side #chat-input input[type="text"] {
+        display: inline-block;
+        width: 100%;
+        border: 1px solid #B4B3B1;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        outline: 0; }
+      #chat .right-side #chat-input input[type="submit"] {
+        width: 100%; }
 
 /*# sourceMappingURL=styles.css.map */

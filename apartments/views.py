@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from apartments.forms import CreateApartmentForm, CreateContractForm
 from authentication.models import Profile
-from .models import Apartment
+from .models import Apartment, ApartmentImage
 from .models import Contract
 from django.db.models import Q
 from geopy.geocoders import Nominatim
@@ -228,7 +228,6 @@ def apartment_detail(request, apartment_id, start_date, end_date):
     return render(request, 'apartments/apartment-detail.html', context)
 
 
-
 def create_apartment(request):
     if request.method == 'GET':
         form = CreateApartmentForm()
@@ -242,7 +241,7 @@ def create_apartment(request):
         form = CreateApartmentForm(request.POST, request.FILES or None)
         print(form.errors)
 
-        #Form.is_valid() må kalles for at cleaned_data skal funke
+        # Form.is_valid() må kalles for at cleaned_data skal funke
         if form.is_valid():
             original_owner = form.cleaned_data["original_owner"]
 
@@ -253,23 +252,35 @@ def create_apartment(request):
                 original_owner = original_owner.lower()
                 owner_count = Profile.objects.filter(Q(email__iexact=original_owner)).count()
 
-        if form.is_valid() and (original_owner is None or owner_count == 1):
+        if form.is_valid() and len(request.FILES.getlist('images')) <= 21 and (original_owner is None or owner_count == 1):
             apartment = form.save(commit=False)
             apartment.owner = Profile.objects.get(pk=request.user.pk)
             apartment.original_owner = original_owner
-            apartment.image1 = request.FILES['image1']
-            print(apartment.image1)
+            apartment.city = apartment.city.lower().capitalize()
+            files = request.FILES.getlist('images')
 
-            #Oppretter og lagrer longitude og latitude til adressen
+            # Oppretter og lagrer longitude og latitude til adressen
             location = geolocator.geocode(apartment.address + " " + apartment.city + " " + apartment.country)
             if location is not None:
                 apartment.latitude = str(location.latitude)
                 apartment.longitude = str(location.longitude)
 
             apartment.save()
+
+            #Checks if all the uploaded files are images
+            try:
+                for f in files:
+                    image = ApartmentImage.objects.create(image=f, image_for=apartment)
+            except:
+                print('non image-file uploaded')
+                messages.error(request, "Du kan kun laste opp bilder!")
+                apartment.delete()
+                return render(request, 'apartments/create-apartment.html', {'form': form})
+
             return redirect('profile')
         else:
             print('failed')
+            messages.error(request, "Noe gikk galt, prøv igjen!")
             return render(request, 'apartments/create-apartment.html', {'form': form})
 
 

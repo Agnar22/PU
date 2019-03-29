@@ -51,3 +51,9 @@
   @return calc(#{$m*100}vw + #{$b}px);
 
 }
+
+@mixin text-wrap() {
+    overflow-wrap: break-word;
+        word-wrap: break-word;
+        hyphens: auto;
+}

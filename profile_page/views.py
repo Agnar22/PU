@@ -4,6 +4,7 @@ from django.http import HttpResponseForbidden
 import datetime
 
 from apartments.models import Apartment, Contract
+from authentication.forms import RegisterForm
 from authentication.models import Profile
 from django.db.models import Q
 
@@ -28,6 +29,7 @@ def profile_view(request):
             owns_apartments = Apartment.objects.filter(owner=request.user).count() > 0
 
             context = {
+                'form': RegisterForm(),
                 'my_apartments': Apartment.objects.filter(owner=request.user),
                 'my_rented_apartments': my_rented_apartments,
                 'has_rented_apartments': has_rented_apartments,
