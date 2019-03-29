@@ -8,3 +8,23 @@ all_tests:
    - python manage.py collectstatic --noinput --pythonpath lib
    - python3 manage.py test -k
   when: on_success
+
+staging:
+  type: deploy
+  script:
+  - apt-get update -qy
+  - apt-get install -y ruby-dev
+  - gem install dpl
+  - dpl --provider=heroku --app=sharebb --api-key=$HEROKU_STAGING_API_KEY
+  only:
+  - master
+
+production:
+  type: deploy
+  script:
+  - apt-get update -qy
+  - apt-get install -y ruby-dev
+  - gem install dpl
+  - dpl --provider=heroku --app=sharebb --api-key=$HEROKU_STAGING_API_KEY
+  only:
+  - tags
