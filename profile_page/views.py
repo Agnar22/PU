@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseForbidden
+from django.http import HttpResponseRedirect
 
 import datetime
 
@@ -56,7 +57,7 @@ def profile_view(request):
             user.phone_number = int(form['phone_number'].data)
             user.save()
 
-            return render(request, 'profile_page/profile-page.html', context)
+            return HttpResponseRedirect('/profile')
 
         elif contract_id is not None:
             contract = Contract.objects.get(pk=contract_id)
