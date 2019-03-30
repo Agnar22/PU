@@ -19,12 +19,6 @@ def update_rating(object, rated):
     object.save()
 
 def get_review(tenant_pk, subtenant_pk, apartment_pk, contract_pk):
-    # for obj in CompleteReview.objects.all():
-    #     print('tenant', obj.review_of_tenant.user_to_be_reviewed.pk, tenant_pk, obj.review_of_tenant)
-    #     print('subtenant', obj.review_of_subtenant.user_to_be_reviewed.pk, subtenant_pk)
-    #     print('apartment', obj.apartment_review.apartment_to_be_reviewed.pk, apartment_pk)
-    #     print('contract', obj.contract.pk, contract_pk)
-    #     print()
     query_set = CompleteReview.objects.filter(Q(review_of_tenant__user_to_be_reviewed__pk=tenant_pk) &
                                               Q(review_of_subtenant__user_to_be_reviewed__pk=subtenant_pk) &
                                               Q(apartment_review__apartment_to_be_reviewed__pk=apartment_pk) &
@@ -43,6 +37,7 @@ def review(request):
 def user_and_apartment_review(request, tenant_pk, subtenant_pk, apartment_pk, contract_pk):
     if not request.user.is_authenticated:
         print('not authenticated')
+        messages.warning(request, "Du må logge inn først")
         return redirect('landing-page')
 
     if request.user.pk == tenant_pk:
@@ -117,6 +112,11 @@ def user_and_apartment_review(request, tenant_pk, subtenant_pk, apartment_pk, co
 
 # Tenants way of rating subtenant
 def user_review(request, subtenant_pk, apartment_pk, contract_pk):
+    if not request.user.is_authenticated:
+        print('not authenticated')
+        messages.warning(request, "Du må logge inn først")
+        return redirect('landing-page')
+
     tenant_pk = request.user.pk
     active_review = get_review(tenant_pk, subtenant_pk, apartment_pk, contract_pk)
 

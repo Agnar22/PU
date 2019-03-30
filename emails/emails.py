@@ -11,7 +11,7 @@ def email_sender(subject, template_name, receivers, context, sender=settings.EMA
 
 
 def send_review_email(url, receiver):
-    subject = "Anmeld ditt siste opphold"
+    subject = "Gi tilbakemelding på ditt siste opphold"
     context = {
         'url': url
     }

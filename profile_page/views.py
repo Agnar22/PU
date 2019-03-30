@@ -7,6 +7,7 @@ from apartments.models import Apartment, Contract
 from authentication.forms import RegisterForm
 from authentication.models import Profile
 from django.db.models import Q
+from django.contrib import messages
 
 from emails.emails import send_review_email
 
@@ -39,6 +40,7 @@ def profile_view(request):
 
     if request.method == 'GET':
         if not request.user.is_authenticated:
+            messages.warning(request, "Du må logge inn først")
             return redirect('landing-page')
         else:
             return render(request, 'profile_page/profile-page.html', context)
@@ -98,6 +100,7 @@ def profile_view(request):
         if request.user.is_authenticated:
             return render(request, 'profile_page/profile-page.html', context)
         else:
+            messages.warning(request, "Du må logge inn først")
             return redirect('landing-page')
 
 
