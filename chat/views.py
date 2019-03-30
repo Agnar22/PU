@@ -8,6 +8,7 @@ import time
 import datetime
 from django.contrib import messages
 from django.http import JsonResponse
+from django.http import HttpResponseRedirect
 
 
 def render_chats(request, chat_person=None):
@@ -112,7 +113,6 @@ def change_chat(request, chat_person_id):
     try:
         chatting_with = Profile.objects.get(id=chat_person_id)
     except Exception as e:
-        print(e)
         chatting_with = None
     return render_chats(request, chat_person=chatting_with)
 
@@ -123,4 +123,26 @@ def chats(request):
     chat_person = None
     if len(last_chats) > 0:
         chat_person = last_chats[0].person1 if request.user is not last_chats[0].person1 else last_chats[0].person2
+
+
+    #When a user pressed "Send Melding" on an apartment
+    if "apartment_chat" in request.POST:
+        chat_with_email = request.POST.get("apartment_email")
+        chat_with = Profile.objects.get(Q(email__iexact=chat_with_email))
+
+        #Checks if the users have previously chatted together
+        try:
+            chat = Chat.objects.get((Q(person1=request.user) &
+                                    Q(person2=chat_with)) |
+                                    (Q(person1=chat_with) &
+                                    Q(person2=request.user)))
+
+        #The users have not chatted together previously
+        except:
+            chat= Chat.objects.create(person1=request.user, person2=chat_with)
+
+        return HttpResponseRedirect('/chat/'+str(chat_with.pk))
+
+
+
     return change_chat(request, chat_person)

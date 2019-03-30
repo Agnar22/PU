@@ -146,7 +146,7 @@ def user_review(request, subtenant_pk, apartment_pk, contract_pk):
 
     if request.method == 'POST':
         # Subtenant is not rated
-        if  request.POST.get('subtenant_rating') == '-1':
+        if request.POST.get('subtenant_rating') == '-1':
             context = {
                 'subtenant_first': active_review.review_of_subtenant.user_to_be_reviewed.first_name,
                 'subtenant_last': active_review.review_of_subtenant.user_to_be_reviewed.last_name,

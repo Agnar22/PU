@@ -25,3 +25,7 @@ def get_first_image_url(images):
         return list(images)[0].image.url
     else:
         return "Unknown"
+
+@register.simple_tag
+def is_user(user, email):
+    return user.email.lower() != email.lower()
