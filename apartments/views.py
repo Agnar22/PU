@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from apartments.forms import CreateApartmentForm, CreateContractForm
 from authentication.models import Profile
-from .models import Apartment
+from .models import Apartment, ApartmentImage
 from .models import Contract
 from django.db.models import Q
 from geopy.geocoders import Nominatim
@@ -36,6 +36,7 @@ def apartments(request):
 
             apartments = Apartment.objects.none()
             apartments_map = Apartment.objects.none()
+            messages.error(request, "Ugyldig dato!")
 
         else:
 
@@ -96,6 +97,7 @@ def apartments(request):
     else:
         apartments = Apartment.objects.none()
         apartments_map = Apartment.objects.none()
+        messages.error(request, "Noe gikk galt!")
 
 
     geolocator = Nominatim(user_agent="Apartment")
@@ -145,8 +147,8 @@ def apartment_detail(request, apartment_id, start_date, end_date):
     if request.method=='POST':
         user_email = request.user.email
 
-        #Sjekker at brukeren har en apartment som kan opprettes kontrakt på, ved å
-        #telle antall ledige leiligheter
+        # Sjekker at brukeren har en apartment som kan opprettes kontrakt på, ved å
+        # telle antall ledige leiligheter
         apartment_count = Apartment.objects.filter(pk=apartment_id).exclude(
 
             contracts__in=Contract.objects.filter(
@@ -178,8 +180,8 @@ def apartment_detail(request, apartment_id, start_date, end_date):
         # Sjekker om brukeren har sendt en slik kontraktforespørsel tidligere
         contract_count = Contract.objects.filter(
                 Q(apartment=apartment_id) &
-                Q(start_date__iexact=start_date.date()) &
-                Q(end_date__iexact=end_date.date()) &
+                Q(start_date__exact=start_date.date()) &
+                Q(end_date__exact=end_date.date()) &
                 Q(pending=True) &
                 (Q(tenants__contains=user_email) |
                  Q(tenant__email__iexact=user_email))).distinct().count()
@@ -212,7 +214,6 @@ def apartment_detail(request, apartment_id, start_date, end_date):
 
             messages.success(request, "Forespørsel om kontrakt er sendt!")
 
-
     context = {
         'apartment': apartment,
         'query': {
@@ -231,34 +232,54 @@ def create_apartment(request):
         form = CreateApartmentForm()
         return render(request, 'apartments/create-apartment.html', {'form': form})
     elif request.method == 'POST':
+        original_owner = None
+        owner_count = 0
+
         geolocator = Nominatim(user_agent="Apartment")
 
         form = CreateApartmentForm(request.POST, request.FILES or None)
         print(form.errors)
 
-        original_owner = form.cleaned_data["original_owner"]
+        # Form.is_valid() må kalles for at cleaned_data skal funke
+        if form.is_valid():
+            original_owner = form.cleaned_data["original_owner"]
 
-        if original_owner == request.user.email:
-            original_owner = None
+            if original_owner == request.user.email:
+                original_owner = None
 
-        owner_count = Profile.objects.filter(Q(email__iexact=original_owner)).count()
+            if original_owner is not None:
+                original_owner = original_owner.lower()
+                owner_count = Profile.objects.filter(Q(email__iexact=original_owner)).count()
 
-        if form.is_valid() and (original_owner is None or owner_count == 1):
+        if form.is_valid() and len(request.FILES.getlist('images')) <= 21 and (original_owner is None or owner_count == 1):
             apartment = form.save(commit=False)
             apartment.owner = Profile.objects.get(pk=request.user.pk)
             apartment.original_owner = original_owner
-            apartment.image1 = request.FILES['image1']
+            apartment.city = apartment.city.lower().capitalize()
+            files = request.FILES.getlist('images')
 
-            #Oppretter og lagrer longitude og latitude til adressen
+            # Oppretter og lagrer longitude og latitude til adressen
             location = geolocator.geocode(apartment.address + " " + apartment.city + " " + apartment.country)
             if location is not None:
                 apartment.latitude = str(location.latitude)
                 apartment.longitude = str(location.longitude)
 
             apartment.save()
+
+            #Checks if all the uploaded files are images
+            try:
+                for f in files:
+                    image = ApartmentImage.objects.create(image=f, image_for=apartment)
+            except:
+                print('non image-file uploaded')
+                messages.error(request, "Du kan kun laste opp bilder!")
+                apartment.delete()
+                return render(request, 'apartments/create-apartment.html', {'form': form})
+
             return redirect('profile')
         else:
             print('failed')
+            messages.error(request, "Noe gikk galt, prøv igjen!")
             return render(request, 'apartments/create-apartment.html', {'form': form})
 
 
@@ -273,16 +294,45 @@ def edit_apartment(request, apartment_id):
         geolocator = Nominatim(user_agent="Apartment")
         if form.is_valid():
             apartment = form.save(commit=False)
-            if request.FILES:
-                apartment.image1 = request.FILES['image1']
             # Oppretter og lagrer longitude og latitude til adressen
             location = geolocator.geocode(apartment.address + " " + apartment.city + " " + apartment.country)
             if location is not None:
                 apartment.latitude = str(location.latitude)
                 apartment.longitude = str(location.longitude)
-            print(apartment.title)
+
             apartment.save()
-            print(apartment.title)
+
+
+            old_images_qs = ApartmentImage.objects.filter(image_for=apartment)
+            old_images = []
+            new_images = []
+
+            for image in old_images_qs:
+                old_images.append(image)
+
+            files = request.FILES.getlist('images')
+            for f in files:
+                print(f)
+
+            try:
+                # Lagrer bildene brukeren lastet opp
+                for f in files:
+                    image = ApartmentImage.objects.create(image=f, image_for=apartment)
+                    new_images.append(image)
+
+                #Sletter bildene som allerede var lastet opp
+                for image in old_images:
+                    image.delete()
+
+            #Brukeren lastet opp en fil som ikke var et bilde
+            except:
+                messages.error(request, "Du kan kun laste opp bilder!")
+                for image in new_images:
+                    image.delete()
+
+                form = CreateApartmentForm(instance=apartment)
+                return render(request, 'apartments/create-apartment.html', {'form': form})
+
             return redirect('profile')
         else:
             return render(request, 'apartments/create-apartment.html', {'form': form})

@@ -1,0 +1,39 @@
+html, input, select, textarea, option {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+
+h1 {
+  $h1: (576: 32, 992: 36);
+  font-size: least-squares-fit($h1);
+}
+
+h2 {
+  $h2: (576: 24, 992: 30);
+  font-size: least-squares-fit($h2);
+}
+
+h3 {
+  $h3: (576: 20, 992: 24);
+  font-size: least-squares-fit($h3);
+}
+
+h4 {
+  font-size: 1.125rem;
+}
+
+h5 {
+  font-size: 0.875rem;
+}
+
+h6 {
+  font-size: 0.75rem;
+}
+
+p {
+  line-height: 1.14em;
+}

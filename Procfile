@@ -1,1 +1,2 @@
-web: gunicorn ShareBNB.prod_wsgi
+web: python manage.py migrate && gunicorn ShareBNB.prod_wsgi
+release: python manage.py migrate

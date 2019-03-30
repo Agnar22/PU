@@ -16,3 +16,12 @@ def gray_stars(number):
 @register.filter
 def calculate_price(obj, days):
     return round(obj.monthly_cost / 30 * days)
+
+
+@register.filter
+def get_first_image_url(images):
+    images = list(images)
+    if len(images):
+        return list(images)[0].image.url
+    else:
+        return "Unknown"

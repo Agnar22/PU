@@ -18,6 +18,7 @@ class Contract(models.Model):
     owner_approved = models.BooleanField(null=True, blank=True)
     start_date = models.DateField()
     end_date = models.DateField()
+    review_made = models.BooleanField(default=False)
 
     def __str__(self):
         return '' + str(self.start_date.strftime("%d.%m.%Y")) + ' - ' + \
@@ -41,19 +42,16 @@ class Apartment(models.Model):
     beds = models.IntegerField()
     rating = models.IntegerField(validators=[MaxValueValidator(5), MinValueValidator(0)], default=0)
     monthly_cost = models.PositiveIntegerField()
+    vote_sum = models.PositiveIntegerField(default=0)
     vote_amount = models.PositiveIntegerField(default=0)
     size = models.PositiveIntegerField()
-    owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, blank=True)
+    owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True)
     original_owner = models.EmailField(
         max_length=255,
         null=True,
         blank=True
     )
     contracts = models.ManyToManyField(Contract, blank=True)
-    image1 = ProcessedImageField(upload_to='apartments/',
-                                 processors=[ResizeToFit(2000, 2000, False)],
-                                 format='JPEG',
-                                 options={'quality': 85})
 
     def __str__(self):
         return self.title
@@ -68,8 +66,21 @@ class Apartment(models.Model):
 
         return apartment_price
 
+    def update_rating(self, new_rating):
+        self.vote_amount += 1
+        self.vote_sum += abs(new_rating)
+        self.rating = round(self.vote_sum / self.vote_amount)
+
     def save(self, *args, **kwargs):
         if not self.title:
             self.vote_amount = 0
             self.rating = 0
         super().save(*args, **kwargs)
+
+
+class ApartmentImage(models.Model):
+    image = ProcessedImageField(upload_to='apartments/',
+                                 processors=[ResizeToFit(2000, 2000, False)],
+                                 format='JPEG',
+                                 options={'quality': 85})
+    image_for = models.ForeignKey(Apartment, on_delete=models.CASCADE)
