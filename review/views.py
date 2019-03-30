@@ -95,15 +95,15 @@ def user_and_apartment_review(request, tenant_pk, subtenant_pk, apartment_pk, co
             return render(request, 'review/review_user_apartment.html', context)
 
         # Review of apartment
-        active_review.apartment_review.review = int(request.POST.get('apartment_rating'))
+        active_review.apartment_review.review = int(request.POST.get('apartment_rating')) + 1
         active_review.apartment_review.has_reviewed = True
-        update_rating(active_review.apartment_review.apartment_to_be_reviewed, int(request.POST.get('apartment_rating')))
+        update_rating(active_review.apartment_review.apartment_to_be_reviewed, int(request.POST.get('apartment_rating'))+1)
         active_review.apartment_review.save()
 
         # Review of tenant
-        active_review.review_of_tenant.review = int(request.POST.get('tenant_rating'))
+        active_review.review_of_tenant.review = int(request.POST.get('tenant_rating'))+1
         active_review.review_of_tenant.has_reviewed = True
-        update_rating(active_review.review_of_tenant.user_to_be_reviewed, int(request.POST.get('tenant_rating')))
+        update_rating(active_review.review_of_tenant.user_to_be_reviewed, int(request.POST.get('tenant_rating'))+1)
         active_review.review_of_tenant.save()
 
         # Update active_review if both has reviewed
@@ -159,9 +159,9 @@ def user_review(request, subtenant_pk, apartment_pk, contract_pk):
             return render(request, 'review/review_user.html', context)
 
         # Review of subtenant
-        active_review.review_of_subtenant.review = int(request.POST.get('subtenant_rating'))
+        active_review.review_of_subtenant.review = int(request.POST.get('subtenant_rating'))+1
         active_review.review_of_subtenant.has_reviewed = True
-        update_rating(active_review.review_of_subtenant.user_to_be_reviewed, int(request.POST.get('subtenant_rating')))
+        update_rating(active_review.review_of_subtenant.user_to_be_reviewed, int(request.POST.get('subtenant_rating'))+1)
         active_review.review_of_subtenant.save()
 
         if active_review.review_of_tenant.has_reviewed and active_review.review_of_subtenant.has_reviewed:

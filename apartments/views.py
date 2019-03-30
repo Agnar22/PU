@@ -138,13 +138,15 @@ def apartment_detail(request, apartment_id, start_date, end_date):
 
     apartment = Apartment.objects.get(pk=apartment_id)
 
+    print("HEHUE")
     apartment_price = apartment.calculate_price(start_date, end_date)
     start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
     emails = []
 
     #Hvis bruker prøver å opprette en ny kontrakt
-    if request.method=='POST' and "send_contract" in request:
+    if request.method=='POST':
+        print("send_contract" in request.POST)
         user_email = request.user.email
 
         # Sjekker at brukeren har en apartment som kan opprettes kontrakt på, ved å
