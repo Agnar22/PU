@@ -55,6 +55,7 @@
 
                 {% for apartment in my_apartments %}
                     <div class="card apartment-list-item">
+                        <a href="{% url 'edit-apartment' apartment_id=apartment.pk %}" class="edit-apartment"><img src="{% static 'icons/edit.svg' %}" alt="edit button"></a>
                         <img class="apartment-image" src="{{ apartment.apartmentimage_set.all|get_first_image_url }}" alt="{{ apartment.title }}">
                         <div class="apartment-description">
                             <h4>{{ apartment.title }}</h4>
@@ -178,10 +179,6 @@
                         </div>
                     </div>
                 {% endfor %}
-
-
-
-
 
                 {% if has_rented_apartments %}
                     <br><br><br>

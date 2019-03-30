@@ -7,7 +7,7 @@ class ApartmentFormTest(TestCase):
     def test_form_no_data(self):
         form = CreateApartmentForm(data={})
         self.assertFalse(form.is_valid())
-        self.assertEqual(len(form.errors), 9)
+        self.assertEqual(len(form.errors), 8)
 
 
     def test_form_no_image(self):
@@ -17,7 +17,6 @@ class ApartmentFormTest(TestCase):
             'country': "Norge",
             'city':"Narvik",
             'address': "Kongens gate 2",
-            'apartment_age': 10,
             'monthly_cost': 19000,
             'size': 300
         })

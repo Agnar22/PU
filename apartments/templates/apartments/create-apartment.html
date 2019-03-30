@@ -73,10 +73,10 @@
             </div>
             <div class="input-field fluid">
                 <input type="file" id="images" name="images" multiple required>
-                <label for="images">Last opp et bilde</label>
+                <label for="images">Last opp flere bilder</label>
             </div>
             <br>
-            <input type="submit" class="button primary" value="Opprett leilighet">
+            <input type="submit" class="button primary" value="{% if 'edit' in request.path %}Lagre endringer{% else %}Opprett leiligheten{% endif %}">
         </form>
     </div>
 {% endblock body %}

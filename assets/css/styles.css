@@ -641,6 +641,10 @@ p a, .link {
   text-align: right; }
 #profile-page .my-apartments > a.button {
   margin-top: 2rem; }
+#profile-page .my-apartments .card .edit-apartment {
+  position: absolute;
+  top: 1rem;
+  right: 1rem; }
 #profile-page .my-apartments .card ul, #profile-page .my-apartments .card .contract ul {
   margin-top: 1rem;
   margin-left: 1.5rem;

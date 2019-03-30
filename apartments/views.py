@@ -145,7 +145,6 @@ def apartment_detail(request, apartment_id, start_date, end_date):
 
     #Hvis bruker prøver å opprette en ny kontrakt
     if request.method=='POST':
-        print("send_contract" in request.POST)
         user_email = request.user.email
 
         # Sjekker at brukeren har en apartment som kan opprettes kontrakt på, ved å
@@ -281,4 +280,59 @@ def create_apartment(request):
         else:
             print('failed')
             messages.error(request, "Noe gikk galt, prøv igjen!")
+            return render(request, 'apartments/create-apartment.html', {'form': form})
+
+
+def edit_apartment(request, apartment_id):
+    apartment = Apartment.objects.get(pk=apartment_id)
+
+    if request.method == 'GET':
+        form = CreateApartmentForm(instance=apartment)
+        return render(request, 'apartments/create-apartment.html', {'form': form})
+    else:
+        form = CreateApartmentForm(request.POST, request.FILES or None, instance=apartment)
+        geolocator = Nominatim(user_agent="Apartment")
+        if form.is_valid():
+            apartment = form.save(commit=False)
+            # Oppretter og lagrer longitude og latitude til adressen
+            location = geolocator.geocode(apartment.address + " " + apartment.city + " " + apartment.country)
+            if location is not None:
+                apartment.latitude = str(location.latitude)
+                apartment.longitude = str(location.longitude)
+
+            apartment.save()
+
+
+            old_images_qs = ApartmentImage.objects.filter(image_for=apartment)
+            old_images = []
+            new_images = []
+
+            for image in old_images_qs:
+                old_images.append(image)
+
+            files = request.FILES.getlist('images')
+            for f in files:
+                print(f)
+
+            try:
+                # Lagrer bildene brukeren lastet opp
+                for f in files:
+                    image = ApartmentImage.objects.create(image=f, image_for=apartment)
+                    new_images.append(image)
+
+                #Sletter bildene som allerede var lastet opp
+                for image in old_images:
+                    image.delete()
+
+            #Brukeren lastet opp en fil som ikke var et bilde
+            except:
+                messages.error(request, "Du kan kun laste opp bilder!")
+                for image in new_images:
+                    image.delete()
+
+                form = CreateApartmentForm(instance=apartment)
+                return render(request, 'apartments/create-apartment.html', {'form': form})
+
+            return redirect('profile')
+        else:
             return render(request, 'apartments/create-apartment.html', {'form': form})

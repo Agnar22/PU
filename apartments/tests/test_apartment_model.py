@@ -11,7 +11,6 @@ class ApartmentModelTest(TestCase):
             city="Trondheim",
             address="Kongens gate 8",
             beds=4,
-            apartment_age=19,
             rating=4,
             monthly_cost=10000,
             vote_amount=140,
