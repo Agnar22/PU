@@ -240,7 +240,7 @@
 
             <div class="profile-settings">
                 <h2>Brukerinnstillinger</h2>
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="input-field fluid">
                         {{ form.first_name }}
@@ -253,6 +253,10 @@
                     <div class="input-field fluid">
                         {{ form.phone_number }}
                         <label for="{{ form.phone_number.id_for_label }}">Mobilnummer</label>
+                    </div>
+                    <div class="input-field fluid">
+                        <input type="file" id="image" name="image">
+                        <label for="image">Endre profilbildet</label>
                     </div>
                     <input type="submit" class="button" value="Lagre brukerinformasjon">
                 </form>

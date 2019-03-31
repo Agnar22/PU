@@ -71,10 +71,17 @@
                 <label for="{{ form.original_owner.id_for_label }}">Epost-adressen til eier av leiligheten</label>
                 {{ form.monthly_cost.errors }}
             </div>
-            <div class="input-field fluid">
-                <input type="file" id="images" name="images" multiple required>
-                <label for="images">Last opp flere bilder</label>
-            </div>
+            {% if image_required %}
+                <div class="input-field fluid">
+                    <input type="file" id="images" name="images" multiple required>
+                    <label for="images">Last opp bilder av leiligheten</label>
+                </div>
+            {% else %}
+                <div class="input-field fluid">
+                    <input type="file" id="images" name="images" multiple>
+                    <label for="images">Andre bilder av leiligheten?</label>
+                </div>
+            {% endif %}
             <br>
             <input type="submit" class="button primary" value="{% if 'edit' in request.path %}Lagre endringer{% else %}Opprett leiligheten{% endif %}">
         </form>

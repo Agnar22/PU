@@ -48,7 +48,7 @@
             <h4>Leie i perioden {{ query.start_date|date:'d.m.y' }} til {{ query.end_date|date:'d.m.y' }}</h4>
             <h3>Totalpris: {{ apartment_price }} kr</h3>
             <div class="user">
-                <img src="{% static 'img/girl.jpg' %}" alt="girl">
+                {% include 'profile-picture.html' with user=apartment.owner %}
                 <div class="user-rating">
                     <p>{{  owner.first_name }} {{ owner.last_name}}</p>
                     {% for i in owner.rating|yellow_stars %}

@@ -76,7 +76,7 @@ def landing_page(request):
     else:  # POST
         if request.POST.get("first_name"):  # Register
             print("Registrering")
-            form = RegisterForm(request.POST)
+            form = RegisterForm(request.POST, request.FILES or None)
             if form.is_valid():
                 user = form.save(commit=False)
 
@@ -84,7 +84,16 @@ def landing_page(request):
                 email = form.cleaned_data['email'].lower()
                 password = form.cleaned_data['password']
                 user.set_password(password)
-                user.save()
+                try:
+                    image = request.FILES.get("image")
+                    if image is not None:
+                        user.profile_picture = image
+                    user.save()
+                except:
+                    messages.error(request, 'Noe gikk galt, prøv igjen')
+                    return redirect('/')
+
+
 
                 # Returns User objects if credentials are correct
                 user = authenticate(email=email, password=password)

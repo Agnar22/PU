@@ -92,7 +92,7 @@
                     <a href="#" class="link" onclick="pushRight()">Tilbake</a>
                     <br><br>
                     <h1>Registrer ny bruker</h1>
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="input-field fluid">
                             {{ form.first_name }}
@@ -113,6 +113,10 @@
                         <div class="input-field fluid location">
                             {{ form.password }}
                             <label for="register_password">Passord</label>
+                        </div>
+                        <div class="input-field fluid">
+                            <input type="file" id="image" name="image">
+                            <label for="image">Last opp et profilbilde</label>
                         </div>
                         <input class="button primary" type="submit" value="Registrer">
                     </form>
