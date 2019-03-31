@@ -230,7 +230,7 @@ def apartment_detail(request, apartment_id, start_date, end_date):
 def create_apartment(request):
     if request.method == 'GET':
         form = CreateApartmentForm()
-        return render(request, 'apartments/create-apartment.html', {'form': form})
+        return render(request, 'apartments/create-apartment.html', {'form': form, 'image_required': True})
     elif request.method == 'POST':
         original_owner = None
         owner_count = 0
@@ -311,18 +311,17 @@ def edit_apartment(request, apartment_id):
                 old_images.append(image)
 
             files = request.FILES.getlist('images')
-            for f in files:
-                print(f)
 
             try:
-                # Lagrer bildene brukeren lastet opp
-                for f in files:
-                    image = ApartmentImage.objects.create(image=f, image_for=apartment)
-                    new_images.append(image)
+                if len(files) > 0:
+                    # Lagrer bildene brukeren lastet opp
+                    for f in files:
+                        image = ApartmentImage.objects.create(image=f, image_for=apartment)
+                        new_images.append(image)
 
-                #Sletter bildene som allerede var lastet opp
-                for image in old_images:
-                    image.delete()
+                    #Sletter bildene som allerede var lastet opp
+                    for image in old_images:
+                        image.delete()
 
             #Brukeren lastet opp en fil som ikke var et bilde
             except:
@@ -331,7 +330,7 @@ def edit_apartment(request, apartment_id):
                     image.delete()
 
                 form = CreateApartmentForm(instance=apartment)
-                return render(request, 'apartments/create-apartment.html', {'form': form})
+                return render(request, 'apartments/create-apartment.html', {'form': form, 'image_required': False})
 
             return redirect('profile')
         else:

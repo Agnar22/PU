@@ -55,7 +55,15 @@ def profile_view(request):
             user.first_name = form['first_name'].data
             user.last_name = form['last_name'].data
             user.phone_number = int(form['phone_number'].data)
-            user.save()
+            try:
+                image = request.FILES.get("image")
+                if image is not None:
+                    user.profile_picture = image
+                user.save()
+                messages.success(request, 'Brukerinformasjon lagret!')
+            except:
+                messages.error(request, 'Noe gikk galt, prøv igjen')
+                return redirect('profile')
 
             return HttpResponseRedirect('/profile')
 
