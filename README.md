@@ -26,8 +26,8 @@ In the subject TDT4140 at NTNU we will work together as a team to create an appl
 *  SCSS for a better and easier css structure
 
 # Testing
-* `python manage.py test` kjører alle testene
-* `python manage.py test <appname>` kjører testene tilhørende en app
+* `python manage.py test` running all test
+* `python manage.py test <appname>` running all tests for an app
 
 # Credits
 **Gruppe 15:**<br>
