@@ -31,7 +31,7 @@ In the subject TDT4140 at NTNU we will work together as a team to create an appl
 
 # Credits
 **Gruppe 15:**<br>
-Agnar Bjørnstad<br>
+Agnar Martin Bjørnstad<br>
 Ingvild Telle Finsås<br>
 Joel Nicolaysen<br>
 Markus Vagstad<br>
