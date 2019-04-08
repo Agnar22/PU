@@ -4,11 +4,13 @@ ShareBNB is an online marketplace and hospitality service which allows for users
 ### Motivation
 In the subject TDT4140 at NTNU we will work together as a team to create an application. The product owner/customer requested that we developed an application which is accessible via a website. We manage the project using the agile management process Scrum.
 
-### Requirements
+
+# Installation and use
 This project requires the following technologies to be pre-installed:
 * Git (can be installed from https://git-scm.com/downloads)
 * Python 3 (can be installed from https://www.python.org/downloads)
-# Installation and use
+
+Then do the following steps:
 1. Open the CMD/terminal, navigate to a desired folder and clone the project to your computer with `git clone https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-15.git`
 2. Now navigate to the cloned directory by typing `cd gruppe-15` in command line
 3. **(Optional)** Create a virtual environment and activate it before step *5.*<br>
