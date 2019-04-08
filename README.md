@@ -8,7 +8,7 @@ In the subject TDT4140 at NTNU we will work together as a team to create an appl
 # Installation and use
 This project requires the following technologies to be pre-installed:
 * Git (can be installed from https://git-scm.com/downloads)
-* Python 3 (can be installed from https://www.python.org/downloads)
+* Python 3 and pip (can be installed from https://www.python.org/downloads)
 
 Then do the following steps:
 1. Open the CMD/terminal, navigate to a desired folder and clone the project to your computer with `git clone https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-15.git`
