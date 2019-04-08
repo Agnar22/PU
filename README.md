@@ -7,7 +7,7 @@ In the subject TDT4140 at NTNU we will work together as a team to create an appl
 
 # Installation and use
 1. Open the CMD, navigate to a desired folder and clone the project to your computer with `git clone https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-15.git`
-2. Navigate to the cloned directory by typing `cd gruppe-15` in command line
+2. Now navigate to the cloned directory by typing `cd gruppe-15` in command line
 3. **(Optional)** Create a virtual environment and activate it before step *5.*<br>
 *(Tip for PyCharm users):* Open this folder in PyCharm. Then Settings -> Project interpreter -> add... -> velg python3
 5. Type `pip install -r requirements.txt` in command line (with the virtual environment activated `source envname/bin/activate`)
