@@ -6,15 +6,16 @@ In the subject TDT4140 at NTNU we will work together as a team to create an appl
 
 
 # Installation and use
-1. Clone the project to your computer with `git clone <url>`
-2. Navigate to the cloned directory
+1. Open the CMD, navigate to a desired folder and clone the project to your computer with `git clone https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-15.git`
+2. Navigate to the cloned directory by typing `cd gruppe-15` in command line
 3. **(Optional)** Create a virtual environment and activate it before step *5.*<br>
 *(Tip for PyCharm users):* Open this folder in PyCharm. Then Settings -> Project interpreter -> add... -> velg python3
 5. Type `pip install -r requirements.txt` in command line (with the virtual environment activated `source envname/bin/activate`)
-6. `python manage.py makemigrations`
-7. `python manage.py migrate`
-8. `python manage.py createsuperuser`
-9. `python manage.py runserver`
+6. Type `python manage.py makemigrations` in command line
+7. Type `python manage.py migrate` in command line
+8. Type `python manage.py createsuperuser` in command line
+9. Type `python manage.py runserver` in command line
+10. The product can now be accessed by typing `http://localhost:8000` in your web-browser 
 
 # Tech/framework used
 *  Heroku for hosting
@@ -26,8 +27,9 @@ In the subject TDT4140 at NTNU we will work together as a team to create an appl
 *  SCSS for a better and easier css structure
 
 # Testing
-* `python manage.py test` running all test
-* `python manage.py test <appname>` running all tests for an app
+* Open the CMD and navigate to the "gruppe-15" folder in the cloned project
+    * Type `python manage.py test` in command line; runs all test
+    * Type `python manage.py test <appname>`; runs all tests for a specific app
 
 # Credits
 **Gruppe 15:**<br>
