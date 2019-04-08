@@ -1,0 +1,30 @@
+#review {
+  text-align: center;
+  h1, h3 {
+    color: $primary-dark;
+  }
+  h3 {
+    margin-bottom: 1.5rem;
+  }
+  .user-rating, .apartment-rating {
+    display: flex;
+    justify-content: space-between;
+    max-width: 480px;
+    margin: 0 auto;
+    .star {
+      display: inline;
+      cursor: pointer;
+      transition: transform 200ms ease-in-out;
+      &:hover {
+        transform: scale(1.2);
+      }
+      img {
+        width: 48px;
+        height: 48px;
+      }
+    }
+  }
+  .user-rating {
+    margin-bottom: 4rem;
+  }
+}

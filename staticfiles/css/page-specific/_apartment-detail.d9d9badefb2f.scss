@@ -1,0 +1,140 @@
+#apartment-detail {
+  position: relative;
+  .apartment-images {
+    position: relative;
+    display: grid;
+    height: calc(#{$navigation-height} + 30vh);
+    grid-template-columns: 100vw;
+    height: 400px;
+    @media screen and (min-width: $xxl) {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 50vw;
+      grid-template-columns: 50vw;
+    }
+
+    #left-arrow, #right-arrow {
+      position: absolute;
+      top: 50%;
+      left: 1rem;
+      transform: translateY(-50%) rotate(45deg);
+      border: 0px solid $white;
+      border-left-width: 2px;
+      border-bottom-width: 2px;
+      height: 24px;
+      width: 24px;
+      cursor: pointer;
+      transition: transform 200ms ease-in-out;
+      &:hover {
+        transform: translateY(-50%) rotate(45deg) scale(1.1);
+      }
+    }
+    #right-arrow {
+      right: 1rem;
+      left: auto;
+      transform: translateY(-50%) rotate(225deg);
+      &:hover {
+        transform: translateY(-50%) rotate(225deg) scale(1.1);
+      }
+    }
+
+    .ellipses {
+      position: absolute;
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+
+      .ellipse {
+        cursor: pointer;
+        $ellipse-size: 8px;
+        display: inline-block;
+        background-color: $light-gray;
+        width: $ellipse-size;
+        height: $ellipse-size;
+        border-radius: 20px;
+        margin-right: 8px;
+
+        &.active {
+          background-color: $primary;
+        }
+      }
+    }
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      &:not(.active) {
+        display: none;
+      }
+      @media screen and (min-width: $xxl) {
+        height: 100vh;
+      }
+    }
+  }
+  .apartment-info {
+    padding: 5%;
+    @media screen and (min-width: $xxl) {
+      margin-left: 50vw;
+      padding: 10rem 6rem 6rem;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+    }
+    .rating {
+      margin-bottom: 1.5rem;
+      img {
+        height: 18px;
+        width: 18px;
+        margin-right: 4px;
+      }
+      p {
+        color: $dark-gray;
+      }
+    }
+
+    i {
+      display: flex;
+      align-items: center;
+      margin-top: 0.5rem;
+      img {
+        width: 18px;
+        height: 18px;
+        margin-right: 0.5rem;
+      }
+    }
+
+    h4 {
+      margin: 2rem 0 0.5rem;
+      color: $dark-gray;
+    }
+
+    .user {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      grid-gap: 0.5rem;
+      margin: 1rem 0;
+      > img {
+        width: 42px;
+        height: 42px;
+        object-fit: cover;
+        border-radius: 100px;
+      }
+      .user-rating {
+        img {
+          width: 10px;
+          height: 10px;
+        }
+      }
+    }
+  }
+  .button.primary {
+    max-width: 100%;
+  }
+}
