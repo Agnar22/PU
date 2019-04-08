@@ -27,7 +27,7 @@ In the subject TDT4140 at NTNU we will work together as a team to create an appl
 *  SCSS for a better and easier css structure
 
 # Testing
-* Open the CMD and navigate to the "gruppe-15" folder in the cloned project
+* Open the CMD/terminal and navigate to the "gruppe-15" folder in the cloned project
     * Type `python manage.py test` in command line; runs all test
     * Type `python manage.py test <appname>`; runs all tests for a specific app
 
