@@ -22,6 +22,11 @@ Then do the following steps:
 9. Type `python manage.py runserver` in command line
 10. The product can now be accessed by typing `http://localhost:8000` in your web-browser 
 
+# Testing
+* Open the CMD/terminal and navigate to the "gruppe-15" folder in the cloned project
+    * Type `python manage.py test` in command line; runs all test
+    * Type `python manage.py test <appname>`; runs all tests for a specific app
+
 # Tech/framework used
 *  Heroku for web-hosting
 *  Amazon S3 buckets for image hosting
@@ -30,11 +35,6 @@ Then do the following steps:
     *  Mixer to create test data
 *  Jquery and Vue to handle front-end data
 *  SCSS for a better and easier css structure
-
-# Testing
-* Open the CMD/terminal and navigate to the "gruppe-15" folder in the cloned project
-    * Type `python manage.py test` in command line; runs all test
-    * Type `python manage.py test <appname>`; runs all tests for a specific app
 
 # Credits
 **Gruppe 15:**<br>
