@@ -11,8 +11,8 @@ This project requires the following technologies to be pre-installed:
 * Python 3 and pip (can be installed from https://www.python.org/downloads)
 
 Then do the following steps:
-1. Open the CMD/terminal, navigate to a desired folder and clone the project to your computer with `git clone https://gitlab.stud.idi.ntnu.no/programvareutvikling-v19/gruppe-15.git`
-2. Now navigate to the cloned directory by typing `cd gruppe-15` in command line
+1. Open the CMD/terminal, navigate to a desired folder and clone the project to your computer with `git clone https://github.com/Agnar22/PU.git`
+2. Now navigate to the cloned directory by typing `cd PU` in command line
 3. **(Optional)** Create a virtual environment and activate it before step *5.*<br>
 *(Tip for PyCharm users):* Open this folder in PyCharm. Then File -> Settings -> Project interpreter -> add... -> choose python3
 5. Type `pip install -r requirements.txt` in command line (with the virtual environment activated `source envname/bin/activate`)
@@ -23,7 +23,7 @@ Then do the following steps:
 10. The product can now be accessed by typing `http://localhost:8000` in your web-browser 
 
 # Testing
-* Open the CMD/terminal and navigate to the "gruppe-15" folder in the cloned project
+* Open the CMD/terminal and navigate to the "PU" folder in the cloned project
     * Type `python manage.py test` in command line; runs all test
     * Type `python manage.py test <appname>`; runs all tests for a specific app
 
